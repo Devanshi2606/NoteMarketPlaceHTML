@@ -1,0 +1,694 @@
+/*======================================
+|   |   |   |   Mobile Menu
+======================================*/
+.navbar-header {
+    position: relative;
+}
+
+#mobile-nav-open-btn {
+    font-size: 30px;
+    color: #6255a5;
+    z-index: 2;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 6px;
+    /* Hide mobile nav open btn */
+    display: none;
+}
+
+#mobile-nav a.a-logout {
+    color: #6255a5;
+}
+
+#mobile-nav {
+    /* by default, mobile nav will be hidden with height 0% */
+    height: 0%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: rgba(225, 225, 225, .9);
+    -webkit-transition: all 30ms linear;
+    transition: all 30ms linear;
+    overflow: hidden;
+}
+
+#mobile-nav-close-btn {
+    font-family: "Open Sans", sans-serif;
+    font-size: 50px;
+    color: #212226;
+    font-weight: 400;
+    cursor: pointer;
+    position: absolute;
+    top: -9px;
+    right: 13px;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+#mobile-nav-content {
+
+    width: 100%;
+    margin-top: 30px;
+    position: relative;
+    top: 10%;
+}
+
+#mobile-nav ul li {
+    margin-bottom: 20px;
+}
+
+#mobile-nav ul li div {
+    margin-bottom: 20px;
+}
+
+#mobile-nav ul.header-collapse li {
+    padding-bottom: 10px;
+}
+
+#mobile-nav ul.header-collapse a:hover,
+#mobile-nav ul.header-collapse a:focus {
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+#mobile-nav ul.header-collapse {
+    list-style-type: none;
+    margin-top: 2%;
+    padding-left: 5%;
+    background: #d1d1d1;
+}
+
+#mobile-nav a {
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+    color: #212226;
+    font-weight: 400;
+    text-transform: uppercase;
+    display: inline;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+
+#mobile-nav a:hover,
+#mobile-nav a:focus,
+#mobile-nav-close-btn:hover,
+#mobile-nav-close-btn:focus {
+    color: #6255a5;
+    background: none;
+}
+
+#mobile-nav ul li button {
+    margin: 15px;
+    width: 30%;
+}
+
+
+
+/*======================================
+|   |   Bootstrap 3 Media Queries
+======================================*/
+
+/* Large Devices (Desktop & Laptops) */
+@media(min-width: 1200px)and (max-width: 1299px) {
+
+    /* Login */
+    .center-wrapper {
+        margin-top: 5%;
+    }
+
+    /* Forgot Password */
+
+    #forgot-password .center-wrapper {
+        margin-top: 10%;
+    }
+
+    /* Change Password & sign up*/
+
+    #change-password .center-wrapper,
+    #sign-up .center-wrapper {
+        margin-top: 3%;
+    }
+
+    ul.navbar-nav > li > button {
+        margin-right: 15px;
+    }
+
+    .field-upload-icon {
+        margin-right: 10px;
+    }
+
+    html.profile {
+        width: 105.9%;
+        height: auto;
+    }
+
+    #contact-us .site-nav-wrapper {
+        padding: 0 45px;
+    }
+
+    html.profile {
+        width: 105.9%;
+        height: auto;
+    }
+
+}
+
+/* Medium Devices(Landscape Tablets & Medium Desktops) */
+@media(min-width: 992px) and (max-width: 1199px) {
+
+    /* Login */
+    .center-wrapper {
+        margin-top: 5%;
+    }
+
+    /* Forgot Password */
+
+    #forgot-password .center-wrapper {
+        margin-top: 10%;
+    }
+
+    /* Change Password */
+
+    #change-password .center-wrapper {
+        margin-top: 2%;
+    }
+
+    .navbar-nav {
+        margin-top: 2%;
+        margin-right: 2%;
+    }
+
+    .field-upload-icon {
+        margin-right: 10px;
+    }
+
+    html.profile {
+        width: 106.9%;
+        height: auto;
+    }
+
+    #contact-us .site-nav-wrapper {
+        padding: 0 45px;
+    }
+
+    .note-text > h4 {
+        min-height: 60px;
+    }
+
+    .book-img img {
+        max-width: 100%;
+        margin-top: 17%
+    }
+
+    .earning-img {
+        padding-bottom: 7px;
+    }
+
+    .item-part2 > div {
+        padding: 0px 10px;
+    }
+
+    .item-part2 > div > div {
+        padding: 25px 0px;
+    }
+
+    .admin-dashboard .item-part2 > div > div {
+        padding: 25px;
+
+    }
+}
+
+/* Small Devices(Portrait Tablets & small Desktops) */
+@media(min-width: 768px) and (max-width: 991px) {
+
+    /* Login */
+    .center-wrapper {
+        margin-top: 7%;
+    }
+
+    /* Forgot Password */
+
+    #forgot-password .center-wrapper {
+        margin-top: 13%;
+    }
+
+    /* Change Password */
+
+    #change-password .center-wrapper {
+        margin-top: 3%;
+    }
+
+    /* User Profile*/
+
+    .field-upload-icon {
+        margin-right: -5px;
+    }
+
+    html.profile {
+        width: 110.5%;
+        height: auto;
+    }
+
+    .navbar-nav > li {
+        display: none;
+    }
+
+    #mobile-nav-open-btn {
+        display: block;
+        -webkit-transform: translateX(390px);
+        transform: translateX(390px);
+    }
+
+    .note-text > h4 {
+        min-height: 80px;
+    }
+
+    .detail-text {
+        padding-left: 20px;
+    }
+
+    .review-text {
+        font-size: 12px;
+    }
+
+    .book-img img {
+        max-width: 110%;
+        margin-top: 40%
+    }
+
+    .cus-review {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .cus-review img {
+        max-width: 40px;
+    }
+
+    .item-part1 .heading,
+    .item-part2 .heading {
+        font-size: 20px;
+    }
+
+    .earning-img {
+        padding-bottom: 7px;
+    }
+
+    .admin-dashboard .j-space-btn {
+        display: block;
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+    }
+
+    #note-details .reviewer-detail,
+    #admin-note-details .reviewer-detail {
+        padding-right: 0;
+    }
+
+    #note-details .reviewer-detail .note-detail-info,
+    #admin-note-details .reviewer-detail .note-detail-info {
+        font-size: 12px;
+    }
+
+    iframe {
+        height: 470px;
+    }
+
+    #manage-system-configuration .field-upload-icon {
+        left: -48%;
+    }
+
+    .mem-info-detail img {
+        max-width: 100%;
+    }
+
+    .mem-info-detail p {
+        font-size: 14px;
+    }
+
+    .mem-info-detail div {
+        padding-right: 0;
+    }
+}
+
+/* Extra Small Devices(Landscape Phone & Portrait Tablets) */
+@media(max-width: 767px) {
+
+    /* Login */
+    .center-wrapper {
+        margin-top: 7%;
+        -webkit-transform: translateX(3%);
+        transform: translateX(3%);
+    }
+
+    /* Forgot Password */
+
+    #forgot-password .center-wrapper {
+        margin-top: 15%;
+        left: auto;
+        top: auto;
+        -webkit-transform: translateX(5%);
+        transform: translateX(5%);
+        -webkit-column-width: ;
+        column-width:
+    }
+
+    /* Change Password */
+
+    #change-password .center-wrapper {
+        margin-top: 3%;
+        -webkit-transform: translateX(5%);
+        transform: translateX(5%);
+    }
+
+    /* Sign Up Password */
+
+    #sign-up .center-wrapper {
+        margin-top: 3%;
+        -webkit-transform: translateX(5%);
+        transform: translateX(5%);
+    }
+
+    /* User Profile*/
+
+    /* Navigation */
+    .navbar {
+        padding: 20px 0;
+    }
+
+    .site-nav-wrapper {
+        padding: 0;
+    }
+
+    /* show mobile nav open btn */
+    #mobile-nav-open-btn {
+        display: block;
+    }
+
+    .basic-profile-details {
+        padding: 0 40px;
+    }
+
+    .field-upload-icon {
+        margin-right: 10px;
+    }
+
+    .contact-us-details {
+        padding: 0 40px;
+    }
+
+    #home-page .content-box-lg {
+        padding-top: 60px;
+    }
+
+    .horizontal-heading {
+        text-align: center;
+    }
+
+    /* Add Review */
+    #review-pop-up .rate {
+        margin-right: 60%;
+        padding-bottom: 60px;
+    }
+
+    .item-part2 > div {
+        margin-top: 20px;
+    }
+
+    #dashboard .j-space-btn {
+        display: block;
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+    }
+
+    .mem-address-detail {
+        border: 0px;
+    }
+
+    .mem-info-detail img {
+        margin-bottom: 30px;
+    }
+}
+
+/* Extra Small Devices(Portrait Phones & Smaller Devices) */
+@media(max-width: 480px) {
+
+    /* Login */
+    .center-wrapper {
+        margin-top: 7%;
+        -webkit-transform: translateX(3%);
+        transform: translateX(3%);
+    }
+
+    .bg-white {
+        margin: 15px 0 0 0;
+    }
+
+    .j-center {
+        display: block;
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+    }
+
+    /* Forgot Password */
+
+    #forgot-password .center-wrapper {
+        margin-top: 20%;
+    }
+
+    /* User Profile*/
+
+    .footer-con > p {
+        font-size: 12px;
+    }
+
+    .field-upload-icon {
+        margin-right: -5px;
+    }
+
+    .field-upload-icon-preview {
+        margin-right: -5px;
+    }
+
+    .heading {
+        font-size: 25px;
+    }
+
+    .white-h {
+        font-size: 30px;
+    }
+
+    #home-page .home-profile {
+        margin-left: 10px;
+    }
+
+    h2.heading {
+        font-size: 18px;
+    }
+
+    .home-icon {
+        width: 40%;
+        left: 30%;
+    }
+
+    .img-download {
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .img-seller {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Add Review */
+    #review-pop-up .rate {
+        margin-right: 40%;
+    }
+
+    .note-text > h4 {
+        min-height: 95px;
+    }
+
+    .detail-text {
+        padding-left: 20px;
+    }
+
+    .book-img img {
+        max-width: 100%;
+        margin-top: 30%
+    }
+
+    .item-part1 {
+        padding-bottom: 0;
+    }
+
+    .item-part2 {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .item-part1 .note-detail-info,
+    .item-part2 .note-detail-info {
+        font-size: 12px;
+    }
+
+    .admin-dashboard .item-part2 > div > div {
+        padding: 18px;
+    }
+
+    .mem-info-detail p {
+        font-size: 14px;
+    }
+}
+
+/* Extra Small Devices(Portrait Phones & Smaller Devices) */
+@media(max-width: 320px) {
+
+    /* Login */
+    .center-wrapper {
+        -webkit-transform: translateX(5%);
+        transform: translateX(5%);
+    }
+
+    .bg-white {
+        padding: 10%;
+    }
+
+    .heading {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 13px;
+    }
+
+    .info {
+        font-size: 12px;
+    }
+
+    .form-check-input {
+        width: 20px;
+    }
+
+    /* Forgot Password */
+
+    #forgot-password .center-wrapper {
+        margin-top: 50%;
+    }
+
+    #forgot-password .heading {
+        font-size: 19px;
+    }
+
+    /* Change Password */
+
+    #change-password .center-wrapper {
+        margin-top: 10%;
+    }
+
+    #change-password .heading {
+        font-size: 19px;
+    }
+
+    /* Sign Up Password */
+
+    #sign-up .heading {
+        font-size: 18px;
+    }
+
+    /* User Profile*/
+
+    .field-upload-icon {
+        margin-right: -10px;
+    }
+
+    .j-center {
+        display: block;
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+    }
+
+    .h-logo > img {
+        max-width: 80%;
+    }
+
+    .sticky-logo > img {
+        max-width: 80%;
+    }
+
+    .home-icon {
+        width: 50%;
+        left: 25%;
+    }
+
+    .submit-btn {
+        padding-right: 80px;
+    }
+
+    .publish-btn {
+        padding-left: 7px;
+    }
+
+    #review-pop-up .rate {
+        margin-right: 0;
+    }
+
+    .cus-review {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .cus-review img {
+        max-width: 40px;
+    }
+
+    .note-detail-info {
+        font-size: 12px;
+    }
+
+    .book-img {
+        margin-left: 50px;
+        width: 200px;
+        margin-right: 120px;
+    }
+
+    .book-info {
+        width: 300px;
+    }
+
+    .item-part2 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .earning-img {
+        padding-top: 30px;
+        padding-bottom: 20px;
+    }
+
+    .earning-img .heading {
+        font-size: 14px;
+    }
+
+    .item-part1 .heading {
+        font-size: 13px;
+    }
+
+    .admin-dashboard .item-part2 > div > div {
+        width: 100px;
+    }
+
+    .admin-dashboard .item-part2 > div > div > p {
+        font-size: 10px;
+    }
+}

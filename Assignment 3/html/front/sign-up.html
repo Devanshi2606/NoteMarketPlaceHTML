@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- important meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>
+        Sign Up Page
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="../../css/font-awesome/css/font-awesome.min.css">
+
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+
+
+</head>
+
+<body>
+
+    <!-- Sign up -->
+    <section id="sign-up">
+        <!-- background image -->
+
+        <img src="../../images/login/banner-with-overlay.jpg" alt="Login" class="img-responsive" id="login-bg-img">
+
+
+        <!-- login overlay -->
+        <div id="login-overlay"></div>
+
+        <!-- sign up content -->
+        <div id="sign-up-content">
+            <div class="center-wrapper">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-8 col-xs-12 text-center child">
+                            <div class="logo">
+                                <img src="../../images/login/top-logo.png" class="img-responsive">
+                            </div>
+                            <div class="bg-white">
+                                <form>
+                                    <h1 class="heading">Create an Account</h1>
+                                    <p class="info">Enter your details to signup</p>
+                                    <i class="fa fa-check-circle verification"> &nbsp;Your account has been successfully created.</i>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>First Name*</p>
+                                            <div class="form-group ">
+                                                <input type="text" class="form-control name f-name" id="f-name" placeholder="First Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Last Name*</p>
+                                            <div class="form-group ">
+                                                <input type="text" class="form-control name l-name" id="l-name" placeholder="Last Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Email*</p>
+                                            <div class="form-group ">
+                                                <input type="email" class="form-control email" id="email" placeholder="Email Address">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Password</p>
+                                            <div class="form-group ">
+                                                <input type="password" class="form-control pass" id="password-field" placeholder="Password">
+                                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Confirm Password</p>
+                                            <div class="form-group ">
+                                                <input type="password" class="form-control pass confirm-pass" id="password-field" placeholder="Confirm Password">
+                                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center" data-toggle="modal" data-target="#exampleModalCenter">
+                                        Sign up
+                                    </button>
+                                    <div class="flex-container j-center signup">
+                                        <div>
+                                            <p>Already have an account?&nbsp;</p>
+                                        </div>
+                                        <div><a href="#" class="clr-change">Login</a></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Verification -->
+        <section id="email-verification">
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <div id="email-verification-content">
+                                <div class="logo">
+                                    <img src="../../images/login/logo.png" class="img-responsive">
+                                </div>
+                                <div class="bg-info">
+                                    <div class="flex-container">
+                                        <h1 class="heading">Email Verification</h1>
+                                        <p class="user-name">Dear Smith,</p>
+                                        <p>Thanks for Signing up!</p>
+                                        <p>Simply click below for email verification.</p>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center">
+                                            Verify email address
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </section>
+
+
+    <!-- JQuerry -->
+    <script src="../../js/jquery.min.js"></script>
+
+    <!-- BootStrap JS -->
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="../../js/script.js"></script>
+</body>
+
+</html>

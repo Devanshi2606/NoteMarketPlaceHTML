@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- important meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Title -->
+    <title>
+        Login Page
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="../../css/font-awesome/css/font-awesome.min.css">
+
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+
+
+</head>
+
+<body>
+
+    <!-- Login -->
+    <section id="login">
+        <!-- background image -->
+
+        <img src="../../images/login/banner-with-overlay.jpg" alt="Login" class="img-responsive" id="login-bg-img">
+
+
+        <!-- login overlay -->
+        <div id="login-overlay"></div>
+
+        <!-- login content -->
+        <div id="login-content">
+            <div class="center-wrapper">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-8 col-xs-12 text-center child">
+                            <div class="logo">
+                                <img src="../../images/login/top-logo.png" class="img-responsive">
+                            </div>
+                            <div class="bg-white">
+                                <form>
+                                    <h1 class="heading">Login</h1>
+                                    <p class="info">Enter your email address and password to login</p>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Email</p>
+                                            <div class="form-group ">
+                                                <input type="email" class="form-control email" id="email" placeholder="Email Address">
+                                            </div>
+                                        </div>
+                                        <div class="flex-container j-space-btn col-md-12 col-sm-12 col-xs-12">
+                                            <div>
+                                                <p>Password</p>
+                                            </div>
+                                            <div><a href="#" class="clr-change">Forgot Password?</a></div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <input type="password" class="form-control pass" id="password-field" placeholder="Password">
+                                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                            <p class="incorrect-pass text-left">
+                                                The password that you've entered is incorrect
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex-container j-start form-check">
+                                        <div>
+                                            <input class="form-check-input" type="checkbox" value="" id="remember">
+                                        </div>
+                                        <div class="check-text">
+                                            <p>Remember Me</p>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center">
+                                        Login
+                                    </button>
+                                    <div class="flex-container j-center signup">
+                                        <div>
+                                            <p>Don't have an account?&nbsp;</p>
+                                        </div>
+                                        <div><a href="#" class="clr-change">Sign Up</a></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- JQuerry -->
+    <script src="../../js/jquery.min.js"></script>
+
+    <!-- BootStrap JS -->
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="../../js/script.js"></script>
+</body>
+
+</html>

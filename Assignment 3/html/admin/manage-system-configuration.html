@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="profile">
+
+<head>
+    <!-- important meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Title -->
+    <title>
+        Manage System Configuration Page
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="../../css/font-awesome/css/font-awesome.min.css">
+
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+
+    <!-- Header CSS -->
+    <link rel="stylesheet" href="../../css/header.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+
+
+</head>
+
+<body>
+    <section id="manage-system-configuration">
+        <!-- Header -->
+        <header>
+            <nav class="navbar">
+                <div class="container-fluid">
+                    <div class="site-nav-wrapper">
+                        <div class="navbar-header">
+                            <!-- Mobile Menu Open Button -->
+                            <span id="mobile-nav-open-btn">&#9776;</span>
+                            <!-- Logo -->
+                            <a class="navbar-brand smooth-scroll h-logo" href="#home">
+                                <img src="../../images/login/logo.png" alt="logo">
+                            </a>
+                        </div>
+                        <!-- Main menu -->
+                        <div class="container">
+                            <div class="collapse navbar-collapse">
+                                <ul class="nav navbar-nav pull-right">
+                                    <li><a class="smooth-scroll" href="../front/search-notes.html">Dashboard</a></li>
+                                    <li><a class="smooth-scroll" href="../front/add-notes.html">Notes</a></li>
+                                    <li><a class="smooth-scroll" href="../front/buyer-request.html">Members</a></li>
+                                    <li><a class="smooth-scroll" href="../front/faq.html">Reports</a></li>
+                                    <li><a class="smooth-scroll" href="../front/contact-us.html">Settings</a></li>
+                                    <li>
+                                        <div class="col-md-6  col-sm-6 col-xs-5 smooth-scroll flex-container">
+                                            <img src="../../images/Add-notes/user-img.png" alt="author" class="img-circle">
+                                        </div>
+                                    </li>
+                                    <li><button type="submit" class="btn btn-primary btn-lg btn-block  text-center navbar-btn">
+                                            Logout
+                                        </button></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Mobile Menu -->
+                        <div id="mobile-nav">
+                            <!-- Mobile Menu Open Button -->
+                            <span id="mobile-nav-close-btn">&times;</span>
+                            <div id="mobile-nav-content">
+                                <ul class="nav">
+                                    <li><a class="smooth-scroll" href="../front/search-notes.html">Dashboard</a></li>
+                                    <li><a class="smooth-scroll" href="../front/add-notes.html">Notes</a></li>
+                                    <li><a class="smooth-scroll" href="../front/buyer-request.html">Members</a></li>
+                                    <li><a class="smooth-scroll" href="../front/faq.html">Reports</a></li>
+                                    <li><a class="smooth-scroll" href="../front/contact-us.html">Settings</a></li>
+                                    <li>
+                                        <div class="col-md-6  col-sm-12 col-xs-12 smooth-scroll flex-container ">
+                                            <img src="../../images/Add-notes/user-img.png" alt="author" class="img-circle">
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-center">
+                                            Logout
+                                        </button>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header Ends -->
+        <!-- profile -->
+        <div class="basic-profile-details">
+            <form>
+                <div class="container">
+                    <div class="row">
+                        <!-- Basic Details -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h1 class="heading">Manage System Configuration</h1>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Support emails address*</p>
+                                <div class="form-group ">
+                                    <input type="email" class="form-control name email" id="f-name" placeholder="Enter email address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Support phone number*</p>
+                                <div class="form-group ">
+                                    <input type="text" class="form-control name p-no" id="p-no" placeholder="Enter phone number">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Email Address(es) (for various events system will send notifications to these users)*</p>
+                                <div class="form-group ">
+                                    <input type="email" class="form-control email" id="email" placeholder="Enter email address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Facebook URL*</p>
+                                <div class="form-group ">
+                                    <input type="email" class="form-control email" id="email" placeholder="Enter facebook url">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Twitter URL*</p>
+                                <div class="form-group ">
+                                    <input type="email" class="form-control email" id="email" placeholder="Enter twitter url">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>LinkedIn URL*</p>
+                                <div class="form-group ">
+                                    <input type="email" class="form-control email" id="email" placeholder="Enter linkedin url">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Default image for notes(if seller do not upload)</p>
+                                <div class="form-group flex-container">
+                                    <input type="text" class="form-control form-control-upload  upload-img" id="upload-img">
+                                    <span>
+                                        <figure><img src="../../images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon">
+                                            <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                                        </figure>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-6 col-sm-12 col-xs-12 data">
+                                <p>Default profile picture(if seller do not upload)</p>
+                                <div class="form-group flex-container">
+                                    <input type="text" class="form-control form-control-upload  upload-img" id="upload-img">
+                                    <span>
+                                        <figure><img src="../../images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon">
+                                            <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                                        </figure>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-7">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center btn-submit">
+                                Submit
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- footer -->
+        <footer class="b_footer">
+            <div class="container">
+                <div class="flex-container j-center footer-content col-md-12 col-sm-12 col-xs-12">
+                    <div class="footer-con">
+                        <p>
+                            version: 1.1.24
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p>
+                            Copyright &copy; TatvaSoft All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </section>
+
+    <!-- JQuerry -->
+    <script src="../../js/jquery.min.js"></script>
+
+    <!-- BootStrap JS -->
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="../../js/script.js"></script>
+
+</body>
+
+</html>

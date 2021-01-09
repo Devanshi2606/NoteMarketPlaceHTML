@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en" class="profile">
+
+<head>
+    <!-- important meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Title -->
+    <title>
+        Dashboard Page
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="../../css/font-awesome/css/font-awesome.min.css">
+
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="css/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl-carousel/owl.theme.default.min.css">
+
+    <!-- Header CSS -->
+    <link rel="stylesheet" href="../../css/header.css">
+
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="../../css/responsive.css">
+
+    <!-- Paging CSS -->
+    <link rel="stylesheet" href="../../css/paging.css">
+
+</head>
+
+<body>
+    <section id="dashboard" class="admin-dashboard">
+        <!-- Header -->
+        <header>
+            <nav class="navbar ">
+                <div class="container-fluid">
+                    <div class="site-nav-wrapper">
+                        <div class="navbar-header">
+                            <!-- Mobile Menu Open Button -->
+                            <span id="mobile-nav-open-btn">&#9776;</span>
+                            <!-- Logo -->
+                            <a class="navbar-brand smooth-scroll h-logo" href="#home">
+                                <img src="../../images/login/logo.png" alt="logo">
+                            </a>
+                        </div>
+                        <!-- Main menu -->
+                        <div class="container">
+                            <div class="collapse navbar-collapse">
+                                <ul class="nav navbar-nav pull-right">
+                                    <li>
+                                        <a class="btn btn-secondary dropdown-toggle smooth-scroll" href="../front/search-notes.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dashboard</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="#">Notes Under Review</a>
+                                            <a class="dropdown-item" href="#">Published Notes</a>
+                                            <a class="dropdown-item" href="#">Downloaded Notes</a>
+                                            <a class="dropdown-item" href="#">Rejected Notes</a>
+
+                                        </div>
+                                    </li>
+                                    <li><a class="smooth-scroll" href="../front/add-notes.html">Notes</a></li>
+                                    <li><a class="smooth-scroll" href="../front/buyer-request.html">Members</a></li>
+                                    <li><a class="btn btn-secondary dropdown-toggle smooth-scroll" href="../front/search-notes.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="#">Spam Reports</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="btn btn-secondary dropdown-toggle smooth-scroll" href="../front/search-notes.html" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="#">Manage System Configuration</a>
+                                            <a class="dropdown-item" href="#">Manage Administrator</a>
+                                            <a class="dropdown-item" href="#">Manage Category</a>
+                                            <a class="dropdown-item" href="#">Manage Type</a>
+                                            <a class="dropdown-item" href="#">Manage Countries</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="col-md-6  col-sm-6 col-xs-5 smooth-scroll flex-container">
+                                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../images/Add-notes/user-img.png" alt="author" class="img-circle"></a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <a class="dropdown-item" href="#">Update Profile</a>
+                                                <a class="dropdown-item" href="#">Change Password</a>
+                                                <a class="dropdown-item a-logout clr-font-change" href="#">LOGOUT</a>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li><button type="submit" class="btn btn-primary btn-lg btn-block  text-center navbar-btn">
+                                            Logout
+                                        </button></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Mobile Menu -->
+                        <div id="mobile-nav">
+                            <!-- Mobile Menu Open Button -->
+                            <span id="mobile-nav-close-btn">&times;</span>
+                            <div id="mobile-nav-content">
+                                <ul class="nav">
+                                    <li>
+                                        <a>Dashboard</a>
+                                        <i class="fa fa-chevron-down toggle-arrow" data-toggle="collapse" data-target="#collapse-dashboard1"></i>
+                                        <div class="collapse" id="collapse-dashboard1">
+                                            <ul class="header-collapse">
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Notes Under Review</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Published Notes</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Downloaded Notes</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Rejected Notes</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li><a class="smooth-scroll" href="../front/add-notes.html">Notes</a></li>
+                                    <li><a class="smooth-scroll" href="../front/buyer-request.html">Members</a></li>
+                                    <li id="header-report">
+                                        <a>Reports</a>
+                                        <i class="fa fa-chevron-down toggle-arrow" data-toggle="collapse" data-target="#collapse-dashboard2"></i>
+                                        <div class="collapse" id="collapse-dashboard2">
+                                            <ul class="header-collapse">
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Spam Reports</a></li>
+                                                <li style="margin-bottom: 2px;">
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li id="header-settings">
+                                        <a>Settings</a>
+                                        <i class="fa fa-chevron-down toggle-arrow" data-toggle="collapse" data-target="#collapse-dashboard3"></i>
+                                        <div class="collapse" id="collapse-dashboard3">
+                                            <ul class="header-collapse">
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Manage System Configuration</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Manage Administrator</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Manage Category</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Manage Type</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Manage Countries</a></li>
+
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li id="header-profile">
+                                        <img src="../../images/Add-notes/user-img.png" class="img-circle" data-toggle="collapse" data-target="#collapse-dashboard4" style="margin-left: 15px;">
+                                        <div class="collapse" id="collapse-dashboard4">
+                                            <ul class="header-collapse">
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Update Profile</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px">Change Password</a></li>
+                                                <li style="margin-bottom: 2px;"><a href="#" style="font-size: 13px" class="a-logout">LOGOUT</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-center">
+                                            Logout
+                                        </button>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- Header Ends -->
+
+        <!-- Content -->
+        <div class="container">
+            <div class="row dashboard-heading">
+                <div class="col-md-12">
+                    <div>
+                        <h2 class="heading">Dashboard</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row dashboard-item">
+                <div class="col-md-12 col-sm-12 sol-xs-12 item-part2" style="padding-right: 0px; padding-left: 0px;">
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 0px;">
+                        <!-- Item 01 -->
+                        <div class="stats-item text-center">
+                            <h2 class="heading">20</h2>
+                            <p class="note-detail-info">Numbers of Notes in Review for Publish</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                        <!-- Item 02 -->
+                        <div class="stats-item text-center">
+                            <h2 class="heading">103</h2>
+                            <p class="note-detail-info">Numbers of New Notes Downloaded (Last 7 days)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                        <!-- Item 03 -->
+                        <div class="stats-item text-center">
+                            <h2 class="heading">223</h2>
+                            <p class="note-detail-info">Numbers of New Registrations (Last 7 days)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="flex-container j-space-btn dashboard-search">
+                    <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                        <h3 class="heading">Published Notes</h3>
+                    </div>
+                    <div class="col-md-7 col-sm-12 col-xs-12" style="padding-right: 0px;">
+                        <div class="form-group ">
+                            <form>
+
+                                <div class="col-md-6 col-sm-6 col-xs-4 search">
+                                    <input type="text" class="form-control search" id="search-field" placeholder="Search">
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-4 text-right">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-4 admin-dashboard-month" style="padding-right: 0px;">
+                                    <div class="form-group drop-arrow">
+                                        <select name="type" id="type" class="form-control">
+                                            <option value="" disabled selected hidden>Select month</option>
+                                            <option value="jan">January</option>
+                                            <option value="feb">February</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="tableData" class="table table-responsive">
+                    <thead>
+                        <tr class="text-uppercase">
+                            <th>Sr no.</th>
+                            <th>title</th>
+                            <th>Category</th>
+                            <th>Attachment size</th>
+                            <th>Sell type</th>
+                            <th>Price</th>
+                            <th>Publisher</th>
+                            <th>Published Date</th>
+                            <th class="table-center">Number of<br>downloads</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="t1">
+                        <tr>
+                            <td class="table-center">1</td>
+                            <td class="clr-change">Data Science</td>
+                            <td>Science</td>
+                            <td>10KB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Pritesh Panchal</td>
+                            <td>09-10-2020, 10:10</td>
+                            <td class="clr-change table-center">10</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">2</td>
+                            <td class="clr-change">Accounts</td>
+                            <td>Commerce</td>
+                            <td>23MB</td>
+                            <td>Paid</td>
+                            <td>$22</td>
+                            <td>Rahil Shah</td>
+                            <td>10-10-2020, 12:30</td>
+                            <td class="clr-change table-center">21</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">3</td>
+                            <td class="clr-change">Social Studies</td>
+                            <td>Social</td>
+                            <td>3MB</td>
+                            <td>Paid</td>
+                            <td>$56</td>
+                            <td>Anish Patel</td>
+                            <td>11-10-2020, 01:00</td>
+                            <td class="clr-change table-center">13</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">4</td>
+                            <td class="clr-change">AI</td>
+                            <td>IT</td>
+                            <td>1MB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Vijay Vaishnav</td>
+                            <td>12-10-2020, 10:10</td>
+                            <td class="clr-change table-center">34</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">5</td>
+                            <td class="clr-change">Lorem ipsum</td>
+                            <td>Lorem</td>
+                            <td>105KB</td>
+                            <td>Paid</td>
+                            <td>$90</td>
+                            <td>Mehul Patel</td>
+                            <td>13-10-2020, 11:25</td>
+                            <td class="clr-change table-center">9</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">6</td>
+                            <td class="clr-change">Data Science</td>
+                            <td>Science</td>
+                            <td>10KB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Pritesh Panchal</td>
+                            <td>09-10-2020, 10:10</td>
+                            <td class="clr-change table-center">10</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">7</td>
+                            <td class="clr-change">Accounts</td>
+                            <td>Commerce</td>
+                            <td>23MB</td>
+                            <td>Paid</td>
+                            <td>$22</td>
+                            <td>Rahil Shah</td>
+                            <td>10-10-2020, 12:30</td>
+                            <td class="clr-change table-center">21</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">8</td>
+                            <td class="clr-change">Social Studies</td>
+                            <td>Social</td>
+                            <td>3MB</td>
+                            <td>Paid</td>
+                            <td>$56</td>
+                            <td>Anish Patel</td>
+                            <td>11-10-2020, 01:00</td>
+                            <td class="clr-change table-center">13</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">9</td>
+                            <td class="clr-change">AI</td>
+                            <td>IT</td>
+                            <td>1MB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Vijay Vaishnav</td>
+                            <td>12-10-2020, 10:10</td>
+                            <td class="clr-change table-center">34</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">10</td>
+                            <td class="clr-change">Lorem ipsum</td>
+                            <td>Lorem</td>
+                            <td>105KB</td>
+                            <td>Paid</td>
+                            <td>$90</td>
+                            <td>Mehul Patel</td>
+                            <td>13-10-2020, 11:25</td>
+                            <td class="clr-change table-center">9</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">11</td>
+                            <td class="clr-change">Data Science</td>
+                            <td>Science</td>
+                            <td>10KB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Pritesh Panchal</td>
+                            <td>09-10-2020, 10:10</td>
+                            <td class="clr-change table-center">10</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">12</td>
+                            <td class="clr-change">Accounts</td>
+                            <td>Commerce</td>
+                            <td>23MB</td>
+                            <td>Paid</td>
+                            <td>$22</td>
+                            <td>Rahil Shah</td>
+                            <td>10-10-2020, 12:30</td>
+                            <td class="clr-change table-center">21</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">13</td>
+                            <td class="clr-change">Social Studies</td>
+                            <td>Social</td>
+                            <td>3MB</td>
+                            <td>Paid</td>
+                            <td>$56</td>
+                            <td>Anish Patel</td>
+                            <td>11-10-2020, 01:00</td>
+                            <td class="clr-change table-center">13</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">14</td>
+                            <td class="clr-change">AI</td>
+                            <td>IT</td>
+                            <td>1MB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Vijay Vaishnav</td>
+                            <td>12-10-2020, 10:10</td>
+                            <td class="clr-change table-center">34</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">15</td>
+                            <td class="clr-change">Lorem ipsum</td>
+                            <td>Lorem</td>
+                            <td>105KB</td>
+                            <td>Paid</td>
+                            <td>$90</td>
+                            <td>Mehul Patel</td>
+                            <td>13-10-2020, 11:25</td>
+                            <td class="clr-change table-center">9</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">16</td>
+                            <td class="clr-change">Data Science</td>
+                            <td>Science</td>
+                            <td>10KB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Pritesh Panchal</td>
+                            <td>09-10-2020, 10:10</td>
+                            <td class="clr-change table-center">10</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">17</td>
+                            <td class="clr-change">Accounts</td>
+                            <td>Commerce</td>
+                            <td>23MB</td>
+                            <td>Paid</td>
+                            <td>$22</td>
+                            <td>Rahil Shah</td>
+                            <td>10-10-2020, 12:30</td>
+                            <td class="clr-change table-center">21</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">18</td>
+                            <td class="clr-change">Social Studies</td>
+                            <td>Social</td>
+                            <td>3MB</td>
+                            <td>Paid</td>
+                            <td>$56</td>
+                            <td>Anish Patel</td>
+                            <td>11-10-2020, 01:00</td>
+                            <td class="clr-change table-center">13</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">19</td>
+                            <td class="clr-change">AI</td>
+                            <td>IT</td>
+                            <td>1MB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Vijay Vaishnav</td>
+                            <td>12-10-2020, 10:10</td>
+                            <td class="clr-change table-center">34</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">20</td>
+                            <td class="clr-change">Lorem ipsum</td>
+                            <td>Lorem</td>
+                            <td>105KB</td>
+                            <td>Paid</td>
+                            <td>$90</td>
+                            <td>Mehul Patel</td>
+                            <td>13-10-2020, 11:25</td>
+                            <td class="clr-change table-center">9</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">21</td>
+                            <td class="clr-change">Data Science</td>
+                            <td>Science</td>
+                            <td>10KB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Pritesh Panchal</td>
+                            <td>09-10-2020, 10:10</td>
+                            <td class="clr-change table-center">10</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">22</td>
+                            <td class="clr-change">Accounts</td>
+                            <td>Commerce</td>
+                            <td>23MB</td>
+                            <td>Paid</td>
+                            <td>$22</td>
+                            <td>Rahil Shah</td>
+                            <td>10-10-2020, 12:30</td>
+                            <td class="clr-change table-center">21</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">23</td>
+                            <td class="clr-change">Social Studies</td>
+                            <td>Social</td>
+                            <td>3MB</td>
+                            <td>Paid</td>
+                            <td>$56</td>
+                            <td>Anish Patel</td>
+                            <td>11-10-2020, 01:00</td>
+                            <td class="clr-change table-center">13</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">24</td>
+                            <td class="clr-change">AI</td>
+                            <td>IT</td>
+                            <td>1MB</td>
+                            <td>Free</td>
+                            <td>$0</td>
+                            <td>Vijay Vaishnav</td>
+                            <td>12-10-2020, 10:10</td>
+                            <td class="clr-change table-center">34</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-center">25</td>
+                            <td class="clr-change">Lorem ipsum</td>
+                            <td>Lorem</td>
+                            <td>105KB</td>
+                            <td>Paid</td>
+                            <td>$90</td>
+                            <td>Mehul Patel</td>
+                            <td>13-10-2020, 11:25</td>
+                            <td class="clr-change table-center">9</td>
+                            <td>
+                                <div class="table-icon dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <p>&vellip;</p>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="#">Download Notes</a>
+                                        <a class="dropdown-item" href="#">View More Details</a>
+                                        <a class="dropdown-item" href="#">Unpublish</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- footer -->
+        <footer class="b_footer">
+            <div class="container">
+                <div class="flex-container j-center footer-content col-md-12 col-sm-12 col-xs-12">
+                    <div class="footer-con">
+                        <p>
+                            version: 1.1.24
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p>
+                            Copyright &copy; TatvaSoft All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </section>
+
+    <!-- JQuerry -->
+    <script src="../../js/jquery.min.js"></script>
+
+    <!-- Paging -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../../js/paging.js"></script>
+    <script type="text/javascript">
+        $("#tableData").pagify(5, "tbody tr");
+    </script>
+
+
+    <!-- BootStrap JS -->
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="../../js/script.js"></script>
+
+</body>
+
+</html>
