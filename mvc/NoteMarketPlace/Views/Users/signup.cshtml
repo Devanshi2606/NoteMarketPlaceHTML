@@ -1,0 +1,187 @@
+﻿
+@{
+    Layout = null;
+}
+@model NoteMarketPlace.Models.Signup
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <!-- important meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title -->
+    <title>
+        Sign Up Page
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="~/Content/css/font-awesome/css/font-awesome.min.css">
+
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="~/Content/css/bootstrap/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/Content/css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="~/Content/css/responsive.css">
+
+
+
+</head>
+
+<body>
+
+    <!-- Sign up -->
+    <section id="sign-up">
+        <!-- background image -->
+
+        <img src="~/Content/images/login/banner-with-overlay.jpg" alt="Login" class="img-responsive" id="login-bg-img">
+
+
+        <!-- login overlay -->
+        <div id="login-overlay"></div>
+
+        <!-- sign up content -->
+        <div id="sign-up-content">
+            <div class="center-wrapper">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-8 col-xs-12 text-center child">
+                            <div class="logo">
+                                <img src="~/Content/images/login/top-logo.png" class="img-responsive">
+                            </div>
+                            <div class="bg-white">
+                                <form method="post">
+                                    <h1 class="heading">Create an Account</h1>
+                                    <p class="info">Enter your details to signup</p>
+                                    <i class="fa fa-check-circle verification">@ViewBag.msg</i>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>First Name*</p>
+                                            <div class="form-group ">
+                                                <!--<input type="text" class="form-control name f-name" id="f-name" placeholder="First Name"> -->
+                                                @Html.TextBox("firstname","",new { @class="form-control name f-name", @id="f-name", @placeholder="First Name"})
+                                                <span class="text-danger"> @Html.ValidationMessage("firstname")</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Last Name*</p>
+                                            <div class="form-group ">
+                                                <!-- <input type="text" class="form-control name l-name" id="l-name" placeholder="Last Name"> -->
+                                                @Html.TextBox("lastname", "", new { @class = "form-control name l-name", @id = "l-name", @placeholder = "Last Name" })
+                                                <span class="text-danger"> @Html.ValidationMessage("lastname")</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Email*</p>
+                                            <div class="form-group ">
+                                                <!-- <input type="email" class="form-control email" id="email" placeholder="Email Address"> -->
+                                                @Html.TextBox("emailId", "", new { @class = "form-control email", @id = "email", @placeholder = "Email Address" })
+                                                <span class="text-danger"> @Html.ValidationMessage("emailId")@Html.ValidationMessage("EmailExists")</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Password</p>
+                                            <div class="form-group ">
+                                                <!-- <input type="password" class="form-control pass" id="password-field" placeholder="Password"> -->
+                                                @Html.Password("password","", new { @class = "form-control pass", @id= "password-field", @placeholder= "Password"})
+                                                <span class="text-danger"> @Html.ValidationMessage("password")</span>
+                                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Confirm Password</p>
+                                            <div class="form-group ">
+                                                <!-- <input type="password" class="form-control pass confirm-pass" id="password-field" placeholder="Confirm Password"> -->
+                                                @Html.Password("confirmPassword", "", new { @class = "form-control pass confirm-pass", @id = "confirmpassword-field", @placeholder = "Confirm Password" })
+                                                <span class="text-danger"> @Html.ValidationMessage("confirmPassword")</span>
+                                                <span toggle="#confirmpassword-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                                @ViewBag.ConfirmPassMsg
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center" @*onclick="SendEmail()" data-toggle="modal" data-target="#exampleModalCenter"*@>
+                                        Sign up
+                                    </button>
+                                    <div class="flex-container j-center signup">
+                                        <div>
+                                            <p>Already have an account?&nbsp;</p>
+                                        </div>
+                                        <div><a href="#" class="clr-change">@Html.ActionLink("Login","Login", "Users")</a></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Verification -->
+        @*<section id="email-verification">
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <div id="email-verification-content">
+                                <div class="logo">
+                                    <img src="~/Content/images/login/logo.png" class="img-responsive">
+                                </div>
+                                <div class="bg-info">
+                                    <div class="flex-container">
+                                        <h1 class="heading">Email Verification</h1>
+                                        <p class="user-name">Dear Smith,</p>
+                                        <p>Thanks for Signing up!</p>
+                                        <p>Simply click below for email verification.</p>
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center">
+                                            Verify email address
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>*@
+
+    </section>
+
+    <script>
+        var SendEmail = function () {
+            $.ajax({
+                type: "Post",
+                url: "/Users/SendMailToUser",
+                success: function (data) {
+                    if (data == true) {
+                        alert("Success");
+                    }
+                    else {
+                        alert("Failed");
+                    }
+                }
+            })
+        }
+    </script>
+    <!-- JQuerry -->
+    <script src="~/Scripts/js/jquery.min.js"></script>
+
+    <!-- BootStrap JS -->
+    <script src="~/Scripts/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="~/Scripts/js/script.js"></script>
+</body>
+
+</html>

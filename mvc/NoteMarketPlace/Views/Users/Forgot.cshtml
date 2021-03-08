@@ -1,0 +1,98 @@
+﻿
+@{
+    Layout = null;
+}
+@model NoteMarketPlace.Models.Forgot
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- important meta tags-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Title -->
+    <title>
+        Forgot Password Page
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="~/Content/css/font-awesome/css/font-awesome.min.css">
+
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="~/Content/css/bootstrap/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/Content/css/style.css">
+
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="~/Content/css/responsive.css">
+
+
+
+</head>
+
+<body>
+    <section id="forgot-password">
+        <!-- background image -->
+
+        <img src="~/Content/images/login/banner-with-overlay.jpg" alt="Login" class="img-responsive" id="login-bg-img">
+
+
+        <!-- overlay -->
+        <div id="login-overlay"></div>
+
+        <!-- Forgot password content -->
+        <div id="forgot-password-content">
+            <div class="center-wrapper">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-8 col-xs-12 text-center child">
+                            <div class="logo">
+                                <img src="~/Content/images/login/top-logo.png" class="img-responsive">
+                            </div>
+                            <div class="bg-white">
+                                <form method="post">
+                                    <h1 class="heading">Forgot Password?</h1>
+                                    <p class="info">Enter your email to reset your password</p>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 text-left">
+                                            <p>Email</p>
+                                            <div class="form-group ">
+                                                <!--   <input type="email" class="form-control email" id="email" placeholder="Email Address"> -->
+                                                @Html.TextBox("emailId", "", new { @class = "form-control email", @id = "email", @placeholder = "Email Address" })
+                                                <span class="text-danger"> @Html.ValidationMessage("emailId")</span>
+                                            </div>
+                                        </div>
+                                        <span class="text-danger">@ViewBag.forgotpassMsg</span>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center" >
+                                        Submit
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- JQuerry -->
+    <script src="~/Scripts/js/jquery.min.js"></script>
+
+    <!-- BootStrap JS -->
+    <script src="~/Scripts/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="~/Scripts/js/script.js"></script>
+</body>
+
+</html>

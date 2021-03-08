@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "ContactUs";
+    Layout = "~/Views/Shared/Header.cshtml";
+}
+
+<body>
+    <section id="contact-us">
+        <div class="overlay-image">
+            <div class="content-box-lg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 ">
+                            <div id="tech-statement" class="text-center">
+                                <h3>Contact Us</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- profile -->
+        <div class="contact-us-details">
+            <form method="post">
+                <div class="container">
+                    <div class="row">
+                        <!-- Basic Details -->
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h1 class="heading">Basic Profile Details</h1>
+                            <p class="info">Let us know how to get back to you</p>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12 contact-input">
+                                <p>First Name*</p>
+                                <div class="form-group ">
+                                    <!-- <input type="text" class="form-control name f-name" id="f-name" placeholder="Enter your first name"> -->
+                                    @Html.TextBox("firstName", "", new { @class = "form-control name f-name", @id = "f-name", @placeholder = "Enter your First Name" })
+                                    <span class="text-danger"> @Html.ValidationMessage("firstName")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 contact-input">
+                                <p>Email Address*</p>
+                                <div class="form-group ">
+                                    <!-- <input type="email" class="form-control name email" id="email" placeholder="Enter your email address"> -->
+                                    @Html.TextBox("emailId", "", new { @class = "form-control name email", @id = "email", @placeholder = "Enter your email address" })
+                                    <span class="text-danger"> @Html.ValidationMessage("emailId")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 contact-input">
+                                <p>Subject*</p>
+                                <div class="form-group ">
+                                    <!-- <input type="text" class="form-control name subject" id="subject" placeholder="Enter your subject"> -->
+                                    @Html.TextBox("subject", "", new { @class = "form-control name subject", @id = "subject", @placeholder = "Enter your subject" })
+                                    <span class="text-danger"> @Html.ValidationMessage("subject")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <p>Comments/Questions*</p>
+                            <div class="form-group ">
+                                <!-- <textarea class="form-control" id="message" placeholder="Comments..."></textarea> -->
+                                @Html.TextArea("comment", "", new { @class = "form-control", @id = "message", @placeholder = "Comments..." })
+                                <span class="text-danger"> @Html.ValidationMessage("comment")</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-8">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </section>
+</body>
