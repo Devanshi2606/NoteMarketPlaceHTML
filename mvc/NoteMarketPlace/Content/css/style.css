@@ -86,10 +86,13 @@ button.inreview:hover {
     background-color: #cccccc;
 }
 
+
+
+
 /*======================================
 |   |   |   |   Heading
 ======================================*/
-.horizontal-heading h2,
+.horizontal-heading h2
     {
     font-size: 42px;
     font-weight: 100;
@@ -337,9 +340,6 @@ form .form-control {
     background: none;
     position: static;
     height: 100%;
-}
-.red_text {
-    color: #FF3636;
 }
 
 #sign-up form .form-control:hover,
@@ -828,16 +828,18 @@ h3.heading {
     margin-bottom: 15px;
 }
 #add_notes .upload-picture,
-#add_notes .upload-notes {
+#add_notes .upload-notes{
     margin-top: 18%;
 }
 #add_notes .upload-preview {
     margin-top: 27%;
 }
+
 #add_notes .display-picture,
 #add_notes .display-notes{
-    margin-top:0%;
+    margin-top: 0%;
 }
+
 #add_notes .display-preview{
     margin-top:0%;
 }
@@ -988,14 +990,12 @@ table.table tbody tr:hover {
     -webkit-box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
 }
-
-table.table tbody tr td i {
+table .table tbody tr td i {
     color: #d1d1d1;
     margin-top: 10%;
     font-size: 1.4em;
 }
-
-table.table tbody tr td p {
+table .table tbody tr td p {
     color: #d1d1d1;
     font-size: 1.4em;
 }

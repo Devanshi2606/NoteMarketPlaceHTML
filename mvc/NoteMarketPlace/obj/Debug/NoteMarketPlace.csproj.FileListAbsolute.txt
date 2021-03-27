@@ -116,4 +116,10 @@ G:\material\Tatvasoft\Ass3\NoteMarketPlace\obj\Debug\NoteMarketPlace.csproj.Core
 G:\material\Tatvasoft\Ass3\NoteMarketPlace\obj\Debug\NoteMarketPlace.csproj.CopyComplete
 G:\material\Tatvasoft\Ass3\NoteMarketPlace\obj\Debug\NoteMarketPlace.dll
 G:\material\Tatvasoft\Ass3\NoteMarketPlace\obj\Debug\NoteMarketPlace.pdb
-G:\material\Tatvasoft\Ass3\NoteMarketPlace\obj\Debug\NoteMarketPlace.csprojAssemblyReference.cache
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\BouncyCastle.Crypto.dll
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\itextsharp.dll
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\itextsharp.xml
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.dll
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.Mvc.dll
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.xml
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.Mvc.xml

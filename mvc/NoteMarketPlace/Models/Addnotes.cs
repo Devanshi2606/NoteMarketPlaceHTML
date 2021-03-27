@@ -8,14 +8,16 @@ namespace NoteMarketPlace.Models
 {
     public class Addnotes
     {   
+        public int? noteid { get; set; }
         [Required]
         public string Title { get; set; }
         [Key]
         public string CategoryID { get; set; }
         public string CategoryName { get; set; }
         public HttpPostedFileBase uploadPicture { get; set; }
-        [Required]
+        public string uploadPictureGet { get; set; }
         public HttpPostedFileBase uploadNotes { get; set; }
+        public string uploadNotesGet { get; set; }
         [Key]
         public string TypeID { get; set; }
         public string TypeName { get; set; }
@@ -34,6 +36,7 @@ namespace NoteMarketPlace.Models
         [Required]
         public float SellPrice { get; set; }
         public HttpPostedFileBase uploadPreview { get; set; }
+        public string uploadPreviewGet { get; set; }
 
 
 

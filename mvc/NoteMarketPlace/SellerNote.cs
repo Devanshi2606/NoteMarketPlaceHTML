@@ -11,9 +11,7 @@ namespace NoteMarketPlace
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Web.Mvc;
-
+    
     public partial class SellerNote
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -45,10 +43,10 @@ namespace NoteMarketPlace
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<int> ActionedBy { get; set; }
         public string AdminRemarks { get; set; }
-        public string rating { get; set; }
+        public Nullable<decimal> rating { get; set; }
         public string FileName { get; set; }
         public string FilePath { get; set; }
-        
+    
         public virtual Country Country1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Download> Downloads { get; set; }

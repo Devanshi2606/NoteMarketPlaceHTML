@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "SoldNotes";
+    Layout = "~/Views/Shared/Header.cshtml";
+}
+
+
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="sold-note">
+
+        @using (Html.BeginForm("SoldNotes", "Users", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <div class="col-md-6 col-sm-5 col-xs-12 download-content">
+                            <h2 class="heading">My Sold Notes</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-7 col-xs-12 text-right" style="padding-right: 0px;">
+                            <div class="form-group ">
+                                <form>
+
+                                    <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                        @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search">*@
+                                        @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                        <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                            Search
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>NOTE TITLE</th>
+                                <th>CATEGORY</th>
+                                <th>BUYER</th>
+                                <th>SELL TYPE</th>
+                                <th>PRICE</th>
+                                <th>DOWNLOADED DATE/TIME</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.downloaddetails != null)
+                            {
+                                foreach (var downloaddata in ViewBag.downloaddetails)
+                                {
+                                    ViewBag.month = downloaddata.AttachmentDownloadDate.Month.ToString();
+                                    ViewBag.day = downloaddata.AttachmentDownloadDate.DayOfWeek.ToString();
+                                    <tr>
+                                        <td class="table-center">@(++ViewBag.count)</td>
+                                        <td class="clr-change" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = downloaddata.NoteID })'">@downloaddata.NoteTitle</td>
+                                        <td>
+                                            @foreach (var categoryname in ViewBag.categorydetails)
+                                            {
+                                                if (categoryname.Text == downloaddata.NoteCategory.ToString())
+                                                {
+                                                    @categoryname.Value
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @foreach (var buyername in ViewBag.buyerdetails)
+                                            {
+                                                if (buyername.Text == downloaddata.DownloaderId.ToString())
+                                                {
+                                                    @buyername.Value
+                                                }
+                                            }
+                                        </td>
+                                        @if (downloaddata.PurchasedPrice == 0)
+                                        {
+                                            <td>Free</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Paid</td>
+                                        }
+
+                                        <td>$@downloaddata.PurchasedPrice</td>
+                                        <td>
+                                            @switch ((string)ViewBag.month)
+                                            {
+                                                case "1": ViewBag.month = "Jan"; break;
+                                                case "2": ViewBag.month = "Feb"; break;
+                                                case "3": ViewBag.month = "Mar"; break;
+                                                case "4": ViewBag.month = "Apr"; break;
+                                                case "5": ViewBag.month = "May"; break;
+                                                case "6": ViewBag.month = "Jun"; break;
+                                                case "7": ViewBag.month = "Jul"; break;
+                                                case "8": ViewBag.month = "Aug"; break;
+                                                case "9": ViewBag.month = "Sep"; break;
+                                                case "10": ViewBag.month = "Oct"; break;
+                                                case "11": ViewBag.month = "Nov"; break;
+                                                default: ViewBag.month = "Dec"; break;
+                                            }
+
+                                            @downloaddata.AttachmentDownloadDate.Day @ViewBag.month @downloaddata.AttachmentDownloadDate.Year, @downloaddata.AttachmentDownloadDate.Hour:@downloaddata.AttachmentDownloadDate.Minute:@downloaddata.AttachmentDownloadDate.Second
+                                        </td>
+                                        <td>
+
+                                            <div class="table-icon dropdown">
+                                                <i class="fa fa-fw fa-eye table-eye" style="color: #d1d1d1; margin-top: 10%; font-size: 1.4em;" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = downloaddata.NoteID })'"></i>
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <p style="color: #d1d1d1; font-size: 1.4em;">&vellip;</p>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = downloaddata.NoteID })'">Download Note</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+    </section>
+
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(10, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+        </script>
+
+    }
+</body>

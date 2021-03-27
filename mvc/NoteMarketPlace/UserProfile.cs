@@ -26,7 +26,7 @@ namespace NoteMarketPlace
         public string City { get; set; }
         public string State { get; set; }
         public string Zip_Code { get; set; }
-        public string Country { get; set; }
+        public Nullable<int> Country { get; set; }
         public string University { get; set; }
         public string College { get; set; }
         public System.DateTime CreatedDate { get; set; }

@@ -26,15 +26,15 @@ namespace NoteMarketPlace
         }
     
         public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<Download> Downloads { get; set; }
         public virtual DbSet<NoteCategory> NoteCategories { get; set; }
         public virtual DbSet<NoteType> NoteTypes { get; set; }
-        public virtual DbSet<SellerNote> SellerNotes { get; set; }
         public virtual DbSet<SellerNotesReportedIssue> SellerNotesReportedIssues { get; set; }
         public virtual DbSet<SellerNotesReview> SellerNotesReviews { get; set; }
         public virtual DbSet<SystemConfiguration> SystemConfigurations { get; set; }
-        public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Download> Downloads { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual DbSet<SellerNote> SellerNotes { get; set; }
     }
 }

@@ -17,8 +17,8 @@ namespace NoteMarketPlace
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.SellerNotes = new HashSet<SellerNote>();
             this.UserProfiles = new HashSet<UserProfile>();
+            this.SellerNotes = new HashSet<SellerNote>();
         }
     
         public int ID { get; set; }
@@ -30,10 +30,10 @@ namespace NoteMarketPlace
         public bool IsEmailVerified { get; set; }
         public Nullable<System.Guid> ActivationCode { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SellerNote> SellerNotes { get; set; }
+        public virtual UserRole UserRole { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserProfile> UserProfiles { get; set; }
-        public virtual UserRole UserRole { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SellerNote> SellerNotes { get; set; }
     }
 }

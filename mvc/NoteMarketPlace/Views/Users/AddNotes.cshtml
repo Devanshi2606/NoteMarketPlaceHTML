@@ -35,70 +35,87 @@
                                 <p>Title*</p>
                                 <div class="form-group ">
                                     <!--<input type="text" class="form-control name f-name" id="f-name" placeholder="Enter your notes title">-->
-                                    @Html.TextBox("Title", "", new { @class = "form-control name f-name", @id = "f-name", @placeholder = "Enter your notes title" })
+                                    @Html.TextBoxFor(m => m.noteid, "", new { @class="form-control name hidden"})
+                                    @Html.TextBoxFor(m => m.Title, "", new { @class = "form-control name f-name", @id = "f-name", @placeholder = "Enter your notes title" })
                                     <span class="text-danger"> @Html.ValidationMessage("Title")</span>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Category*</p>
                                 <div class="form-group drop-arrow">
-                                    @Html.DropDownListFor(model => model.CategoryName, ViewBag.CategoryList as SelectList, "Select your Category", new { @id = "category", @class = "form-control" })
+                                    @if (ViewBag.countrydefValue == null)
+                                    {
+                                        @Html.DropDownListFor(model => model.CategoryName, ViewBag.CategoryList as SelectList, new { @id = "category", @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.CategoryName, ViewBag.CategoryList as SelectList, "Select Your Category", new { @id = "category", @class = "form-control" })
+                                    }
+                                    
                                     @*<select name="category" id="category" class="form-control">
-                                            <option value="" disabled selected hidden>Select your Category</option>
-                                            <option value="ds">Data Science</option>
-                                            <option value="cd">Compiler Designer</option>
-                                        </select>*@
+            <option value="" disabled selected hidden>Select your Category</option>
+            <option value="ds">Data Science</option>
+            <option value="cd">Compiler Designer</option>
+        </select>*@
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Display Picture</p>
                                 <div class="form-group flex-container">
                                     <label for="uploadPicture" id="upload-img" class="form-control form-control-upload  upload-img">
-                                        <input type="file" name="uploadPicture" id="uploadPicture" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" />
+                                        @Html.TextBoxFor(m => m.uploadPictureGet, "", new { @class = "form-control name hidden" })
+                                        <input type="file" name="uploadPicture" id="uploadPicture" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" value=@ViewBag.picname />
                                         <p class="display-picture"></p>
                                         <figure class="upload-picture">
-                                            <img src="~/Content/images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon" style="z-index:1;"/>
+                                            <img src="~/Content/images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon" style="z-index:1;" />
                                             <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
                                         </figure>
                                     </label>
                                     <span class="text-danger">@ViewBag.Extensionerror</span>
 
                                     @*<input type="text" class="form-control form-control-upload  upload-img" id="upload-img">
-                                        <span>
-                                            <figure>
-                                                <img src="../../images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon">
-                                                <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
-                                            </figure>
-                                        </span>*@
+                <span>
+                    <figure>
+                        <img src="../../images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon">
+                        <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                    </figure>
+                </span>*@
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Upload Notes*</p>
                                 <div class="form-group flex-container">
                                     <label for="uploadNotes" id="upload-img" class="form-control form-control-upload  upload-img">
-                                        <input type="file" name="uploadNotes" id="uploadNotes" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" />
+                                        @Html.TextBoxFor(m => m.uploadNotesGet, "", new { @class = "form-control name hidden" })
+                                        <input type="file" name="uploadNotes" id="uploadNotes" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" value=@ViewBag.notename />
                                         <p class="display-notes"></p>
                                         <figure class="upload-notes">
-                                            <img src="~/Content/images/Add-notes/upload-note.svg" class="field-upload-icon" alt="upload icon" style="z-index:1;"/>
+                                            <img src="~/Content/images/Add-notes/upload-note.svg" class="field-upload-icon" alt="upload icon" style="z-index:1;" />
                                             <figcaption class="field-upload-icon-text">Upload your notes</figcaption>
                                         </figure>
                                     </label>
 
 
                                     @*<input type="text" class="form-control form-control-upload  upload-img" id="upload-img">
-                                        <span>
-                                            <figure>
-                                                <img src="../../images/Add-notes/upload-note.svg" class="field-upload-icon" alt="upload icon">
-                                                <figcaption class="field-upload-icon-text">Upload your notes</figcaption>
-                                            </figure>
-                                        </span>*@
+                <span>
+                    <figure>
+                        <img src="../../images/Add-notes/upload-note.svg" class="field-upload-icon" alt="upload icon">
+                        <figcaption class="field-upload-icon-text">Upload your notes</figcaption>
+                    </figure>
+                </span>*@
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Type</p>
                                 <div class="form-group drop-arrow">
-                                    
-                                    @Html.DropDownListFor(model => model.TypeName, ViewBag.TypeList as SelectList, "Select your note type", new { @id = "type-123", @class = "form-control" })
+                                    @if (ViewBag.typedefValue == null)
+                                    {
+                                        @Html.DropDownListFor(model => model.TypeName, ViewBag.TypeList as SelectList, new { @id = "type-123", @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.TypeName, ViewBag.TypeList as SelectList, "Select Your Type", new { @id = "type-123", @class = "form-control" })
+                                    }
                                     @*<select name="type-123" id="type-123" class="form-control">
             <option value="" disabled selected hidden>Select your note type</option>
             <option value="type1">Type 1</option>
@@ -110,7 +127,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Number of pages</p>
                                 <div class="form-group ">
-                                    @Html.TextBox("NoOfPages", "", new { @class = "form-control no-pages", @id = "no-pages", @placeholder = "Enter number of note pages" })
+                                    @Html.TextBoxFor(m => m.NoOfPages, "", new { @class = "form-control no-pages", @id = "no-pages", @placeholder = "Enter number of note pages" })
                                     <span class="text-danger"> @Html.ValidationMessage("NoOfPages")</span>
                                     @*<input type="text" class="form-control no-pages" id="no-pages" placeholder="Enter number of note pages">*@
                                 </div>
@@ -118,7 +135,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Description*</p>
                                 <div class="form-group ">
-                                    @Html.TextBox("Description", "", new { @class = "form-control desc", @id = "desc", @placeholder = "Enter your description" })
+                                    @Html.TextBoxFor(m => m.Description, "", new { @class = "form-control desc", @id = "desc", @placeholder = "Enter your description" })
                                     <span class="text-danger"> @Html.ValidationMessage("Description")</span>
                                     @*<input type="text" class="form-control desc" id="desc" placeholder="Enter your description">*@
                                 </div>
@@ -130,22 +147,29 @@
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Country</p>
-                                <div class="form-group drop-arrow ">
-                                    @Html.DropDownListFor(model => model.CountryName, ViewBag.CountryList as SelectList, "Select your Country", new { @id = "country", @class = "form-control" })
+                                <div class="form-group drop-arrow">
+                                        @if (ViewBag.countrydefValue == null)
+                                        {
+                                            @Html.DropDownListFor(model => model.CountryName, ViewBag.CountryList as SelectList, new { @id = "country", @class = "form-control" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(model => model.CountryName, ViewBag.CountryList as SelectList, "Select Your Country", new { @id = "country", @class = "form-control" })
+                                        }
                                     @*<select name="country" id="country" class="form-control">
-                                            <option value="" disabled selected hidden>Select your country</option>
-                                            <option value="india">India</option>
-                                            <option value="usa">USA</option>
-                                        </select>*@
+            <option value="" disabled selected hidden>Select your country</option>
+            <option value="india">India</option>
+            <option value="usa">USA</option>
+        </select>*@
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Institution Name</p>
                                 <div class="form-group ">
                                     @*<input type="text" class="form-control name college-name" id="college-name" placeholder="Enter your institution name">*@
-                                    @Html.TextBox("InstitutionName", "", new { @class = "form-control name college-name", @id = "college-name", @placeholder = "Enter your institution name" })
+                                    @Html.TextBoxFor(m => m.InstitutionName, "", new { @class = "form-control name college-name", @id = "college-name", @placeholder = "Enter your institution name" })
                                     <span class="text-danger"> @Html.ValidationMessage("InstitutionName")</span>
-                                    
+
                                 </div>
                             </div>
 
@@ -156,7 +180,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Course Name</p>
                                 <div class="form-group ">
-                                    @Html.TextBox("CourseName", "", new { @class = "form-control name course-name", @id = "course-name", @placeholder = "Enter your course name" })
+                                    @Html.TextBoxFor(m => m.CourseName, "", new { @class = "form-control name course-name", @id = "course-name", @placeholder = "Enter your course name" })
                                     <span class="text-danger"> @Html.ValidationMessage("CourseName")</span>
                                     @*<input type="text" class="form-control name course-name" id="course-name" placeholder="Enter your course name">*@
                                 </div>
@@ -164,7 +188,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Course Code</p>
                                 <div class="form-group ">
-                                    @Html.TextBox("CourseCode", "", new { @class = "form-control name course-code", @id = "course-code", @placeholder = "Enter your course code" })
+                                    @Html.TextBoxFor(m => m.CourseCode, "", new { @class = "form-control name course-code", @id = "course-code", @placeholder = "Enter your course code" })
                                     <span class="text-danger"> @Html.ValidationMessage("CourseCode")</span>
                                     @*<input type="text" class="form-control name course-code" id="course-code" placeholder="Enter your course code">*@
                                 </div>
@@ -172,7 +196,7 @@
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <p>Professor/Lecturer</p>
                                 <div class="form-group ">
-                                    @Html.TextBox("ProfessorName", "", new { @class = "form-control name prof-code", @id = "prof-name", @placeholder = "Enter your professor name" })
+                                    @Html.TextBoxFor(m => m.ProfessorName, "", new { @class = "form-control name prof-code", @id = "prof-name", @placeholder = "Enter your professor name" })
                                     <span class="text-danger"> @Html.ValidationMessage("ProfessorName")</span>
                                     @*<input type="text" class="form-control name prof-name" id="prof-name" placeholder="Enter your professor name">*@
                                 </div>
@@ -191,17 +215,17 @@
                                         @Html.RadioButtonFor(m => m.SellMode, "Paid", new { @id = "paid" })
                                         <label for="paid" class="radio-text">Paid</label>
                                         @*<div>
-                                                <input type="radio" id="sell-method1" class="sell_method" name="sell-method" value="free">
-                                            </div>
-                                            <div class="radio-text">
-                                                <p for="contactChoice1">Free</p>
-                                            </div>
-                                            <div>
-                                                <input type="radio" id="sell-method2" class="sell_method" name="sell-method" value="paid">
-                                            </div>
-                                            <div class="radio-text">
-                                                <p for="contactChoice1">Paid</p>
-                                            </div>*@
+                        <input type="radio" id="sell-method1" class="sell_method" name="sell-method" value="free">
+                    </div>
+                    <div class="radio-text">
+                        <p for="contactChoice1">Free</p>
+                    </div>
+                    <div>
+                        <input type="radio" id="sell-method2" class="sell_method" name="sell-method" value="paid">
+                    </div>
+                    <div class="radio-text">
+                        <p for="contactChoice1">Paid</p>
+                    </div>*@
                                     </div>
 
                                 </div>
@@ -209,7 +233,7 @@
                                     <p>Sell Price*</p>
                                     <div class="form-group ">
                                         @*<input type="text" class="form-control name sell-price" id="sell-price" placeholder="Enter your price">*@
-                                        @Html.TextBox("SellPrice", "", new { @class = "form-control name sell-price", @id = "sell-price", @placeholder = "Enter your price" })
+                                        @Html.TextBoxFor(m => m.SellPrice, "", new { @class = "form-control name sell-price", @id = "sell-price", @placeholder = "Enter your price" })
                                         <span class="text-danger"> @Html.ValidationMessage("SellPrice")</span>
                                     </div>
                                 </div>
@@ -218,21 +242,22 @@
                                 <p>Note Preview</p>
                                 <div class="form-group flex-container">
                                     <label for="uploadPreview" id="upload-img" class="form-control form-control-upload-preview  upload-img">
-                                        <input type="file" name="uploadPreview" id="uploadPreview" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" />
+                                        @Html.TextBoxFor(m => m.uploadPreviewGet, "", new { @class = "form-control name hidden" })
+                                        <input type="file" name="uploadPreview" id="uploadPreview" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" value=@ViewBag.previewname />
                                         <p class="display-preview"></p>
                                         <figure class="upload-preview">
-                                            <img src="~/Content/images/User-Profile/upload.png" class="field-upload-icon-preview" alt="upload icon" style="z-index:1;"/>
+                                            <img src="~/Content/images/User-Profile/upload.png" class="field-upload-icon-preview" alt="upload icon" style="z-index:1;" />
                                             <figcaption class="field-upload-icon-text-preview">Upload a file</figcaption>
                                         </figure>
                                     </label>
 
                                     @*<input type="text" class="form-control form-control-upload-preview  upload-img" id="upload-img">
-                                        <span>
-                                            <figure>
-                                                <img src="../../images/User-Profile/upload.png" class="field-upload-icon-preview" alt="upload icon">
-                                                <figcaption class="field-upload-icon-text-preview">Upload a file</figcaption>
-                                            </figure>
-                                        </span>*@
+                <span>
+                    <figure>
+                        <img src="../../images/User-Profile/upload.png" class="field-upload-icon-preview" alt="upload icon">
+                        <figcaption class="field-upload-icon-text-preview">Upload a file</figcaption>
+                    </figure>
+                </span>*@
                                 </div>
                             </div>
                             <div class="col-md-2 col-sm-2 col-xs-6">
@@ -253,23 +278,40 @@
         }
     </section>
 </body>
-<script type="text/javascript">
-    function getname(file_name, class_name) {
-        file_name = file_name.replace(/^.*\\/, "");
-        if (class_name == "uploadPicture") {
-            $(".display-picture").html(file_name);
-            $(".upload-picture").hide();
-            //ViewBag.picture=file_name;
-        }
-        if (class_name == "uploadNotes") {
-            $(".display-notes").html(file_name);
-            $(".upload-notes").hide();
-        }
-        if (class_name == "uploadPreview") {
-            $(".display-preview").html(file_name);
-            $(".upload-preview").hide();
-        }
+@section Scripts{
+    <script type="text/javascript">
+        $(window).on("load", function () {
+            if ($("#uploadPicture").attr("value") != null) {
+                $(".display-picture").html($("#uploadPicture").attr("value"));
+                $(".upload-picture").hide();
+            }
+            if ($("#uploadNotes").attr("value") != null) {
+                $(".display-notes").html($("#uploadNotes").attr("value"));
+                $(".upload-notes").hide();
+            }
+            if ($("#uploadPreview").attr("value") != null) {
+                $(".display-preview").html($("#uploadPreview").attr("value"));
+                $(".upload-preview").hide();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        function getname(file_name, class_name) {
+            file_name = file_name.replace(/^.*\\/, "");
+            if (class_name == "uploadPicture") {
+                $(".display-picture").html(file_name);
+                $(".upload-picture").hide();
+                //ViewBag.picture=file_name;
+            }
+            if (class_name == "uploadNotes") {
+                $(".display-notes").html(file_name);
+                $(".upload-notes").hide();
+            }
+            if (class_name == "uploadPreview") {
+                $(".display-preview").html(file_name);
+                $(".upload-preview").hide();
+            }
 
+        }
+    </script>
     }
-</script>
-

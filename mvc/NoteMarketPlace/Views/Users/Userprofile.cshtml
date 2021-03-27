@@ -1,0 +1,258 @@
+﻿
+@{
+    ViewBag.Title = "Userprofile";
+    Layout = "~/Views/Shared/Header.cshtml";
+}
+@model NoteMarketPlace.Models.User_Profile
+
+<body>
+    <section class="my_profile" id="user-profile">
+        @using (Html.BeginForm("Userprofile", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            
+            <div class="overlay-image">
+                <div class="content-box-lg">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                <div id="tech-statement" class="text-center">
+                                    <h3>User Profile</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- profile -->
+            <div class="basic-profile-details">
+                <form>
+                    <div class="container">
+                        <div class="row">
+                            <!-- Basic Details -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h1 class="heading">Basic Profile Details</h1>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>First Name*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name f-name" id="f-name" placeholder="Enter your first name">*@
+                                    @Html.TextBoxFor(m=>m.Firstname, "", new { @class = "form-control name f-name", @id = "f-name", @placeholder = "Enter your first name"})
+                                    <span class="text-danger"> @Html.ValidationMessage("Firstname")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Last Name*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name l-name" id="l-name" placeholder="Enter your last name">*@
+                                    @Html.TextBoxFor(m => m.Lastname, "", new { @class = "form-control name l-name", @id = "l-name", @placeholder = "Enter your last name" })
+                                    <span class="text-danger"> @Html.ValidationMessage("Lastname")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Email*</p>
+                                <div class="form-group ">
+                                    @*<input type="email" class="form-control email" id="email" placeholder="Enter your email address">*@
+                                    @Html.TextBoxFor(m => m.emailId, "", new { @class = "form-control email", @id = "email", @placeholder = "Enter your email address" })
+                                    <span class="text-danger"> @Html.ValidationMessage("emailId")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Date Of Birth</p>
+                                <div class="form-group ">
+                                    @*<input type="input" class="form-control bdate" id="bdate" placeholder="Enter your date of birth">*@
+                                    @Html.TextBoxFor(m => m.DOB,"{0:dd/MMM/yyyy}", new { @class = "form-control bdate", @id = "bdate", @placeholder = "YYYY-MM-DD" })
+                                    <span><img src="~/Content/images/User-Profile/calendar.png" class="field-icon calendar"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Gender</p>
+                                <div class="form-group drop-arrow">
+                                    <InputSelect >
+                                        <select name="Gender" id="gender" class="form-control">
+                                            @if (ViewBag.gender == null)
+                                            {
+                                                <option value="" disabled selected hidden>Select Your Gender</option>
+}
+                                            else
+                                            {
+                                                <option value=@ViewBag.gender selected hidden>@ViewBag.gender</option>
+                                            }
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Phone Number</p>
+                                <div class="col-md-3 col-sm-4 col-xs-4 country-code form-group drop-arrow">
+                                    @*<select name="phone-no" id="phone-no" class="form-control">
+                                            <option value="india">+91</option>
+                                            <option value="usa">+1</option>
+                                        </select>*@
+                                    @Html.DropDownListFor(model => model.CountryCode, ViewBag.CountryList as SelectList, new { @id = "phone-no", @class = "form-control" })
+
+                                </div>
+                                <div class="col-md-9 col-sm-8 col-xs-8 phone-number form-group">
+                                    @*<input type="text" class="form-control name p-no" id="p-no" placeholder="Enter your phone number">*@
+                                    @Html.TextBoxFor(m => m.phoneNo, "", new { @class = "form-control name p-no", @id = "p-no", @placeholder = "Enter your phone number" })
+                                    <span class="text-danger"> @Html.ValidationMessage("phoneNo")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Profile Picture</p>
+                                <div class="form-group flex-container">
+                                    @*<input type="text" class="form-control form-control-upload  upload-img" id="upload-img">
+                                        <span>
+                                            <figure>
+                                                <img src="../../images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon">
+                                                <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                                            </figure>
+                                        </span>*@
+                                    <label for="profilePicture" id="upload-img" class="form-control form-control-upload  upload-img">
+                                        @Html.TextBoxFor(m => m.profilePictureGet, "", new { @class = "form-control name hidden" })
+                                        <input type="file" name="profilePicture" id="profilePicture" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" value=@ViewBag.picname />
+                                        <p class="display-picture" style="margin-top:0%;"></p>
+                                        <figure class="upload-picture" style="margin-top:18%;">
+                                            <img src="~/Content/images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon" style="z-index:1;" />
+                                            <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                                        </figure>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Address Details -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h1 class="heading">Address Details</h1>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Address Line 1*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name a1-name" id="a1-name" placeholder="Enter your address">*@
+                                    @Html.TextBoxFor(m => m.address1, "", new { @class = "form-control name a1-name", @id = "a1-name", @placeholder = "Enter your address" })
+                                    <span class="text-danger"> @Html.ValidationMessage("address1")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Address Line 2*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name a2-name" id="a2-name" placeholder="Enter your address">*@
+                                    @Html.TextBoxFor(m => m.address2, "", new { @class = "form-control name a2-name", @id = "a2-name", @placeholder = "Enter your address" })
+                                    <span class="text-danger"> @Html.ValidationMessage("address")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>City*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name city-name" id="city-name" placeholder="Enter your city">*@
+                                    @Html.TextBoxFor(m => m.city, "", new { @class = "form-control name city-name", @id = "city-name", @placeholder = "Enter your city" })
+                                    <span class="text-danger"> @Html.ValidationMessage("city")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>State*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name state-name" id="state-name" placeholder="Enter your state">*@
+                                    @Html.TextBoxFor(m => m.state, "", new { @class = "form-control name state-name", @id = "state-name", @placeholder = "Enter your state" })
+                                    <span class="text-danger"> @Html.ValidationMessage("state")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>ZipCode*</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name zip-name" id="zip-name" placeholder="Enter your zipcode">*@
+                                    @Html.TextBoxFor(m => m.zipCode, "", new { @class = "form-control name zip-name", @id = "zip-name", @placeholder = "Enter your zipcode" })
+                                    <span class="text-danger"> @Html.ValidationMessage("zipCode")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>Country*</p>
+                                <div class="form-group drop-arrow ">
+                                    @*<select name="country" id="country" class="form-control">
+            <option value="" disabled selected hidden>Select your country</option>
+            <option value="india">India</option>
+            <option value="usa">USA</option>
+        </select>*@
+                                    @if (ViewBag.countrydefValue == null)
+                                    {
+                                        @Html.DropDownListFor(model => model.CountryName, ViewBag.CountryNameList as SelectList, new { @id = "country", @class = "form-control" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.CountryName, ViewBag.CountryNameList as SelectList,"Select Your Country", new { @id = "country", @class = "form-control" })
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- University & College Info -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h1 class="heading">University and College Information</h1>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>University</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name university-name" id="university-name" placeholder="Enter your university">*@
+                                    @Html.TextBoxFor(m => m.University, "", new { @class = "form-control name university-name", @id = "university-name", @placeholder = "Enter your university" })
+                                    <span class="text-danger"> @Html.ValidationMessage("University")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <p>College</p>
+                                <div class="form-group ">
+                                    @*<input type="text" class="form-control name college-name" id="college-name" placeholder="Enter your college">*@
+                                    @Html.TextBoxFor(m => m.College, "", new { @class = "form-control name college-name", @id = "college-name", @placeholder = "Enter your college" })
+                                    <span class="text-danger"> @Html.ValidationMessage("College")</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-6">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center">
+                                    Submit
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+    </section>
+</body>
+@section Scripts{
+    <script type="text/javascript">
+        $(window).on("load", function () {
+            if ($("#profilePicture").attr("value") != null) {
+                $(".display-picture").html($("#profilePicture").attr("value"));
+                $(".upload-picture").hide();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        function getname(file_name, class_name) {
+            file_name = file_name.replace(/^.*\\/, "");
+            if (class_name == "profilePicture") {
+                $(".display-picture").html(file_name);
+                $(".upload-picture").hide();
+                //ViewBag.picture=file_name;
+            }
+        }
+    </script>
+    @Scripts.Render("~/bundles/jqueryui")
+    @Styles.Render("~/Content/cssjqryUi")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.bdate').datepicker({
+                dateFormat: "dd/M/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+            //if ($(".display-picture").text != null) {
+            //    $(".upload-picture").hide();
+            //}
+            //else {
+            //    $(".upload-picture").show();
+            //}
+        });
+    </script>  
+
+}

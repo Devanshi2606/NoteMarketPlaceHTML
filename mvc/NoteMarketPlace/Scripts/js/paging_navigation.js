@@ -1,4 +1,4 @@
-/*jslint browser: true*/
+﻿/*jslint browser: true*/
 /*global jQuery*/
 (function ($) {
     var pagify = {
@@ -9,23 +9,23 @@
         currentPage: 0,
         createNavigation: function () {
             this.totalPages = Math.ceil(this.items.length / this.perPage);
-            var pagination = $('<div class="pagination"></div>').append('<a class="nav prev disabled" data-next="false"><</a>');
+            var pagination = $('<div class="pagination"></div>').append('<a class="navi prev disabled" data-next="false"><</a>');
             for (var i = 0; i < this.totalPages; i++) {
                 var pageElClass = "page";
                 if (!i)
                     pageElClass = "page current";
                 var pageEl = '<a class="' + pageElClass + '" data-page="' + (
                     i + 1) + '">' + (
-                    i + 1) + "</a>";
+                        i + 1) + "</a>";
                 pagination.append(pageEl);
             }
-            pagination.append('<a class="nav next" data-next="true">></a>');
+            pagination.append('<a class="navi next" data-next="true">></a>');
 
             this.container.after(pagination);
 
             var that = this;
-            $("body").off("click", ".nav");
-            this.navigator = $("body").on("click", ".nav", function () {
+            $("body").off("click", ".navi");
+            this.navigator = $("body").on("click", ".navi", function () {
                 var el = $(this);
                 that.navigate(el.data("next"));
             });
@@ -41,19 +41,19 @@
             if (isNaN(next) || next === undefined) {
                 next = true;
             }
-            $(".pagination .nav").removeClass("disabled");
+            $(".pagination .navi").removeClass("disabled");
             if (next) {
                 this.currentPage++;
                 if (this.currentPage > (this.totalPages - 1))
                     this.currentPage = (this.totalPages - 1);
                 if (this.currentPage == (this.totalPages - 1))
-                    $(".pagination .nav.next").addClass("disabled");
+                    $(".pagination .navi.next").addClass("disabled");
             } else {
                 this.currentPage--;
                 if (this.currentPage < 0)
                     this.currentPage = 0;
                 if (this.currentPage == 0)
-                    $(".pagination .nav.prev").addClass("disabled");
+                    $(".pagination .navi.prev").addClass("disabled");
             }
 
             this.showItems();
@@ -69,12 +69,12 @@
 
             this.currentPage = page - 1;
 
-            $(".pagination .nav").removeClass("disabled");
+            $(".pagination .navi").removeClass("disabled");
             if (this.currentPage == (this.totalPages - 1))
-                $(".pagination .nav.next").addClass("disabled");
+                $(".pagination .navi.next").addClass("disabled");
 
             if (this.currentPage == 0)
-                $(".pagination .nav.prev").addClass("disabled");
+                $(".pagination .navi.prev").addClass("disabled");
             this.showItems();
         },
         showItems: function () {

@@ -1,4 +1,4 @@
-.pagination {
+﻿.pagination {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -8,14 +8,14 @@
     padding-top: 2px;
 }
 
-.pagination a {
-    color: #000;
-    text-decoration: none;
-    padding: 1px 7px;
-    border-radius: 50%;
-}
+    .pagination a {
+        color: #000;
+        text-decoration: none;
+        padding: 1px 7px;
+        border-radius: 50%;
+    }
 
-.pagination a.current {
-    color: #fff;
-    background-color: #6255a5;
-}
+        .pagination a.current {
+            color: #fff;
+            background-color: #6255a5;
+        }

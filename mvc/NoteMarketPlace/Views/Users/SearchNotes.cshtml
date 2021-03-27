@@ -3,157 +3,170 @@
     ViewBag.Title = "SearchNotes";
     Layout = "~/Views/Shared/Header.cshtml";
 }
-
+@model NoteMarketPlace.Models.Searchnotes
 
 
 <body>
     <section id="search-notes">
-        <div class="overlay-image">
-            <div class="content-box-lg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 ">
-                            <div id="tech-statement" class="text-center">
-                                <h3>Search Notes</h3>
+            <div class="overlay-image">
+                <div class="content-box-lg">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                <div id="tech-statement" class="text-center">
+                                    <h3>Search Notes</h3>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Content -->
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <h2 class="heading">Search and filter notes</h2>
+            <!-- Content -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <h2 class="heading">Search and filter notes</h2>
+                    </div>
+                    <div class="form-group">
+                        <form>
+                            <div class="col-md-12 col-sm-12 co-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12 search search-heading">
+                                    <input type="text" class="form-control search fa fa-search" id="search-field" placeholder="Search" onchange = "document.location.href = '/Users/SearchNotes?changeInTitle=' + this.value;"><i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
+                                    <div class="form-group drop-arrow">
+                                            @Html.DropDownListFor(model => model.TypeName, ViewBag.TypeList as SelectList, "Select Type", new { @id = "type", @class = "form-control" , onchange = "document.location.href = '/Users/SearchNotes?changeInType=' + this.options[this.selectedIndex].value;" })
+                                            @*<select name="type" id="type" class="form-control">
+                <option value="" disabled selected hidden>Select type</option>
+                <option value="type1">Type 1</option>
+                <option value="type2">Type2</option>
+            </select>*@
+                                        </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
+                                    <div class="form-group drop-arrow">
+                                        @Html.DropDownListFor(model => model.CategoryName, ViewBag.CategoryList as SelectList, "Select Category", new { @id = "category", @class = "form-control" , onchange = "document.location.href = '/Users/SearchNotes?changeINCategory=' + this.options[this.selectedIndex].value;" })
+                                        @*<select name="type" id="type" class="form-control">
+            <option value="" disabled selected hidden>Select category</option>
+            <option value="it">Information Technology</option>
+            <option value="be">Bio Medical</option>
+        </select>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
+                                    <div class="form-group drop-arrow">
+                                        @Html.DropDownListFor(model => model.UniversityName, ViewBag.UniversityList as SelectList, "Select University", new { @id = "university", @class = "form-control" , onchange = "document.location.href = '/Users/SearchNotes?changeInUniversity=' + this.options[this.selectedIndex].value;" })
+
+                                        @*<select name="type" id="type" class="form-control">
+        <option value="" selected>Select university</option>
+                                    @foreach (var univname in ViewBag.UniversityList)
+                                    {
+                                    <option value=@univname.Key>@univname.Key</option>
+                                    }
+                                    </select>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
+                                    <div class="form-group drop-arrow">
+                                        @Html.DropDownListFor(model => model.CourseName, ViewBag.CourseList as SelectList, "Select Course", new { @id = "course", @class = "form-control", onchange = "document.location.href = '/Users/SearchNotes?changeInCourse=' + this.options[this.selectedIndex].value;" })
+                                        @*<select name="type" id="type" class="form-control">
+            <option value="" disabled selected hidden>Select course</option>
+            <option value="ds">Data Science</option>
+            <option value="cd">Compiler Design</option>
+        </select>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
+                                    <div class="form-group drop-arrow">
+                                        @Html.DropDownListFor(model => model.CountryName, ViewBag.CountryList as SelectList, "Select Country", new { @id = "country", @class = "form-control", onchange = "document.location.href = '/Users/SearchNotes?changeInCountry=' + this.options[this.selectedIndex].value;" })
+                                        @*<select name="type" id="type" class="form-control">
+            <option value="" disabled selected hidden>Select country</option>
+            <option value="india">India 1</option>
+            <option value="usa">USA</option>
+        </select>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
+                                    <div class="form-group drop-arrow">
+                                        <select name="type" id="type" class="form-control" onchange="document.location.href = '/Users/SearchNotes?changeInRating=' + this.options[this.selectedIndex].value;" >
+                                            <option value="" disabled selected hidden>Select rating</option>
+                                            <option value="4">4+</option>
+                                            <option value="3">3+</option>
+                                            <option value="2">2+</option>
+                                            <option value="1">1+</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <form>
-                        <div class="col-md-12 col-sm-12 co-xs-12">
-                            <div class="col-md-12 col-sm-12 col-xs-12 search search-heading">
-                                <input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search"><i class="fa fa-search"></i>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
-                                <div class="form-group drop-arrow">
-                                    
-                                    <select name="type" id="type" class="form-control">
-            <option value="" disabled selected hidden>Select type</option>
-            <option value="type1">Type 1</option>
-            <option value="type2">Type2</option>
-        </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
-                                <div class="form-group drop-arrow">
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="" disabled selected hidden>Select category</option>
-                                        <option value="it">Information Technology</option>
-                                        <option value="be">Bio Medical</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
-                                <div class="form-group drop-arrow">
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="" disabled selected hidden>Select university</option>
-                                        <option value="unv1">University 1</option>
-                                        <option value="unv2">University 2</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
-                                <div class="form-group drop-arrow">
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="" disabled selected hidden>Select course</option>
-                                        <option value="ds">Data Science</option>
-                                        <option value="cd">Compiler Design</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
-                                <div class="form-group drop-arrow">
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="" disabled selected hidden>Select country</option>
-                                        <option value="india">India 1</option>
-                                        <option value="usa">USA</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-sm-4 col-xs-6 mini-drop-box">
-                                <div class="form-group drop-arrow">
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="" disabled selected hidden>Select rating</option>
-                                        <option value="above4">4+</option>
-                                        <option value="above3">3+</option>
-                                        <option value="above2">2+</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <h2 class="heading count-note-text">Total notes</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <h2 class="heading count-note-text">Total notes</h2>
-                </div>
-            </div>
-            
-            <div class="row count">
-                @foreach (var newbook in ViewBag.bookdetails)
-                { ViewBag.month = newbook.PublishedDate.Month.ToString();
-                    ViewBag.day = newbook.PublishedDate.DayOfWeek.ToString();
-                    ViewBag.count = 0;
-                    ViewBag.review = 0;
-                    ViewBag.rating = 0;
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <div class="notes">
-                            <div class="note-img">
-                                <img src="~/Content/images/search-notes/search1.png" alt="search1" class="img-responsive" style="background-image:@newbook.DisplayPicture;" onclick="location.href='@Url.Action("ViewNotes","Users",new {sellerid=newbook.SellerID })'">
-                            </div>
-                            <div class="note-text">
-                                <h4>@newbook.Title</h4>
-                                <div class="row note-details">
-                                    <div class="col-md-2 col-sm-2 col-xs-2">
-                                        <img src="~/Content/images/search-notes/university.png">
+
+                <div class="row count">
+                    @if (ViewBag.bookdetails != null)
+                    {
+
+                        foreach (var newbook in ViewBag.bookdetails)
+                        {
+                            ViewBag.month = newbook.PublishedDate.Month.ToString();
+                            ViewBag.day = newbook.PublishedDate.DayOfWeek.ToString();
+                            ViewBag.count = 0;
+                            ViewBag.review = 0;
+                            ViewBag.star = newbook.rating;
+                            <div class="col-md-4 col-sm-4 col-xs-12" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = newbook.ID })'">
+                                <div class="notes">
+                                    <div class="note-img">
+                                        <img src="@Url.Content(newbook.DisplayPicture)" alt="search1" class="img-responsive" style="height:253px;width:450px;border-bottom:1px solid #d1d1d1;">
                                     </div>
-                                    <div class="col-md-10 col-sm-10 col-xs-10 detail-text">
-                                        <span>
-                                            @newbook.UniversityName , @foreach (var countryname in ViewBag.countrydetails)
-                                        {
-                                            if (countryname.Text == newbook.Country.ToString())
-                                            {
-                                                @countryname.Value
-                                            }
-                                        }
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row note-details">
-                                    <div class="col-md-2 col-sm-2 col-xs-2">
-                                        <img src="~/Content/images/search-notes/pages.png">
-                                    </div>
-                                    <div class="col-md-10 col-sm-10 col-xs-10 detail-text">
-                                        <span>@newbook.NumberofPages Pages</span>
-                                    </div>
-                                </div>
-                                <div class="row note-details">
-                                    <div class="col-md-2 col-sm-2 col-xs-2">
-                                        <img src="~/Content/images/search-notes/date.png">
-                                    </div>
-                                    <div class="col-md-10 col-sm-10 col-xs-10 detail-text">
-                                        <span>
-                                            @switch ((string)ViewBag.day)
-                                            {
-                                                case "Sunday": ViewBag.day = "Sun"; break;
-                                                case "Monday": ViewBag.day = "Mon"; break;
-                                                case "Tuesday": ViewBag.day = "Tue"; break;
-                                                case "Wednesday": ViewBag.day = "Wed"; break;
-                                                case "Thursday": ViewBag.day = "Thu"; break;
-                                                case "Friday": ViewBag.day = "Fri"; break;
-                                                default:ViewBag.day = "Sat"; break;
-                                            }
+                                    <div class="note-text">
+                                        <h4>@newbook.Title</h4>
+                                        <div class="row note-details">
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                <img src="~/Content/images/search-notes/university.png">
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 detail-text">
+                                                <span>
+                                                    @newbook.UniversityName ,
+                                                    @foreach (var countryname in ViewBag.countryname)
+                                                    {
+                                                        if (countryname.Value == newbook.Country.ToString())
+                                                        {
+                                                            @countryname.Text
+                                                        }
+                                                    }
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row note-details">
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                <img src="~/Content/images/search-notes/pages.png">
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 detail-text">
+                                                <span>@newbook.NumberofPages Pages</span>
+                                            </div>
+                                        </div>
+                                        <div class="row note-details">
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                <img src="~/Content/images/search-notes/date.png">
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 detail-text">
+                                                <span>
+                                                    @switch ((string)ViewBag.day)
+                                                    {
+                                                        case "Sunday": ViewBag.day = "Sun"; break;
+                                                        case "Monday": ViewBag.day = "Mon"; break;
+                                                        case "Tuesday": ViewBag.day = "Tue"; break;
+                                                        case "Wednesday": ViewBag.day = "Wed"; break;
+                                                        case "Thursday": ViewBag.day = "Thu"; break;
+                                                        case "Friday": ViewBag.day = "Fri"; break;
+                                                        default: ViewBag.day = "Sat"; break;
+                                                    }
                                                     @switch ((string)ViewBag.month)
                                                     {
                                                         case "1": ViewBag.month = "Jan"; break;
@@ -171,98 +184,97 @@
                                                     }
                                                     @ViewBag.day, @ViewBag.month @newbook.PublishedDate.Day @newbook.PublishedDate.Year
                                                 </span>
-            
 
-                                                            </div>
-            
 
-                                                        </div>
-            
+                                            </div>
 
-                                                        <div class="row note-details">
-                                    <div class="col-md-2 col-sm-2 col-xs-2">
-                                        <img src="~/Content/images/search-notes/flag.png">
-                                    </div>
-                                    <div class="col-md-10 col-sm-10 col-xs-10 detail-text detail-text-clr-change">
-                                        <span>
-                                            @foreach (var temp in ViewBag.inappropriateMsg)
-                                                {
-                                                    if (newbook.ID == Convert.ToInt32(temp.Text))
-                                                    {
-                                                        ViewBag.count += 1;
-                                                    }
-                                                }@ViewBag.count Users marked this note as inappropriate
-                                            </span>
+
                                         </div>
-                                </div>
 
 
-                                    @foreach (var temp in ViewBag.reviewMsg)
-                                {
-                                                    if (newbook.ID == Convert.ToInt32(temp.Text))
+                                        <div class="row note-details">
+                                            <div class="col-md-2 col-sm-2 col-xs-2">
+                                                <img src="~/Content/images/search-notes/flag.png">
+                                            </div>
+                                            <div class="col-md-10 col-sm-10 col-xs-10 detail-text detail-text-clr-change">
+                                                <span>
+                                                    @foreach (var temp in ViewBag.inappropriateMsg)
                                                     {
-                                                        ViewBag.review += 1;
-                                                        ViewBag.rating += Convert.ToDecimal(temp.Value);
-                                                    }
-                                                }
-                                                @if (ViewBag.rating>=0)
-                                {
-                                    try
-                                    {
-                                        ViewBag.star = Decimal.Divide(@ViewBag.rating, @ViewBag.review);
-                                    }
-                                    catch {
-                                        ViewBag.star = 0;
-                                    }
-                                }
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 col-xs-12 review-star">
-                                        <div class="rate" style="margin-top:5px;">
-                                            @for(var i=5;i>0;i--)
-                                            {
-                                            if (ViewBag.star >= 1)
-                                            { <i class="fa fa-star" style="color:#ffc700;"></i>}
-                                                else
+                                                        if (newbook.ID == Convert.ToInt32(temp.Text))
+                                                        {
+                                                            ViewBag.count += 1;
+                                                        }
+                                                    }@ViewBag.count Users marked this note as inappropriate
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+                                        @foreach (var temp in ViewBag.reviewMsg)
                                         {
-                                                    <i class="fa fa-star" style="color:#ccc;"></i>
-                                                }
-                                                ViewBag.star -= 1;
+                                            if (newbook.ID == Convert.ToInt32(temp.Text))
+                                            {
+                                                ViewBag.review += 1;
                                             }
-                                            @*<input type="radio" id="star5" name="rate" value="5" />
-                                            <label for="star5" title="text">5 stars</label>
-                                            <input type="radio" id="star4" name="rate" value="4" />
-                                            <label for="star4" title="text">4 stars</label>
-                                            <input type="radio" id="star3" name="rate" value="3" />
-                                            <label for="star3" title="text">3 stars</label>
-                                            <input type="radio" id="star2" name="rate" value="2" />
-                                            <label for="star2" title="text">2 stars</label>
-                                            <input type="radio" id="star1" name="rate" value="1" />
-                                            <label for="star1" title="text">1 star</label>*@
+                                        }
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12 review-star">
+                                                <div class="rate" style="margin-top:5px;">
+                                                    @for (var i = 5; i > 0; i--)
+                                                    {
+                                                        if (ViewBag.star >= 1)
+                                                        {<i class="fa fa-star" style="color:#ffc700;"></i>}
+                                                        else
+                                                        {
+                                                            <i class="fa fa-star" style="color:#ccc;"></i>
+                                                        }
+                                                        ViewBag.star -= 1;
+                                                    }
+                                                    @*<input type="radio" id="star5" name="rate" value="5" />
+                                        <label for="star5" title="text">5 stars</label>
+                                        <input type="radio" id="star4" name="rate" value="4" />
+                                        <label for="star4" title="text">4 stars</label>
+                                        <input type="radio" id="star3" name="rate" value="3" />
+                                        <label for="star3" title="text">3 stars</label>
+                                        <input type="radio" id="star2" name="rate" value="2" />
+                                        <label for="star2" title="text">2 stars</label>
+                                        <input type="radio" id="star1" name="rate" value="1" />
+                                        <label for="star1" title="text">1 star</label>*@
+                                                </div>
+                                                <div class="review-text">
+                                                    <span>
+                                                        @ViewBag.review reviews
+                                                    </span>
+                                                </div>
+                                            </div>
+
                                         </div>
-                                        <div class="review-text">
-                                            <span>
-                                                @ViewBag.review reviews
-                                            </span>
-                                        </div>
+
                                     </div>
-
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
 
 
-                }
+                        }
+                    }
+                    else
+                    {
+                        <table width="100%" class="table-responsive">
+                            <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                        </table>
+                    }
+                </div>
             </div>
-        </div>
 
-
+        
     </section>
+    @section Scripts{
     <!-- Paging -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../../js/paging.js"></script>
+    
+    <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
     <script type="text/javascript">
         $(".count").pagify(9, ".notes");
     </script>
+        }
 </body>

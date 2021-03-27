@@ -25,20 +25,21 @@ namespace NoteMarketPlace
         public int SellerId { get; set; }
         public int DownloaderId { get; set; }
         public bool IsSellerHasAllowedDownload { get; set; }
+        public string AttachmentName { get; set; }
         public string AttachmentPath { get; set; }
         public bool IsAttachmentDownloaded { get; set; }
         public Nullable<System.DateTime> AttachmentDownloadDate { get; set; }
         public bool IsPaid { get; set; }
         public Nullable<decimal> PurchasedPrice { get; set; }
         public string NoteTitle { get; set; }
-        public string NoteCategory { get; set; }
+        public int NoteCategory { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
     
-        public virtual SellerNote SellerNote { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SellerNotesReportedIssue> SellerNotesReportedIssues { get; set; }
+        public virtual SellerNote SellerNote { get; set; }
     }
 }

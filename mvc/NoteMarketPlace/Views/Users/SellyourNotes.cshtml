@@ -4,5 +4,277 @@
     Layout = "~/Views/Shared/Header.cshtml";
 }
 
-<h2>SellyourNotes</h2>
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="dashboard">
+        @using (Html.BeginForm("SellyourNotes", "Users", new { enctype = "multipart/form-data" }))
+        {
+            <!-- Content -->
+        <div class="container">
+            <div class="row dashboard-heading">
+                <div class="col-md-12 j-space-btn">
+                    <div>
+                        <h2 class="heading">Dashboard</h2>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn small-btn" onclick="location.href='@Url.Action("AddNotes", "Users")'" >
+                            Add Note
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row dashboard-item">
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding-left: 0px;">
+                    <div class="col-md-3  col-sm-3 col-xs-4 earning-img">
+                        <!-- Item 01 -->
+                        <div class="stats-item ">
+                            <img src="~/Content/images/dashboard/my-earning.png">
+                            <h3 class="heading">My Earning</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-8 item-part1">
+                        <div class="col-md-6  col-sm-6 col-xs-6 stats-item text-center">
+                            <!-- Item 02 -->
 
+                            <h2 class="heading">@ViewBag.Soldnotes</h2>
+                            <p class="note-detail-info">Number of Notes Sold</p>
+
+                        </div>
+                        <div class="col-md-6  col-sm-6 col-xs-6 stats-item text-center">
+                            <!-- Item 03 -->
+                            <h2 class="heading">$@ViewBag.Earning</h2>
+                            <p class="note-detail-info">Money Earned</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 sol-xs-12 item-part2" style="padding-right: 0px; padding-left: 0px;">
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 0px;">
+                        <!-- Item 04 -->
+                        <div class="stats-item text-center">
+                            <h2 class="heading">@ViewBag.downloadNotes</h2>
+                            <p class="note-detail-info">My Downloads</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 0px;">
+                        <!-- Item 05 -->
+                        <div class="stats-item text-center">
+                            <h2 class="heading">@ViewBag.rejectedNotes</h2>
+                            <p class="note-detail-info">My Rejected Notes</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 0px;">
+                        <!-- Item 06 -->
+                        <div class="stats-item text-center">
+                            <h2 class="heading">@ViewBag.buyerNotes</h2>
+                            <p class="note-detail-info">Buyer Requests</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="flex-container j-space-btn dashboard-search">
+                    <div>
+                        <h3 class="heading">In Progress Notes</h3>
+                    </div>
+                    <div>
+                        <div class="form-group ">
+                            <form>
+
+                                <div class="col-md-8 col-sm-8 col-xs-6 search">
+                                    @*<input type="text" class="form-control search" id="search-field" placeholder="Search">*@
+                                    @Html.TextBox("progressText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "progressText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("progressText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-6 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="table1" class="table table-responsive">
+                    <thead>
+                        <tr class="text-uppercase">
+                            <th>Added date</th>
+                            <th>Title</th>
+                            <th>CATEGORY</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="t1">
+                        @if (ViewBag.progressdetails != null)
+                        {
+                            foreach (var progressRecord in ViewBag.progressdetails)
+                            {
+                        <tr>
+                            <td>@progressRecord.ModifiedDate.Day-@progressRecord.ModifiedDate.Month-@progressRecord.ModifiedDate.Year</td>
+                            <td>@progressRecord.Title</td>
+                            <td>
+                                @foreach (var categoryname in ViewBag.categorydetails)
+                                {
+                                    if (categoryname.Text == progressRecord.Category.ToString())
+                                    {
+                                        @categoryname.Value
+                                    }
+                                }
+                            </td>
+                                    @switch ((string)progressRecord.Status)
+                                    {
+                                        case "inReview":
+                                                        <td>In Review</td>
+                                                        <td class="eye">
+                                                            <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = progressRecord.ID })'">
+                                                        </td>
+                                                        break;
+                                        case "draft":
+                                                        <td>Draft</td>
+                                                        <td>
+                                                            <img src="~/Content/images/dashboard/edit.png" onclick="location.href='@Url.Action("AddNotes", "Users", new { noteid = progressRecord.ID })'">
+                                                            <img src="~/Content/images/dashboard/delete.png" onclick="location.href='@Url.Action("DeleteNotes", "Users", new { noteid = progressRecord.ID })'">
+                                                        </td>
+                                                        break;
+                                        case "submitted":
+                                                        <td>Submitted</td>
+                                                        <td class="eye">
+                                                            <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = progressRecord.ID })'">
+                                                        </td>
+                                                        break;
+                                    }
+                        </tr>
+                            }
+                          }
+                         else
+                         {
+                            <table width="100%" class="table-responsive">
+                                <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                            </table>
+                         }
+                        
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="flex-container j-space-btn dashboard-search">
+                    <div>
+                        <h3 class="heading">Published Notes</h3>
+                    </div>
+                    <div>
+                        <div class="form-group ">
+                            <form>
+
+                                <div class="col-md-8 col-sm-8 col-xs-6 search">
+                                    @*<input type="text" class="form-control search" id="search-field" placeholder="Search">*@
+                                    @Html.TextBox("publishedText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "publishedText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("publishedText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-6 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="table2" class="table table-responsive">
+                    <thead>
+                        <tr class="text-uppercase">
+                            <th>Added date</th>
+                            <th>Title</th>
+                            <th>CATEGORY</th>
+                            <th>Sell type</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="t2">
+                        @if (ViewBag.publisheddetails != null)
+                        {
+                            foreach (var publishRecord in ViewBag.publisheddetails)
+                            {
+                                <tr>
+                                    <td>@publishRecord.PublishedDate.Day-@publishRecord.PublishedDate.Month-@publishRecord.PublishedDate.Year</td>
+                                    <td>@publishRecord.Title</td>
+                                    <td>
+                                        @foreach (var categoryname in ViewBag.categorydetails)
+                                        {
+                                            if (categoryname.Text == publishRecord.Category.ToString())
+                                            {
+                                                @categoryname.Value
+                                            }
+                                        }
+                                    </td>
+                                    @if(publishRecord.IsPaid==false)
+                                    {
+                                        <td>Free</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Paid</td>
+                                    }
+                                    <td>$@publishRecord.SellingPrice</td>
+                                    <td class="eye">
+                                        <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = publishRecord.ID })'">
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <table width="100%" class="table-responsive">
+                                <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                            </table>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </section>
+
+
+    @section Scripts{
+        <!-- Paging -->
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#table1").pagify(5, "tbody tr");
+            $("#table2").pagify(5, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                                    showHideNav();
+                $(window).scroll(function () {
+                                        //show hide nav on windows scroll
+                                        showHideNav();
+                                    });
+
+                                    function showHideNav() {
+                                        if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                                        //Show back-to-top Button
+                                    }
+                                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                                    }
+                                }
+                            });
+        </script>
+    }
+
+</body>

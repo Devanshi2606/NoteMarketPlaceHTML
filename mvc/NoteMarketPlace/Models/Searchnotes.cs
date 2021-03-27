@@ -14,9 +14,15 @@ namespace NoteMarketPlace.Models
 {
     public class Searchnotes
     {
-        public string CategoryID { get; set; }
-        public string CategoryName { get; set; }
-        
+     
+        public SelectList CategoryName { get; set; }
+        public SelectList TypeName { get; set; }
+        public SelectList UniversityName { get; set; }
+        public SelectList CourseName { get; set; }
+        public SelectList CountryName { get; set; }
+        public string Rating { get; set; }
+
+
 
 
     }

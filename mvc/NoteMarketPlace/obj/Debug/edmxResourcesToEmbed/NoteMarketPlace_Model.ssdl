@@ -22,13 +22,14 @@
     <Property Name="SellerId" Type="int" Nullable="false" />
     <Property Name="DownloaderId" Type="int" Nullable="false" />
     <Property Name="IsSellerHasAllowedDownload" Type="bit" Nullable="false" />
-    <Property Name="AttachmentPath" Type="varchar(max)" />
+    <Property Name="AttachmentName" Type="varchar(max)" Nullable="false" />
+    <Property Name="AttachmentPath" Type="varchar(max)" Nullable="false" />
     <Property Name="IsAttachmentDownloaded" Type="bit" Nullable="false" />
     <Property Name="AttachmentDownloadDate" Type="datetime" />
     <Property Name="IsPaid" Type="bit" Nullable="false" />
     <Property Name="PurchasedPrice" Type="decimal" Precision="18" Scale="2" />
     <Property Name="NoteTitle" Type="varchar" MaxLength="100" Nullable="false" />
-    <Property Name="NoteCategory" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="NoteCategory" Type="int" Nullable="false" />
     <Property Name="CreatedDate" Type="datetime" />
     <Property Name="CreatedBy" Type="int" />
     <Property Name="ModifiedDate" Type="datetime" />
@@ -85,7 +86,7 @@
     <Property Name="ModifiedDate" Type="datetime" />
     <Property Name="ActionedBy" Type="int" />
     <Property Name="AdminRemarks" Type="varchar(max)" />
-    <Property Name="rating" Type="varchar" MaxLength="10" />
+    <Property Name="rating" Type="decimal" Precision="18" Scale="1" />
     <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="FilePath" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
@@ -140,7 +141,7 @@
     <Property Name="City" Type="varchar" MaxLength="50" />
     <Property Name="State" Type="varchar" MaxLength="50" />
     <Property Name="Zip_Code" Type="varchar" MaxLength="50" />
-    <Property Name="Country" Type="varchar" MaxLength="50" />
+    <Property Name="Country" Type="int" />
     <Property Name="University" Type="varchar" MaxLength="100" />
     <Property Name="College" Type="varchar" MaxLength="100" />
     <Property Name="CreatedDate" Type="datetime" Nullable="false" />
