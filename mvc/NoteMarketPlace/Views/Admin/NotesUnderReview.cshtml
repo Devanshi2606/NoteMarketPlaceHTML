@@ -1,0 +1,213 @@
+﻿
+@{
+    ViewBag.Title = "NotesUnderReview";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+@model NoteMarketPlace.Models.Buyername
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="buyer-requests">
+        @using (Html.BeginForm("NotesUnderReview", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <h2 class="heading">Notes Under Review</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-5 col-xs-6 admin-dashboard-month">
+                        <p>Seller</p>
+                        <div class="form-group drop-arrow" style="max-width: 200px;">
+                            @Html.DropDownListFor(m =>m.BuyerName  , ViewBag.BuyerList as SelectList, "Select Seller Name", new { @id = "type", @class = "form-control", onchange = "document.location.href = '/Admin/NotesUnderReview?changeInName=' + this.options[this.selectedIndex].value;" })
+                            @*<select name="type" id="type" class="form-control">
+            <option value="khyati" selected>Khyati</option>
+            <option value="rahul">Rahul</option>
+            <option value="suman">Suman</option>
+            <option value="raj">Raj</option>
+            <option value="niya">Niya</option>
+        </select>*@
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-7 col-xs-12 search-content text-right">
+                        <div class="form-group ">
+                            <form>
+                                <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                    @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search"><i class="fa fa-search"></i>*@
+                                    @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>NOTE TITLE</th>
+                                <th>CATEGORY</th>
+                                <th>SELLER</th>
+                                <th width="10px"></th>
+                                <th>DATE ADDED</th>
+                                <th>STATUS</th>
+                                <th class="table-center">ACTION</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.SellerNoteDetails != null)
+                            {
+                                foreach (var sellerdata in ViewBag.SellerNoteDetails)
+                                {
+                            <tr>
+                                <td class="table-center">@(++ViewBag.count)</td>
+                                <td class="clr-change" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = sellerdata.ID })'">@sellerdata.Title</td>
+                                <td>
+                                    @foreach (var categoryname in ViewBag.categorydetails)
+                                    {
+                                        if (categoryname.Text == sellerdata.Category.ToString())
+                                        {
+                                            @categoryname.Value
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @foreach (var buyername in ViewBag.userdetails)
+                                    {
+                                        if (buyername.ID.ToString() == sellerdata.SellerID.ToString())
+                                        {
+                                            @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <i class="fa fa-fw fa-eye table-eye" style="color: #d1d1d1; margin-top: 10%; font-size: 1.4em;" onclick="location.href='@Url.Action("MemberDetails", "Admin", new { memberId = sellerdata.SellerID  })'"></i>
+
+                                </td>
+                                <td>@sellerdata.PublishedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                <td>@sellerdata.Status</td>
+                                <td class="table-center">
+                                    <button type="button" class="btn-primary btn-sm approve" onclick="if (confirm('If you approve the notes – System will publish the notes over portal. Please press ok to continue')) { location.href = '@Url.Action("approved", "Admin", new { noteid = sellerdata.ID })' }">Approve</button>
+                                    <button type="button" class="btn-primary btn-sm reject" data-toggle="modal" data-target="#@sellerdata.ID">Reject</button>
+                                    <button type="button" class="btn-primary btn-sm inreview" onclick="if (confirm('Via marking the note In Review – System will let user know that review process has been initiated. Please press yes to continue')) { location.href = '@Url.Action("inReview", "Admin", new { noteid = sellerdata.ID })' }">InReview</button>
+                                </td>
+                                <!-- Reject pop up -->
+                                <div class="modal fade" id="@sellerdata.ID" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <form action="/Admin/reject?noteid=@sellerdata.ID" method="post">
+                                                <div class="modal-body" style="padding: 20px;">
+                                                    <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <h3 class="heading">@sellerdata.Title.ToUpper()</h3>
+                                                    Remarks
+                                                    <div class="form-group">
+                                                        @Html.TextArea("Message", "", new { @class = "form-control", @id = "message", @placeholder = "Write remarks", @name = "Message", @style = "height:140px;" })
+                                                        @*<textarea class="form-control" id="message" placeholder="Write remarks" style="height: 140px;" name="message"></textarea>*@
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <button class="btn-primary btn-sm reject" onclick="if (confirm('Are you sure you want to reject seller request?'){ type='submit'})">Reject</button>
+                                                        <button type="button" class="btn-primary btn-sm inreview" onclick="location.href='@Url.Action("NotesUnderReview", "Admin")'">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <td>
+                                    <div class="table-icon dropdown">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <p style="color: #d1d1d1; font-size: 1.4em;">&vellip;</p>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = sellerdata.ID })'">View More Details</a>
+                                            <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = sellerdata.ID })'">Download Notes</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Reject pop up -->
+            @*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        @Html.BeginForm("reject","Admin", new { enctype = "multipart/form-data" }))
+                        {
+                        <div class="modal-body" style="padding: 20px;">
+                            <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h3 class="heading">Human Body-Science</h3>
+                            Remarks
+                            <div class="form-group">
+                                @Html.TextArea("Message", "", new { @class="form-control", @id="message",@placeholder="Write remarks",@name="Message",@style="height:140px;"})
+                                <textarea class="form-control" id="message" placeholder="Write remarks" style="height: 140px;" name="message"></textarea>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="btn-primary btn-sm reject">Reject</button>
+                                <button type="button" class="btn-primary btn-sm inreview" onclick="location.href='@Url.Action("NotesUnderReview", "Admin")'">Cancel</button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>*@
+
+        }
+    </section>
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(5, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+
+        </script>
+    }
+</body>
+
+

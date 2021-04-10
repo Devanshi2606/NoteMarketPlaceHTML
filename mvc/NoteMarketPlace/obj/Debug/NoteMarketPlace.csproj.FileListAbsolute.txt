@@ -123,3 +123,4 @@ G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.dll
 G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.Mvc.dll
 G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.xml
 G:\material\Tatvasoft\Ass3\NoteMarketPlace\bin\PagedList.Mvc.xml
+G:\material\Tatvasoft\Ass3\NoteMarketPlace\obj\Debug\NoteMarketPlace.csprojAssemblyReference.cache

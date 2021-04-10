@@ -12,5 +12,6 @@ namespace NoteMarketPlace.Models
         public string emailId { get; set; }
         [Required]
         public string password { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

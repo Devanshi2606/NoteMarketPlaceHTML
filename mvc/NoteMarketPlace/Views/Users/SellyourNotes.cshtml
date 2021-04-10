@@ -4,6 +4,9 @@
     Layout = "~/Views/Shared/Header.cshtml";
 }
 
+@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<SellerNote>
 <body>
     <br />
     <br />
@@ -19,7 +22,7 @@
                         <h2 class="heading">Dashboard</h2>
                     </div>
                     <div>
-                        <button type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn small-btn" onclick="location.href='@Url.Action("AddNotes", "Users")'" >
+                        <button type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn small-btn" onclick="location.href='@Url.Action("AddNotes", "Users")'">
                             Add Note
                         </button>
                     </div>
@@ -114,54 +117,58 @@
                         {
                             foreach (var progressRecord in ViewBag.progressdetails)
                             {
-                        <tr>
-                            <td>@progressRecord.ModifiedDate.Day-@progressRecord.ModifiedDate.Month-@progressRecord.ModifiedDate.Year</td>
-                            <td>@progressRecord.Title</td>
-                            <td>
-                                @foreach (var categoryname in ViewBag.categorydetails)
-                                {
-                                    if (categoryname.Text == progressRecord.Category.ToString())
-                                    {
-                                        @categoryname.Value
-                                    }
-                                }
-                            </td>
+                                <tr>
+                                    <td>@progressRecord.ModifiedDate.ToString(string.Format("dd-MM-yyyy"))</td>
+                                    <td>@progressRecord.Title</td>
+                                    <td>
+                                        @foreach (var categoryname in ViewBag.categorydetails)
+                                        {
+                                            if (categoryname.Text == progressRecord.Category.ToString())
+                                            {
+                                                @categoryname.Value
+                                            }
+                                        }
+                                    </td>
                                     @switch ((string)progressRecord.Status)
                                     {
                                         case "inReview":
-                                                        <td>In Review</td>
-                                                        <td class="eye">
-                                                            <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = progressRecord.ID })'">
-                                                        </td>
-                                                        break;
+                                            <td>In Review</td>
+                                            <td class="eye">
+                                                <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = progressRecord.ID })'">
+                                            </td>
+                                            break;
                                         case "draft":
-                                                        <td>Draft</td>
-                                                        <td>
-                                                            <img src="~/Content/images/dashboard/edit.png" onclick="location.href='@Url.Action("AddNotes", "Users", new { noteid = progressRecord.ID })'">
-                                                            <img src="~/Content/images/dashboard/delete.png" onclick="location.href='@Url.Action("DeleteNotes", "Users", new { noteid = progressRecord.ID })'">
-                                                        </td>
-                                                        break;
+                                            <td>Draft</td>
+                                            <td>
+                                                <img src="~/Content/images/dashboard/edit.png" onclick="location.href='@Url.Action("AddNotes", "Users", new { noteid = progressRecord.ID })'">
+                                                <img src="~/Content/images/dashboard/delete.png" onclick="if (confirm('Are you sure, you want to delete this note?')){ location.href = '@Url.Action("DeleteNotes", "Users", new { noteid = progressRecord.ID })' }">
+                                            </td>
+                                            break;
                                         case "submitted":
-                                                        <td>Submitted</td>
-                                                        <td class="eye">
-                                                            <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = progressRecord.ID })'">
-                                                        </td>
-                                                        break;
+                                            <td>Submitted</td>
+                                            <td class="eye">
+                                                <img src="~/Content/images/dashboard/eye.png" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = progressRecord.ID })'">
+                                            </td>
+                                            break;
                                     }
-                        </tr>
+                                </tr>
                             }
-                          }
-                         else
-                         {
+
+                        }
+                        else
+                        {
                             <table width="100%" class="table-responsive">
-                                <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                                <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
                             </table>
-                         }
-                        
+                        }
+
 
                     </tbody>
+
                 </table>
+
             </div>
+            @Html.PagedListPager(Model, page => Url.Action("SellyourNotes", "Users", new { page }))
             <div class="row">
                 <div class="flex-container j-space-btn dashboard-search">
                     <div>
@@ -205,7 +212,7 @@
                             foreach (var publishRecord in ViewBag.publisheddetails)
                             {
                                 <tr>
-                                    <td>@publishRecord.PublishedDate.Day-@publishRecord.PublishedDate.Month-@publishRecord.PublishedDate.Year</td>
+                                    <td>@publishRecord.PublishedDate.ToString(string.Format("dd-MM-yyyy"))</td>
                                     <td>@publishRecord.Title</td>
                                     <td>
                                         @foreach (var categoryname in ViewBag.categorydetails)
@@ -216,7 +223,7 @@
                                             }
                                         }
                                     </td>
-                                    @if(publishRecord.IsPaid==false)
+                                    @if (publishRecord.IsPaid == false)
                                     {
                                         <td>Free</td>
                                     }
@@ -234,7 +241,7 @@
                         else
                         {
                             <table width="100%" class="table-responsive">
-                                <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                                <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
                             </table>
                         }
                     </tbody>
@@ -249,31 +256,60 @@
         <!-- Paging -->
         <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
         <script type="text/javascript">
-            $("#table1").pagify(5, "tbody tr");
+            $(function () {
+                $("ul.pagination li a").css("color", "#000");
+                $("ul.pagination li a").css("text-decoration", "none");
+                $("ul.pagination li a").css("padding", "1px 7px");
+                $("ul.pagination li a").css("border-radius", "50%");
+                $("ul.pagination li a").css("border", "0px solid #fff");
+                $("ul.pagination li a").hover(function () {
+                    $("ul.pagination li a").css("background-color", "transparent");
+                    $("ul.pagination li.active a").css("background-color", "#6255a5");
+                });
+                $("ul.pagination li").css("display","-webkit-box");
+                $("ul.pagination li").css("display", "-ms-flexbox");
+                $("ul.pagination li").css("display", "flex");
+                $("ul.pagination li").css("-webkit-box-pack","center");
+                $("ul.pagination li").css("-ms-flex-pack","center");
+                $("ul.pagination li").css("justify-content","center");
+                $("ul.pagination li").css("padding-top", "2px");
+                $("ul.pagination li").css("padding-left", "2px");
+                $("ul.pagination li").css("padding-right", "2px");
+                $("ul.pagination li.active a").css("background-color", "#6255a5");
+                $("ul.pagination li.active a").css("color", "#fff");
+                $("ul.pagination li.active a").css("font-weight", "400");
+                $("ul.pagination li.active a").css("z-index", "1");
+                $("ul.pagination li.PagedList-skipToPrevious a").text("<");
+                $("ul.pagination li.PagedList-skipToNext a").text(">");
+                        
+            });
+        </script>
+        <script type="text/javascript">
+            
             $("#table2").pagify(5, "tbody tr");
         </script>
         <script type="text/javascript">
             $(function () {
-                                    showHideNav();
+                showHideNav();
                 $(window).scroll(function () {
-                                        //show hide nav on windows scroll
-                                        showHideNav();
-                                    });
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
 
-                                    function showHideNav() {
-                                        if ($(window).scrollTop() > -50) {
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
                         //show white nav
                         $("nav").addClass("white-nav-top");
                         $("nav").css("box-shadow", "0 0 0 0 ");
                         //show dark logo
                         $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
-                                        //Show back-to-top Button
-                                    }
-                                    if ($(window).scrollTop() > 50) {
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
                         $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
-                                    }
-                                }
-                            });
+                    }
+                }
+            });
         </script>
     }
 

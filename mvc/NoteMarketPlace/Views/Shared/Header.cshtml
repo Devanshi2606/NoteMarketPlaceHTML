@@ -34,8 +34,11 @@
 
 </head>
 @{ 
+    ViewBag.Facebook = TempData["Twitter"].ToString();
+    ViewBag.LinkedIn = TempData["LinkedIn"].ToString();
+    ViewBag.Twitter = TempData["Facebook"].ToString();
 
-   ViewBag.Profile= TempData["Userdetails"].ToString();
+    ViewBag.Profile= TempData["Userdetails"].ToString();
 
 }
 <body>
@@ -62,31 +65,32 @@
                                     <li>@Html.ActionLink("FAQ", "Faq", "Users")</li>
                                     <li>@Html.ActionLink("Contact Us", "ContactUs", "Users")</li>
                                     @if (User.Identity.IsAuthenticated)
-                                            {    
+                                    {
                                         <li>
                                             <div class="col-md-6  col-sm-6 col-xs-5 smooth-scroll flex-container">
 
-                                                <a class="  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;"><img src="@Url.Content(ViewBag.Profile)" alt="author" class="img-circle"></a>
+                                                <a class="  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;"><img src="@Url.Content(ViewBag.Profile)" alt="author" class="img-circle" style="height:50px;width:50px;"></a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                     <a class="dropdown-item" onclick="location.href='@Url.Action("UserProfile", "Users")'">My Profile</a>
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("BuyerRequest", "Users")'">Buyer Requests</a>
                                                     <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadNotes", "Users")'">My Downloads</a>
                                                     <a class="dropdown-item" onclick="location.href='@Url.Action("SoldNotes", "Users")'">My Sold Notes</a>
                                                     <a class="dropdown-item" onclick="location.href='@Url.Action("RejectedNotes", "Users")'">My Rejected Notes</a>
                                                     <a class="dropdown-item" onclick="location.href='@Url.Action("Changepassword", "Users")'">Change Password</a>
-                                                    <a class="dropdown-item a-logout" onclick="location.href='@Url.Action("Logout", "Users")'">LOGOUT</a>
+                                                    <a class="dropdown-item a-logout" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }">LOGOUT</a>
                                                 </div>
 
                                             </div>
                                         </li>
                                         <li>
-                                            <input type="button" value="Logout" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Logout", "Users")'" />
+                                            <input type="button" value="Logout" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }" />
                                         </li>
 
                                     }
                                     else
                                     {
                                         <li>
-                                        <input type = "button" value = "Login" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Login", "Users")'" />
+                                            <input type="button" value="Login" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Login", "Users")'" />
                                         </li>
                                     }
                                 </ul>
@@ -104,30 +108,32 @@
                                 <li>@Html.ActionLink("Contact Us", "ContactUs", "Users")</li>
                                 @if (User.Identity.IsAuthenticated)
                                 {
-                                    <li>
-
-                                        <div class="col-md-6  col-sm-6 col-xs-5 smooth-scroll flex-container">
-                                            <a class="  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;"><img src="@Url.Content(ViewBag.Profile)" alt="author" class="img-circle"></a>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                <a class="dropdown-item" onclick="location.href='@Url.Action("UserProfile", "Users")'">My Profile</a>
-                                                <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadNotes", "Users")'">My Downloads</a>
-                                                <a class="dropdown-item" onclick="location.href='@Url.Action("SoldNotes", "Users")'">My Sold Notes</a>
-                                                <a class="dropdown-item" onclick="location.href='@Url.Action("RejectedNotes", "Users")'">My Rejected Notes</a>
-                                                <a class="dropdown-item" onclick="location.href='@Url.Action("Changepassword", "Users")'">Change Password</a>
-                                                <a class="dropdown-item a-logout" onclick="location.href='@Url.Action("Logout", "Users")'">LOGOUT</a>
-                                            </div>
+                                    <li id="header-profile">
+                                        <img src="@Url.Content(ViewBag.Profile)" class="img-circle" data-toggle="collapse" data-target="#collapse-profile" style="margin-left: 15px;height:50px;width:50px;margin-top:5px;">
+                                        <div class="collapse" id="collapse-profile">
+                                            <ul class="header-collapse">
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("UserProfile", "Users")'">My Profile</a></li>
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("BuyerRequest", "Users")'">Buyer Requests</a></li>
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("DownloadNotes", "Users")'">My Downloads</a></li>
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("SoldNotes", "Users")'">My Sold Notes</a></li>
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("RejectedNotes", "Users")'">My Rejected Notes</a></li>
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("Changepassword", "Users")'">Change Password</a></li>
+                                                <li style="margin-bottom: 2px;"><a class="dropdown-item a-logout" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }">LOGOUT</a></li>
+                                            </ul>
                                         </div>
                                     </li>
+
                                     <li>
-                                        <input type="button" value="Logout" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Logout", "Users")'" />
+                                        <input type="button" value="Logout" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }" />
                                     </li>
 
                                 }
                                 else
                                 {
-                                    <li>
-                                        <input type="button" value="Login" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Login", "Users")'" />
-                                    </li>
+                            <li>
+                                <input type="button" value="Login" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Login", "Users")'"/>
+                                
+                            </li>
                                 }
                             </ul>
                         </div>
@@ -149,11 +155,14 @@
                               </p>
                             </div>
                             <div class="text-right">
-                                 <ul class="social-list">
-                                       <li><a href="#" class="text-center"><i class="fa fa-facebook"></i></a></li>
-                                       <li><a href="#" class="text-center"><i class="fa fa-twitter"></i></a></li>
-                                       <li><a href="#" class="text-center"><i class="fa fa-google-plus"></i></a></li>
-                                  </ul>
+                                <ul class="social-list">
+                                    <li><a href="@ViewBag.Facebook" class="text-center"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="@ViewBag.Twitter" class="text-center"><i class="fa fa-twitter"></i></a></li>
+                                    <li class="linked"><a href="@ViewBag.LinkedIn"class="text-center"><i class="fa fa-linkedin"></i></a></li>
+                                    
+
+                                    @*<li><a href="@ViewBag.LinkedIn" class="text-center"><i class="fa fa-linkedin"></i></a></li>*@
+                                </ul>
                              </div>
                       </div>
                </div>
@@ -167,7 +176,6 @@
  @*Custom JS*@ 
 <script src="~/Scripts/js/script.js"></script>
     @RenderSection("Scripts", required: false)
-
 </body>
 
 </html>

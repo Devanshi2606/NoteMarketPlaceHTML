@@ -52,7 +52,7 @@
                                 <p>Email*</p>
                                 <div class="form-group ">
                                     @*<input type="email" class="form-control email" id="email" placeholder="Enter your email address">*@
-                                    @Html.TextBoxFor(m => m.emailId, "", new { @class = "form-control email", @id = "email", @placeholder = "Enter your email address" })
+                                    @Html.TextBoxFor(m => m.emailId, "", new { @class = "form-control email", @id = "email", @placeholder = "Enter your email address", @readonly="readonly"})
                                     <span class="text-danger"> @Html.ValidationMessage("emailId")</span>
                                 </div>
                             </div>
@@ -235,9 +235,7 @@
             }
         }
     </script>
-    @Scripts.Render("~/bundles/jqueryui")
-    @Styles.Render("~/Content/cssjqryUi")
-
+    
     <script type="text/javascript">
         $(document).ready(function () {
             $('.bdate').datepicker({

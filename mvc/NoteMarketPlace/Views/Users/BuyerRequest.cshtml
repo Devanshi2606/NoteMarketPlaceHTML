@@ -57,8 +57,6 @@
                             {
                                 foreach (var downloaddata in ViewBag.downloaddetails)
                                 {
-                                    ViewBag.month = downloaddata.AttachmentDownloadDate.Month.ToString();
-                                    ViewBag.day = downloaddata.AttachmentDownloadDate.DayOfWeek.ToString();
                                     <tr>
                                         <td class="table-center">@(++ViewBag.count)</td>
                                         <td class="clr-change">@downloaddata.NoteTitle</td>
@@ -107,23 +105,9 @@
 
                                         <td>$@downloaddata.PurchasedPrice</td>
                                         <td>
-                                            @switch ((string)ViewBag.month)
-                                            {
-                                                case "1": ViewBag.month = "Jan"; break;
-                                                case "2": ViewBag.month = "Feb"; break;
-                                                case "3": ViewBag.month = "Mar"; break;
-                                                case "4": ViewBag.month = "Apr"; break;
-                                                case "5": ViewBag.month = "May"; break;
-                                                case "6": ViewBag.month = "Jun"; break;
-                                                case "7": ViewBag.month = "Jul"; break;
-                                                case "8": ViewBag.month = "Aug"; break;
-                                                case "9": ViewBag.month = "Sep"; break;
-                                                case "10": ViewBag.month = "Oct"; break;
-                                                case "11": ViewBag.month = "Nov"; break;
-                                                default: ViewBag.month = "Dec"; break;
-                                            }
-
-                                            @downloaddata.AttachmentDownloadDate.Day @ViewBag.month @downloaddata.AttachmentDownloadDate.Year, @downloaddata.AttachmentDownloadDate.Hour:@downloaddata.AttachmentDownloadDate.Minute:@downloaddata.AttachmentDownloadDate.Second
+                                            
+                                            @downloaddata.AttachmentDownloadDate.ToString(string.Format("dd MMM yyyy, hh:mm:ss"))
+                                            @*@downloaddata.AttachmentDownloadDate.Day @ViewBag.month @downloaddata.AttachmentDownloadDate.Year, @downloaddata.AttachmentDownloadDate.Hour:@downloaddata.AttachmentDownloadDate.Minute:@downloaddata.AttachmentDownloadDate.Second*@
                                         </td>
                                         <td>
 
@@ -143,7 +127,7 @@
                             else
                             {
                                 <table width="100%" class="table-responsive">
-                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
                                 </table>
                             }
                         </tbody>

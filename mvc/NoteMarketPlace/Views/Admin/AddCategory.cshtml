@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "AddCategory";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+@model NoteMarketPlace.Models.Category
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="add-category">
+        @using (Html.BeginForm("AddCategory", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="basic-profile-details">
+                <form>
+                    <div class="container">
+                        <div class="row">
+                            <!-- Basic Details -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h1 class="heading">Add Category</h1>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Category Name*</p>
+                                    <div class="form-group ">
+                                        @*<input type="text" class="form-control name category-name" id="category-name" placeholder="Enter your Category name">*@
+                                        @Html.TextBoxFor(m=>m.categoryID,"",new { @class="form-control name hidden"})
+                                        @Html.TextBoxFor(m => m.categoryName, "", new { @class = "form-control name category-name", @id = "category-name", @placeholder = "Enter your Category name" })
+                                        <span class="text-danger"> @Html.ValidationMessage("categoryName")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Description*</p>
+                                    <div class="form-group ">
+                                        @*<textarea class="form-control" id="message" placeholder="Enter your description"></textarea>*@
+                                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", @id = "message", @placeholder = "Enter your description" })
+                                        <span class="text-danger"> @Html.ValidationMessage("Description")</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-7">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center btn-submit">
+                                    Submit
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+    </section>
+@section Scripts{
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                //show hide nav on windows scroll
+                showHideNav();
+                });
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                    //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                     //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                    //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                    $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+        </script>
+    }
+</body>

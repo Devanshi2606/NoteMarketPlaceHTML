@@ -152,13 +152,19 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Addnotes.cs" />
+    <Compile Include="Models\Administrator.cs" />
+    <Compile Include="Models\Admin_Profile.cs" />
+    <Compile Include="Models\Buyername.cs" />
+    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Changepassword.cs" />
     <Compile Include="Models\ContactUs.cs" />
+    <Compile Include="Models\Note_Country.cs" />
     <Compile Include="Models\Forgot.cs" />
     <Compile Include="Models\Login.cs" />
-    <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\Note_Type.cs" />
     <Compile Include="Models\Searchnotes.cs" />
     <Compile Include="Models\Signup.cs" />
+    <Compile Include="Models\SystemConfiguration.cs" />
     <Compile Include="Models\User_Profile.cs" />
     <Compile Include="NoteCategory.cs">
       <DependentUpon>NoteMarketPlace_Model.tt</DependentUpon>
@@ -201,6 +207,9 @@
       <DependentUpon>NoteMarketPlace_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="UserRole.cs">
+      <DependentUpon>NoteMarketPlace_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Users_Admin.cs">
       <DependentUpon>NoteMarketPlace_Model.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -395,6 +404,25 @@
     <Content Include="Views\Users\SoldNotes.cshtml" />
     <Content Include="Views\Users\RejectedNotes.cshtml" />
     <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\Shared\Admin_Header.cshtml" />
+    <Content Include="Views\Admin\ManageCategory.cshtml" />
+    <Content Include="Views\Admin\AddCategory.cshtml" />
+    <Content Include="Views\Admin\ManageType.cshtml" />
+    <Content Include="Views\Admin\AddType.cshtml" />
+    <Content Include="Views\Admin\ManageCountry.cshtml" />
+    <Content Include="Views\Admin\AddCountry.cshtml" />
+    <Content Include="Views\Admin\AddAdministrator.cshtml" />
+    <Content Include="Views\Admin\ManageAdministrator.cshtml" />
+    <Content Include="Views\Admin\NotesUnderReview.cshtml" />
+    <Content Include="Views\Admin\PublishedNotes.cshtml" />
+    <Content Include="Views\Admin\Admin_ViewNotes.cshtml" />
+    <Content Include="Views\Admin\Admin_DownloadNotes.cshtml" />
+    <Content Include="Views\Admin\Admin_RejectedNotes.cshtml" />
+    <Content Include="Views\Admin\SpamReports.cshtml" />
+    <Content Include="Views\Admin\Members.cshtml" />
+    <Content Include="Views\Admin\MemberDetails.cshtml" />
+    <Content Include="Views\Admin\ManageConfiguration.cshtml" />
+    <Content Include="Views\Admin\UserProfile_Admin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

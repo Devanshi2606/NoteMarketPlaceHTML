@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewBag.Title = "RejectedNotes";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+
+@model NoteMarketPlace.Models.Buyername
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="buyer-requests">
+        @using (Html.BeginForm("Admin_RejectedNotes", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <h2 class="heading">Rejected Notes</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-5 col-xs-6 admin-dashboard-month">
+                        <p>Seller</p>
+                        <div class="form-group drop-arrow" style="max-width: 200px;">
+                            @Html.DropDownListFor(m => m.BuyerName, ViewBag.BuyerList as SelectList, "Select Seller Name", new { @id = "type", @class = "form-control", onchange = "document.location.href = '/Admin/Admin_RejectedNotes?changeInName=' + this.options[this.selectedIndex].value;" })
+                            @*<select name="type" id="type" class="form-control">
+                                    <option value="khyati" selected>Khyati</option>
+                                    <option value="rahul">Rahul</option>
+                                    <option value="suman">Suman</option>
+                                    <option value="raj">Raj</option>
+                                    <option value="niya">Niya</option>
+                                </select>*@
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-7 col-xs-12 search-content text-right">
+                        <div class="form-group ">
+                            <form>
+                                <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                    @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search"><i class="fa fa-search"></i>*@
+                                    @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>NOTE TITLE</th>
+                                <th>CATEGORY</th>
+                                <th>SELLER</th>
+                                <th width="10px"></th>
+                                <th>DATE ADDED</th>
+                                <th>REJECTED BY</th>
+                                <th>REMARK</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.SellerNoteDetails != null)
+                            {
+                                foreach (var sellerdata in ViewBag.SellerNoteDetails)
+                                {
+                                    ViewBag.downloadcount = 0;
+                                    <tr>
+                                        <td class="table-center">@(++ViewBag.count)</td>
+                                        <td class="clr-change" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = sellerdata.ID })'">@sellerdata.Title</td>
+                                        <td>
+                                            @foreach (var categoryname in ViewBag.categorydetails)
+                                            {
+                                                if (categoryname.Text == sellerdata.Category.ToString())
+                                                {
+                                                    @categoryname.Value
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @foreach (var buyername in ViewBag.userdetails)
+                                            {
+                                                if (buyername.ID.ToString() == sellerdata.SellerID.ToString())
+                                                {
+                                                    @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            <i class="fa fa-fw fa-eye table-eye" style="color: #d1d1d1; margin-top: 10%; font-size: 1.4em;" onclick="location.href='@Url.Action("MemberDetails", "Admin", new { memberId = sellerdata.SellerID  })'"></i>
+
+                                        </td>
+                                        <td>@sellerdata.PublishedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                        <td>
+                                            @foreach (var buyername in ViewBag.userdetails)
+                                            {
+                                                if (buyername.ID.ToString() == sellerdata.ActionedBy.ToString())
+                                                {
+                                                    @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                                }
+                                            }
+                                        </td>
+                                        <td>@sellerdata.AdminRemarks</td>
+                                        <td>
+                                            <div class="table-icon dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <p style="color: #d1d1d1; font-size: 1.4em;">&vellip;</p>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" onclick="if (confirm('If you approve the notes – System will publish the notes over portal. Please press ok to continue')) { location.href = '@Url.Action("approved", "Admin", new { noteid = sellerdata.ID })' }">Approve</a>
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = sellerdata.ID })'">Download Notes</a>
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = sellerdata.ID })'">View More Details</a>
+                                                </div>
+                                            </div>
+                                           
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        }
+    </section>
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(5, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+
+        </script>
+    }
+</body>
+
+

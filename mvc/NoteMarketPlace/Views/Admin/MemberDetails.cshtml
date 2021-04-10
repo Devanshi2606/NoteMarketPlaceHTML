@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "MemberDetails";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="members">
+        @using (Html.BeginForm("MemberDetails", "Admin", new { enctype = "multipart/form-data" }))
+        {
+        <div class="container">
+            <div class="row whole-content" style="overflow-x: auto;">
+                <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                    <h2 class="heading">Member Details</h2>
+                </div>
+                @foreach (var member in ViewBag.memberdetails)
+                {
+                    <div class="col-md-12 col-sm-12 col-xs-12 mem-info-detail">
+                        <div class="col-md-2 col-sm-2 col-xs-5" style="padding-left: 0px;">
+                            <img src="@Url.Content(member.Profile_Picture)" style="height:235px;width:151px;border:1px solid #d1d1d1;">
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @foreach (var user in ViewBag.userdetails)
+                            {
+                                if (member.UserId == user.ID)
+                                {
+                             <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>First Name:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@user.FirstName</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>Last Name:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@user.LastName</p>
+                            </div>
+                            <div class="col-md- col-sm-5 col-xs-6">
+                                <p>Email:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@user.EmailID</p>
+                            </div>
+                                }
+                            }
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>DOB:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.DOB.ToString(string.Format("dd-MM-yyyy"))</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>Phone Number:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.Phone_Number</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>College/University:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.College/@member.University</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12 mem-address-detail">
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>Address 1:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.Address_Line1</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>Address 2:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.Address_Line1</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>City:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.City</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>State:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.State</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>Country:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">
+                                    @foreach (var countryname in ViewBag.countrydetails)
+                                    {
+                                        if (countryname.Text == member.Country.ToString())
+                                        {
+                                            @countryname.Value
+                                        }
+                                    }</p>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-6">
+                                <p>Zip Code:</p>
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-6">
+                                <p class="clr-font-change">@member.Zip_Code</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                    <div class="col-md-12 col-sm-12 col-xs-12 download-content">
+                        <h3 class="heading">Members</h3>
+
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>NOTE TITLE</th>
+                                <th>CATEGORY</th>
+                                <th>STATUS</th>
+                                <th class="table-center">DOWNLOADED NOTES</th>
+                                <th class="table-center">TOTAL EARNINGS</th>
+                                <th>DATE ADDED</th>
+                                <th>PUBLISHED DATE</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.bookdetails != null)
+                            {
+                                foreach (var notes in ViewBag.bookdetails)
+                                {
+                                    ViewBag.countDownload = 0;
+                                    <tr>
+                                        <td class="table-center">@(++ViewBag.count)</td>
+                                        <td class="clr-change">@notes.Title</td>
+                                        <td>
+                                            @foreach (var categoryname in ViewBag.categorydetails)
+                                            {
+                                                if (categoryname.Text == notes.Category.ToString())
+                                                {
+                                                    @categoryname.Value
+                                                }
+                                            }
+                                        </td>
+                                        <td>@notes.Status</td>
+                                        @foreach (var member_notes in ViewBag.downloaddetails)
+                                        {
+                                            if (member_notes.NoteID.ToString() == notes.ID.ToString())
+                                            {
+                                                ViewBag.countDownload = ViewBag.countDownload + 1;
+                                            }
+                                        }
+                                        <td class="table-center clr-change">@ViewBag.countDownload</td>
+                                        <td class="table-center">$@notes.total_Earnings</td>
+                                        <td>@notes.ModifiedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                        <td>@notes.PublishedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                        <td>
+
+                                            <div class="table-icon dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <p>&vellip;</p>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = notes.ID })'">Download Notes</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+        }
+    </section>
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(5, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+        </script>
+    }
+</body>
+

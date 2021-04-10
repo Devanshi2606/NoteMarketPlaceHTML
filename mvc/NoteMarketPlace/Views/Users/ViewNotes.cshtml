@@ -9,19 +9,21 @@
     <br />
     <br />
     <br />
-    
+
     <section id="note-details" style="z-index:0;">
+        
         <form method="post">
-            <!-- Content -->
-            <div class="container">
-                <div class="row">
-                    @foreach (var newbook in ViewBag.bookdetails)
-                    {
-                        ViewBag.month = newbook.PublishedDate.Month.ToString();
-                        ViewBag.day = newbook.PublishedDate.DayOfWeek.ToString();
-                        ViewBag.count = 0;
-                        ViewBag.review = 0;
-                        ViewBag.star = newbook.rating;
+            @foreach (var newbook in ViewBag.bookdetails)
+            {
+                ViewBag.month = newbook.PublishedDate.Month.ToString();
+                ViewBag.day = newbook.PublishedDate.DayOfWeek.ToString();
+                ViewBag.count = 0;
+                ViewBag.review = 0;
+                ViewBag.star = newbook.rating;
+                
+                    <!-- Content -->
+                <div class="container">
+                    <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <h2 class="heading" style="padding-left: 15px;">Notes Details</h2>
                             <div class="col-md-3 col-sm-3 col-xs-6 book-img">
@@ -31,9 +33,27 @@
                                 <h1 class="heading">@newbook.Title</h1>
                                 <p>Sciences</p>
                                 <p class="note-detail-info">@newbook.Description</p>
-                                <button type="button" class="btn btn-primary btn-lg btn-block btn-verify text-uppercase text-center small-btn" style="font-weight: 600;width:200px;" data-toggle="modal" data-target="#exampleModalCenter"  onclick="location.href='@Url.Action("Downloading", "Users", new { noteid = newbook.ID })'">
-                                    Download/$ @newbook.SellingPrice
-                                </button>
+
+                                @if (User.Identity.Name != "")
+                                {
+                                    if (newbook.SellingPrice != 0 && ViewBag.RecordCreated == "no")
+                                    {<button type="button" class="btn btn-primary btn-lg btn-block btn-verify text-uppercase text-center small-btn" style="font-weight: 600;width:200px;" data-toggle="modal" data-target="#exampleModalCenter" onclick="if (confirm('Are you sure you want to download this Paid note. Please confirm')) { location.href = '@Url.Action("Downloading", "Users", new { noteid = newbook.ID })' } else { location.href = '@Url.Action("ViewNotes", "Users", new { noteid = newbook.ID })' }">Download/ $ @newbook.SellingPrice</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-primary btn-lg btn-block btn-verify text-uppercase text-center small-btn" style="font-weight: 600;width:200px;" onclick="location.href='@Url.Action("Downloading", "Users", new { noteid = newbook.ID })'">Download</button>
+                                }
+                            }
+                            else
+                            {
+                                if (newbook.SellingPrice != 0)
+                                {<button type="button" class="btn btn-primary btn-lg btn-block btn-verify text-uppercase text-center small-btn" style="font-weight: 600;width:200px;" onclick=" location.href = '@Url.Action("Login", "Users", new { noteid = newbook.ID })'">Download/ $ @newbook.SellingPrice</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary btn-lg btn-block btn-verify text-uppercase text-center small-btn" style="font-weight: 600;width:200px;" onclick=" location.href = '@Url.Action("Login", "Users", new { noteid = newbook.ID })'">Download</button>
+                            }
+                        }
                             </div>
                             <div class="col-md-5 col-sm-5 col-xs-12 flex-container">
                                 <div class="note-info j-space-btn">
@@ -95,7 +115,7 @@
                                         ViewBag.review += 1;
                                     }
                                 }
-                                
+
                                 <div class="note-info j-space-btn">
                                     <div>Rating:</div>
                                     <div class="clr-change review-star">
@@ -111,15 +131,15 @@
                                                 ViewBag.star -= 1;
                                             }
                                             @*<input type="radio" id="star5" name="rate" value="5" />
-                                                <label for="star5" title="text">5 stars</label>
-                                                <input type="radio" id="star4" name="rate" value="4" />
-                                                <label for="star4" title="text">4 stars</label>
-                                                <input type="radio" id="star3" name="rate" value="3" />
-                                                <label for="star3" title="text">3 stars</label>
-                                                <input type="radio" id="star2" name="rate" value="2" />
-                                                <label for="star2" title="text">2 stars</label>
-                                                <input type="radio" id="star1" name="rate" value="1" />
-                                                <label for="star1" title="text">1 star</label>*@
+                                        <label for="star5" title="text">5 stars</label>
+                                        <input type="radio" id="star4" name="rate" value="4" />
+                                        <label for="star4" title="text">4 stars</label>
+                                        <input type="radio" id="star3" name="rate" value="3" />
+                                        <label for="star3" title="text">3 stars</label>
+                                        <input type="radio" id="star2" name="rate" value="2" />
+                                        <label for="star2" title="text">2 stars</label>
+                                        <input type="radio" id="star1" name="rate" value="1" />
+                                        <label for="star1" title="text">1 star</label>*@
                                         </div>
                                         <span>@ViewBag.review reviews</span>
                                     </div>
@@ -140,21 +160,48 @@
                         <div class="col-md-12 col-sm-12 col-xs-12 review-part">
                             <div class="col-md-6 col-sm-6 col-xs-12 note-preview">
                                 <h2 class="heading">Notes Preview</h2>
-                                <iframe src="@Url.Content(newbook.NotesPreview)"style="width:100%; height:410px;"></iframe>
+                                <iframe src="@Url.Content(newbook.NotesPreview)" style="width:100%; height:410px;"></iframe>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <h2 class="heading">Customer Reviews</h2>
                                 <div class="col-md-12 col-sm-12 col-xs-12 cus-review">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <div class="col-md-2 col-sm-2 col-xs-3">
-                                            <img src="~/Content/images/note-details/reviewer-1.png" alt="reviewer 01" class="img-responsive img-circle img-reviewer">
-                                        </div>
-                                        <div class="col-md-10 col-sm-10 col-xs-9 review-star reviewer-detail">
-                                            <div class="col-md-12 col-sm-12 col-xs-12 reviewer-name">
-                                                <p>Richard Brown</p>
+                                    @foreach (var user_review in ViewBag.NoteReview)
+                                    {
+                                        ViewBag.star = user_review.Ratings;
+                                        <div class="col-md-12 col-sm-12 col-xs-12 reviewer-2">
+                                            <div class="col-md-2 col-sm-2 col-xs-3">
+                                                @foreach (var reviewerProfile in ViewBag.reviewrProfileList)
+                                                {
+                                                    if (reviewerProfile.UserId == user_review.ReviewedByID)
+                                                    {
+                                                        <img src="@Url.Content(reviewerProfile.Profile_Picture)" alt="reviewer 01" class="img-responsive img-circle img-reviewer">
+                                                    }
+                                                }
+
                                             </div>
-                                            <div class="rate">
-                                                <input type="radio" id="star5" name="rate" value="5" />
+                                            <div class="col-md-10 col-sm-10 col-xs-9 review-star reviewer-detail">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 reviewer-name">
+                                                    @foreach (var reviewerUser in ViewBag.reviewerList)
+                                                    {
+                                                        if (reviewerUser.ID == user_review.ReviewedByID)
+                                                        {
+
+                                                            <p>@reviewerUser.FirstName&nbsp;@reviewerUser.LastName</p>
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="rate">
+                                                    @for (var i = 5; i > 0; i--)
+                                                    {
+                                                        if (ViewBag.star >= 1)
+                                                        {<i class="fa fa-star" style="color:#ffc700;"></i>}
+                                                        else
+                                                        {
+                                                            <i class="fa fa-star" style="color:#ccc;"></i>
+                                                        }
+                                                        ViewBag.star -= 1;
+                                                    }
+                                                    @*<input type="radio" id="star5" name="rate" value="5" />
                                                 <label for="star5" title="text">5 stars</label>
                                                 <input type="radio" id="star4" name="rate" value="4" />
                                                 <label for="star4" title="text">4 stars</label>
@@ -163,101 +210,135 @@
                                                 <input type="radio" id="star2" name="rate" value="2" />
                                                 <label for="star2" title="text">2 stars</label>
                                                 <input type="radio" id="star1" name="rate" value="1" />
-                                                <label for="star1" title="text">1 star</label>
+                                                <label for="star1" title="text">1 star</label>*@
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <p class="note-detail-info">@user_review.Comments</p>
+                                                </div>
                                             </div>
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <p class="note-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque aliquam omnis quae commodi molestiae non magnam.</p>
-                                            </div>
+                                        </div>}
+                                    @*<div class="col-md-12 col-sm-12 col-xs-12 reviewer-2">
+                                    <div class="col-md-2 col-sm-2 col-xs-3">
+                                        <img src="~/Content/images/note-details/reviewer-2.png" alt="reviewer 02" class="img-responsive img-circle img-reviewer">
+                                    </div>
+                                    <div class="col-md-10 col-sm-10 col-xs-9 review-star reviewer-detail">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 reviewer-name">
+                                            <p>Alice Ortiaz</p>
+                                        </div>
+                                        <div class="rate">
+                                            <input type="radio" id="star5" name="rate" value="5" />
+                                            <label for="star5" title="text">5 stars</label>
+                                            <input type="radio" id="star4" name="rate" value="4" />
+                                            <label for="star4" title="text">4 stars</label>
+                                            <input type="radio" id="star3" name="rate" value="3" />
+                                            <label for="star3" title="text">3 stars</label>
+                                            <input type="radio" id="star2" name="rate" value="2" />
+                                            <label for="star2" title="text">2 stars</label>
+                                            <input type="radio" id="star1" name="rate" value="1" />
+                                            <label for="star1" title="text">1 star</label>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <p class="note-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque aliquam omnis quae commodi molestiae non magnam.</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12 reviewer-2">
-                                        <div class="col-md-2 col-sm-2 col-xs-3">
-                                            <img src="~/Content/images/note-details/reviewer-2.png" alt="reviewer 02" class="img-responsive img-circle img-reviewer">
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-md-2 col-sm-2 col-xs-3">
+                                        <img src="~/Content/images/note-details/reviewer-3.png" alt="reviewer 03" class="img-responsive img-circle img-reviewer">
+                                    </div>
+                                    <div class="col-md-10 col-sm-10 col-xs-9 review-star reviewer-detail">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 reviewer-name">
+                                            <p>Sara Passmore</p>
                                         </div>
-                                        <div class="col-md-10 col-sm-10 col-xs-9 review-star reviewer-detail">
-                                            <div class="col-md-12 col-sm-12 col-xs-12 reviewer-name">
-                                                <p>Alice Ortiaz</p>
-                                            </div>
-                                            <div class="rate">
-                                                <input type="radio" id="star5" name="rate" value="5" />
-                                                <label for="star5" title="text">5 stars</label>
-                                                <input type="radio" id="star4" name="rate" value="4" />
-                                                <label for="star4" title="text">4 stars</label>
-                                                <input type="radio" id="star3" name="rate" value="3" />
-                                                <label for="star3" title="text">3 stars</label>
-                                                <input type="radio" id="star2" name="rate" value="2" />
-                                                <label for="star2" title="text">2 stars</label>
-                                                <input type="radio" id="star1" name="rate" value="1" />
-                                                <label for="star1" title="text">1 star</label>
-                                            </div>
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <p class="note-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque aliquam omnis quae commodi molestiae non magnam.</p>
-                                            </div>
+                                        <div class="rate">
+                                            <input type="radio" id="star5" name="rate" value="5" />
+                                            <label for="star5" title="text">5 stars</label>
+                                            <input type="radio" id="star4" name="rate" value="4" />
+                                            <label for="star4" title="text">4 stars</label>
+                                            <input type="radio" id="star3" name="rate" value="3" />
+                                            <label for="star3" title="text">3 stars</label>
+                                            <input type="radio" id="star2" name="rate" value="2" />
+                                            <label for="star2" title="text">2 stars</label>
+                                            <input type="radio" id="star1" name="rate" value="1" />
+                                            <label for="star1" title="text">1 star</label>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <p class="note-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque aliquam omnis quae commodi molestiae non magnam.</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <div class="col-md-2 col-sm-2 col-xs-3">
-                                            <img src="~/Content/images/note-details/reviewer-3.png" alt="reviewer 03" class="img-responsive img-circle img-reviewer">
-                                        </div>
-                                        <div class="col-md-10 col-sm-10 col-xs-9 review-star reviewer-detail">
-                                            <div class="col-md-12 col-sm-12 col-xs-12 reviewer-name">
-                                                <p>Sara Passmore</p>
-                                            </div>
-                                            <div class="rate">
-                                                <input type="radio" id="star5" name="rate" value="5" />
-                                                <label for="star5" title="text">5 stars</label>
-                                                <input type="radio" id="star4" name="rate" value="4" />
-                                                <label for="star4" title="text">4 stars</label>
-                                                <input type="radio" id="star3" name="rate" value="3" />
-                                                <label for="star3" title="text">3 stars</label>
-                                                <input type="radio" id="star2" name="rate" value="2" />
-                                                <label for="star2" title="text">2 stars</label>
-                                                <input type="radio" id="star1" name="rate" value="1" />
-                                                <label for="star1" title="text">1 star</label>
-                                            </div>
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <p class="note-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque aliquam omnis quae commodi molestiae non magnam.</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>*@
                                 </div>
 
                             </div>
                         </div>
-                    }
+
+                    </div>
                 </div>
-            </div>
+                
 
-            <!-- Thanks pop up -->
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-body ">
-                            <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <div class="">
-                                <i class="fa fa-check-circle verified-thanks-pop-up "></i>
-                                <h2 class="heading j-center">Thank you for purchasing!</h2>
+                <!-- Thanks pop up -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <form>
+                            <div class="modal-body ">
+                                <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <div class="">
+                                    <i class="fa fa-check-circle verified-thanks-pop-up "></i>
+                                    <h2 class="heading j-center">Thank you for purchasing!</h2>
+                                </div>
+                                <div class="">
+                                    @foreach (var buyername in ViewBag.UserDetails)
+                                    {
+                                        if (buyername.EmailID == User.Identity.Name)
+                                        {
+                                            <p class="user-name">
+                                                Dear @buyername.FirstName,
+                                            </p>
+                                        }
+                                        if (buyername.ID == newbook.SellerID)
+                                        {
+                                            foreach (var sellerdata in ViewBag.UserProfileDetails)
+                                            {
+                                                if (sellerdata.Gender == "Male")
+                                                {
+                                                    <p>
+                                                        As this is private notes you need to have a permission from seller @buyername.FirstName&nbsp;@buyername.LastName offline. We will send him an email that you want to download this note. He may contact you further for payment process completion.
+                                                    </p>
+                                                    <p>
+                                                        In case, you have urgency,<br>
+                                                        Please contact us on @ViewBag.systemPhoneNo .
+                                                    </p>
+                                                    <p>Once he receives the payment and acknowledge us - seleced notes you can see over my downloads tab for download.</p>
+                                                    <p>Have a good day.</p>
+                                                }
+                                                if (sellerdata.Gender == "Female")
+                                                {
+                                                    <p>
+                                                        As this is private notes you need to have a permission from seller @buyername.FirstName&nbsp;@buyername.LastName offline. We will send her an email that you want to download this note. She may contact you further for payment process completion.
+                                                    </p>
+                                                    <p>
+                                                        In case, you have urgency,<br>
+                                                        Please contact us on @ViewBag.systemPhoneNo .
+                                                    </p>
+                                                    <p>Once she receives the payment and acknowledge us - selected notes you can see over my downloads tab for download.</p>
+                                                    <p>Have a good day.</p>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </div>
                             </div>
-                            <div class="">
-                                <p class="user-name">Dear Smith,</p>
-                                <p>As this is paid notes- you need to pay to seller Rahil Shah offline. We will send him an email that you want to download this note. He may contact you further for payment process completion.</p>
-                                <p>
-                                    In case, you have urgency,<br>
-                                    Please contact us on +9195377345959 .
-                                </p>
-                                <p>Once he receives the payment and acknowledge us - seleced notes you can see over my downloads tab for download.</p>
-                                <p>Have a good day.</p>
-                            </div>
+                                </form>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            }
 
         </form>
+        }
     </section>
     @section Scripts{
         <script type="text/javascript">
@@ -269,20 +350,19 @@
                 });
 
                 function showHideNav() {
-                    if ($(window).scrollTop() > -50 ) {
+                    if ($(window).scrollTop() > -50) {
                         //show white nav
                         $("nav").addClass("white-nav-top");
                         $("nav").css("box-shadow", "0 0 0 0 ");
                         //show dark logo
                         $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
                         //Show back-to-top Button
-                    } 
+                    }
                     if ($(window).scrollTop() > 50) {
                         $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
                     }
                 }
             });
-
         </script>
     }
 

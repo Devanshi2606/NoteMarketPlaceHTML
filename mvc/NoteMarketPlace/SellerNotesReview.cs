@@ -20,6 +20,9 @@ namespace NoteMarketPlace
         public decimal Ratings { get; set; }
         public int ReviewedByID { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<int> ModifiedBy { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
     
         public virtual SellerNote SellerNote { get; set; }
     }

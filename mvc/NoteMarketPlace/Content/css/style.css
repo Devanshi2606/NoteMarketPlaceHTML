@@ -510,17 +510,14 @@ ul.social-list li:nth-child(2) a:hover {
     background: #00aced;
     border-color: transparent;
 }
-
-ul.social-list li:nth-child(3) a:hover {
-    background: #dd4b39;
-    border-color: transparent;
+    ul.social-list li.linkedin:nth-child(3) a:hover {
+        background: #3b5998;
+        border-color: transparent;
+    }
+ul.social-list li:nth-child(3) a:hover{
+    background:#3b5998;
+    border-color:transparent;
 }
-
-ul.social-list li.linked-in:nth-child(3) a:hover {
-    background: #3b5998;
-    border-color: transparent;
-}
-
 
 footer {
     background: #fff;
@@ -565,7 +562,14 @@ footer p {
     color: #8a8a8a;
 }
 
-ul.navbar-nav > li > a:hover,
+ul.navbar-nav > li > a:hover{
+    padding-bottom: 5px;
+    -webkit-transition: border-color 300ms linear;
+    transition: border-color 300ms linear;
+    background: none;
+    color: #6255a5;
+}
+
 ul.navbar-nav > li > a:focus {
     border-bottom: 3px solid #6255a5;
     padding-bottom: 5px;

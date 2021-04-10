@@ -23,6 +23,7 @@ namespace NoteMarketPlace
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<int> ModifiedBy { get; set; }
+        public bool IsActive { get; set; }
     
         public virtual Download Download { get; set; }
         public virtual SellerNote SellerNote { get; set; }

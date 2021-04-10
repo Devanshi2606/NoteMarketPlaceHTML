@@ -34,6 +34,7 @@
     <Property Name="CreatedBy" Type="int" />
     <Property Name="ModifiedDate" Type="datetime" />
     <Property Name="ModifiedBy" Type="int" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="NoteCategories">
     <Key>
@@ -81,7 +82,7 @@
     <Property Name="IsPaid" Type="bit" Nullable="false" />
     <Property Name="SellingPrice" Type="decimal" Precision="18" Scale="2" />
     <Property Name="NotesPreview" Type="nvarchar(max)" />
-    <Property Name="PublishedDate" Type="datetime" />
+    <Property Name="PublishedDate" Type="datetime" Nullable="false" />
     <Property Name="Status" Type="varchar" MaxLength="30" Nullable="false" />
     <Property Name="ModifiedDate" Type="datetime" />
     <Property Name="ActionedBy" Type="int" />
@@ -89,6 +90,8 @@
     <Property Name="rating" Type="decimal" Precision="18" Scale="1" />
     <Property Name="FileName" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="FilePath" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="total_Earnings" Type="decimal" Precision="18" Scale="2" Nullable="false" />
   </EntityType>
   <EntityType Name="SellerNotesReportedIssues">
     <Key>
@@ -103,6 +106,7 @@
     <Property Name="CreatedBy" Type="int" />
     <Property Name="ModifiedDate" Type="datetime" />
     <Property Name="ModifiedBy" Type="int" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="SellerNotesReviews">
     <Key>
@@ -114,6 +118,9 @@
     <Property Name="Ratings" Type="decimal" Precision="18" Scale="1" Nullable="false" />
     <Property Name="ReviewedByID" Type="int" Nullable="false" />
     <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="ModifiedBy" Type="int" />
+    <Property Name="ModifiedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="SystemConfigurations">
     <Key>
@@ -145,8 +152,10 @@
     <Property Name="University" Type="varchar" MaxLength="100" />
     <Property Name="College" Type="varchar" MaxLength="100" />
     <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-    <Property Name="Total_expenses" Type="int" />
-    <Property Name="Total_earnings" Type="int" />
+    <Property Name="Total_expenses" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Total_earnings" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="ModifiedDate" Type="datetime" />
   </EntityType>
   <EntityType Name="UserRoles">
     <Key>
@@ -167,6 +176,24 @@
     <Property Name="Password" Type="varchar" MaxLength="24" Nullable="false" />
     <Property Name="IsEmailVerified" Type="bit" Nullable="false" />
     <Property Name="ActivationCode" Type="uniqueidentifier" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="JoiningDate" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedDate" Type="datetime" />
+    <Property Name="ModifiedBY" Type="int" />
+  </EntityType>
+  <EntityType Name="Users_Admin">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="Secondary_Email" Type="varchar(max)" />
+    <Property Name="Country_Code" Type="varchar" MaxLength="5" />
+    <Property Name="Phone_Number" Type="varchar" MaxLength="20" />
+    <Property Name="Profile_Picture" Type="varchar(max)" />
+    <Property Name="IsActive" Type="bit" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="ModifiedDate" Type="datetime" />
   </EntityType>
   <Association Name="FK_Downloads_SellerNotes">
     <End Role="SellerNotes" Type="Self.SellerNotes" Multiplicity="1" />
@@ -276,6 +303,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Users_Admin_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Users_Admin" Type="Self.Users_Admin" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Users_Admin">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Users_UserRoles">
     <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="1" />
     <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -300,6 +339,7 @@
     <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users_Admin" EntityType="Self.Users_Admin" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Downloads_SellerNotes" Association="Self.FK_Downloads_SellerNotes">
       <End Role="SellerNotes" EntitySet="SellerNotes" />
       <End Role="Downloads" EntitySet="Downloads" />
@@ -335,6 +375,10 @@
     <AssociationSet Name="FK_UserProfile_Users" Association="Self.FK_UserProfile_Users">
       <End Role="Users" EntitySet="Users" />
       <End Role="UserProfile" EntitySet="UserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Admin_Users" Association="Self.FK_Users_Admin_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Users_Admin" EntitySet="Users_Admin" />
     </AssociationSet>
     <AssociationSet Name="FK_Users_UserRoles" Association="Self.FK_Users_UserRoles">
       <End Role="UserRoles" EntitySet="UserRoles" />

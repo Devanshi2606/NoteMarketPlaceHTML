@@ -2,7 +2,7 @@
     ViewBag.Title = "DownloadNotes";
     Layout = "~/Views/Shared/Header.cshtml";
 }
-@model NoteMarketPlace.Models.Review
+
 <body>
     <br />
     <br />
@@ -58,8 +58,6 @@
                                 foreach (var downloaddata in ViewBag.downloaddetails)
                                 {
 
-                                    ViewBag.month = downloaddata.AttachmentDownloadDate.Month.ToString();
-                                    ViewBag.day = downloaddata.AttachmentDownloadDate.DayOfWeek.ToString();
                                     <tr>
                                         <td class="table-center">@(++ViewBag.count)</td>
                                         <td class="clr-change" onclick="location.href='@Url.Action("ViewNotes", "Users", new { noteid = downloaddata.NoteID })'">@downloaddata.NoteTitle</td>
@@ -92,23 +90,7 @@
 
                                         <td>$@downloaddata.PurchasedPrice</td>
                                         <td>
-                                            @switch ((string)ViewBag.month)
-                                            {
-                                                case "1": ViewBag.month = "Jan"; break;
-                                                case "2": ViewBag.month = "Feb"; break;
-                                                case "3": ViewBag.month = "Mar"; break;
-                                                case "4": ViewBag.month = "Apr"; break;
-                                                case "5": ViewBag.month = "May"; break;
-                                                case "6": ViewBag.month = "Jun"; break;
-                                                case "7": ViewBag.month = "Jul"; break;
-                                                case "8": ViewBag.month = "Aug"; break;
-                                                case "9": ViewBag.month = "Sep"; break;
-                                                case "10": ViewBag.month = "Oct"; break;
-                                                case "11": ViewBag.month = "Nov"; break;
-                                                default: ViewBag.month = "Dec"; break;
-                                            }
-
-                                            @downloaddata.AttachmentDownloadDate.Day @ViewBag.month @downloaddata.AttachmentDownloadDate.Year, @downloaddata.AttachmentDownloadDate.Hour:@downloaddata.AttachmentDownloadDate.Minute:@downloaddata.AttachmentDownloadDate.Second
+                                            @downloaddata.AttachmentDownloadDate.ToString(string.Format("dd-MMM-yyyy, hh:mm:ss"))
                                         </td>
                                         <td>
 
@@ -119,68 +101,89 @@
                                                 </a>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                     <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = downloaddata.NoteID })'">Download Note</a>
-                                                    <a type="button" class="dropdown-item" id="addreview" data-toggle="modal" data-target="#exampleModalCenter">Add Reviews/Feedback</a>
-                                                    <a class="dropdown-item" href="#">Report as inappropriate</a>
+                                                    <a type="button" class="dropdown-item" id="addreview" data-toggle="modal" data-target="#ReviewPopUp" onclick="passNoteid(@downloaddata.NoteID);">Add Reviews/Feedback</a>
+                                                    <a type="button" class="dropdown-item" data-toggle="modal" data-target="#@downloaddata.NoteID" >Report as inappropriate</a>
                                                 </div>
-
-
+                                            </div>
+                                            <!-- Report Issue pop up -->
+                                            <div class="modal fade" id="@downloaddata.NoteID" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <form action="/Users/ReportIssue?noteid=@downloaddata.NoteID" method="post">
+                                                            <div class="modal-body" style="padding: 20px;">
+                                                                <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                <h3 class="heading">@downloaddata.NoteTitle.ToUpper()</h3>
+                                                                <div class="form-group">
+                                                                    <p>Remarks*</p>
+                                                                    @Html.TextArea("Issue", "", new { @class = "form-control", @id = "issue", @placeholder = "Write remarks", @name = "Issue", @style = "height:140px;" })
+                                                                    @*<textarea class="form-control" id="message" placeholder="Write remarks" style="height: 140px;" name="message"></textarea>*@
+                                                                </div>
+                                                                <div class="text-right">
+                                                                    <button class="btn-primary btn-sm " onclick="if (confirm('Are you sure you want to mark this report as spam, you cannot update it later?')) { type='submit' }">Report</button>
+                                                                    <button type="button" class="btn-primary btn-sm inreview" onclick="location.href='@Url.Action("DownloadNotes", "Users")'">Cancel</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
+
                                     </tr>
                                 }
                             }
                             else
                             {
                                 <table width="100%" class="table-responsive">
-                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
                                 </table>
                             }
                         </tbody>
                     </table>
-                    <!-- Review Pop Up -->
                     <section id="review-pop-up">
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal fade" id="ReviewPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
-
-                                    <div class="modal-body ">
-                                        <form method="post">
+                                    <form class="formReview" method="post">
+                                        <div class="modal-body" style="padding: 20px;">
                                             <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
-                                            <div>
-                                                <h2 class="heading">Add Review</h2>
-                                            </div>
+                                            <h3 class="heading">Add Review</h3>
                                             <div class="rate">
-                                                @Html.RadioButtonFor(m => m.rating, "5", new { @id = "star5" })
+                                                @Html.RadioButton("rating", "5", new { @id = "star5", @name = "rating" })
+                                                @Html.Label("star5", "5 stars", new { @title = "text" })
                                                 @*<input type="radio" id="star5" name="rate" value="5" />*@
-                                                <label for="star5" title="text">5 stars</label>
-                                                @Html.RadioButtonFor(m => m.rating, "4", new { @id = "star4" })
+                                                @*<label for="star5" title="text">5 stars</label>*@
+                                                @Html.RadioButton("rating", "4", new { @id = "star4", @name = "rating" })
+                                                @Html.Label("star4", "4 stars", new { @title = "text" })
                                                 @*<input type="radio" id="star4" name="rate" value="4" />*@
-                                                <label for="star4" title="text">4 stars</label>
-                                                @Html.RadioButtonFor(m => m.rating, "3", new { @id = "star3" })
+                                                @*<label for="star4" title="text">4 stars</label>*@
+                                                @Html.RadioButton("rating", "3", new { @id = "star3", @name = "rating" })
+                                                @Html.Label("star3", "3 stars", new { @title = "text" })
                                                 @*<input type="radio" id="star3" name="rate" value="3" />*@
-                                                <label for="star3" title="text">3 stars</label>
-                                                @Html.RadioButtonFor(m => m.rating, "2", new { @id = "star2" })
+                                                @*<label for="star3" title="text">3 stars</label>*@
+                                                @Html.RadioButton("rating", "2", new { @id = "star2", @name = "rating" })
+                                                @Html.Label("star2", "2 stars", new { @title = "text" })
                                                 @*<input type="radio" id="star2" name="rate" value="2" />*@
-                                                <label for="star2" title="text">2 stars</label>
-                                                @Html.RadioButtonFor(m => m.rating, "1", new { @id = "star1" })
+                                                @*<label for="star2" title="text">2 stars</label>*@
+                                                @Html.RadioButton("rating", "1", new { @id = "star1", @name = "rating" })
+                                                @Html.Label("star1", "1 stars", new { @title = "text" })
                                                 @*<input type="radio" id="star1" name="rate" value="1" />*@
-                                                <label for="star1" title="text">1 star</label>
+                                                @*<label for="star1" title="text">1 star</label>*@
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Comments*</p>
+                                                @Html.TextArea("Message", "", new { @class = "form-control", @id = "message", @placeholder = "Comments...", @name = "Message", @style = "height:140px;" })
+                                                @*<textarea class="form-control" id="message" placeholder="Write remarks" style="height: 140px;" name="message"></textarea>*@
                                             </div>
                                             <div class="">
-                                                <p>Comments</p>
-                                                <div class="form-group ">
-                                                    <textarea class="form-control" id="message" placeholder="Comments..." name="comment"></textarea>
-                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center">Submit</button>
                                             </div>
-                                            <div class="">
-                                                <input type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center" onclick="location.href='@Url.Action("Review", "Users")'" value="Submit" />
-                                            </div>
-
-                                        </form>
-                                    </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -221,6 +224,13 @@
                     }
                 }
             });
+        </script>
+        <script type="text/javascript">
+            function passNoteid(noteid) {
+                var ac = "/Users/Review/?noteid=" + noteid;
+                $('form.formReview').attr("action", ac);
+            }
+            
         </script>
 }
 </body>

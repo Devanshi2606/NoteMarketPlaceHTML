@@ -1,0 +1,154 @@
+﻿
+@{
+    ViewBag.Title = "SpamReports";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+
+@model NoteMarketPlace.Models.Buyername
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="spam-reports">
+        @using (Html.BeginForm("SpamReports", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <div class="col-md-6 col-sm-5 col-xs-12 download-content">
+                            <h2 class="heading">Spam Reports</h2>
+                        </div>
+                    <div class="col-md-6 col-sm-7 col-xs-12 search-content text-right">
+                        <div class="form-group ">
+                            <form>
+                                <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                    @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search"><i class="fa fa-search"></i>*@
+                                    @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                        </div>
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>REPORTED BY</th>
+                                <th>NOTE TITLE</th>
+                                <th>CATEGORY</th>
+                                <th>DATE ADDED</th>
+                                <th>REMARK</th>
+                                <th>ACTION</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.ReportDetails != null)
+                            {
+                                foreach (var reportdata in ViewBag.ReportDetails)
+                                {
+                                    ViewBag.downloadcount = 0;
+                            <tr>
+                                <td class="table-center">@(++ViewBag.count)</td>
+                                <td>
+                                    @foreach (var buyername in ViewBag.userdetails)
+                                    {
+                                        if (buyername.ID.ToString() == reportdata.ReportedBYID.ToString())
+                                        {
+                                            @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                        }
+                                    }
+                                </td>
+                                @foreach (var sellerdata in ViewBag.sellerdetails)
+                                {
+                                    if (sellerdata.ID == reportdata.NoteID)
+                                    {
+                                        <td class="clr-change" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = reportdata.NoteID })'">@sellerdata.Title</td>
+                                        <td>
+                                            @foreach (var categoryname in ViewBag.categorydetails)
+                                            {
+                                                if (categoryname.Text == sellerdata.Category.ToString())
+                                                {
+                                                    @categoryname.Value
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                }
+
+                                <td>@reportdata.CreatedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                <td>@reportdata.Remarks</td>
+                                <td class="table-center"><img src="~/Content/images/dashboard/delete.png" onclick="if (confirm('Are you sure you want to delete reported issue?')) { location.href = '@Url.Action("DeleteSpamReports", "Admin", new { reportid = reportdata.ID })' }"></td>
+                                <td>
+                                    <div class="table-icon dropdown">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <p style="color: #d1d1d1; font-size: 1.4em;">&vellip;</p>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = reportdata.NoteID })'">Download Notes</a>
+                                            <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = reportdata.NoteID })'">View More Details</a>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        }
+    </section>
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(5, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+
+        </script>
+    }
+</body>
+
+
+
+

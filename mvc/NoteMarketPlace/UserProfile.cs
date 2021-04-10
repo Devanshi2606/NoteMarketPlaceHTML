@@ -30,8 +30,10 @@ namespace NoteMarketPlace
         public string University { get; set; }
         public string College { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public Nullable<int> Total_expenses { get; set; }
-        public Nullable<int> Total_earnings { get; set; }
+        public Nullable<decimal> Total_expenses { get; set; }
+        public Nullable<decimal> Total_earnings { get; set; }
+        public bool IsActive { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
     
         public virtual User User { get; set; }
     }

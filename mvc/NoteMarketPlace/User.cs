@@ -17,8 +17,9 @@ namespace NoteMarketPlace
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.UserProfiles = new HashSet<UserProfile>();
             this.SellerNotes = new HashSet<SellerNote>();
+            this.UserProfiles = new HashSet<UserProfile>();
+            this.Users_Admin = new HashSet<Users_Admin>();
         }
     
         public int ID { get; set; }
@@ -29,11 +30,17 @@ namespace NoteMarketPlace
         public string Password { get; set; }
         public bool IsEmailVerified { get; set; }
         public Nullable<System.Guid> ActivationCode { get; set; }
+        public bool IsActive { get; set; }
+        public System.DateTime JoiningDate { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<int> ModifiedBY { get; set; }
     
-        public virtual UserRole UserRole { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserProfile> UserProfiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SellerNote> SellerNotes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserProfile> UserProfiles { get; set; }
+        public virtual UserRole UserRole { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users_Admin> Users_Admin { get; set; }
     }
 }

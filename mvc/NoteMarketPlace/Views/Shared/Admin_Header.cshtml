@@ -1,0 +1,236 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en" class="profile">
+
+<head>
+    @*important meta tags*@
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*Title*@
+    <title>
+        @ViewBag.Title Page
+    </title>
+    @*Google Fonts*@
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    @*Fontawesome*@
+    <link rel="stylesheet" href="~/Content/css/font-awesome/css/font-awesome.min.css">
+    @*BootStrap CSS*@
+    <link rel="stylesheet" href="~/Content/css/bootstrap/bootstrap.min.css">
+    @*Header CSS*@
+    <link rel="stylesheet" href="~/Content/css/header.css">
+    @*Custom CSS*@
+    <link rel="stylesheet" href="~/Content/css/style.css">
+    @*Responsive CSS*@
+    <link rel="stylesheet" href="~/Content/css/responsive.css">
+    @*Paging CSS*@
+    <link rel="stylesheet" href="~/Content/css/paging.css">
+
+
+</head>
+@{
+    ViewBag.Facebook = TempData["Twitter"].ToString();
+    ViewBag.LinkedIn = TempData["LinkedIn"].ToString();
+    ViewBag.Twitter = TempData["Facebook"].ToString();
+    ViewBag.RoleID = TempData["RoleId"].ToString();
+    ViewBag.Profile = TempData["Userdetails"].ToString();
+
+}
+<body>
+    <section id="_header">
+
+        <header>
+            <nav class="navbar navbar-fixed-top navbar-sticky ">
+                <div class="container-fluid">
+                    <div class="site-nav-wrapper">
+                        <div class="navbar-header">
+
+                            <span id="mobile-nav-open-btn">&#9776;</span>
+                            @*Logo*@
+                            <a class="navbar-brand sticky-logo smooth-scroll" href="#home">
+                                <img class="img-responsive" src="~/Content/images/login/top-logo.png" alt="logo" />
+                            </a>
+                        </div>
+                        @*Main menu*@
+                        <div class="container">
+                            <div class="collapse navbar-collapse">
+                                <ul class="nav navbar-nav pull-right sticky">
+
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <li>@Html.ActionLink("Dashboard", "Dashboard_admin", "Admin")</li>
+                                        <li>
+                                            <a class=" dropdown-toggle smooth-scroll" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;">Notes</a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("NotesUnderReview", "Admin")'">Notes Under Review</a>
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("PublishedNotes", "Admin")'">Published Notes</a>
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_DownloadNotes", "Admin")'">Downloaded Notes</a>
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_RejectedNotes", "Admin")'">Rejected Notes</a>
+
+                                            </div>
+                                        </li>
+                                        <li>@Html.ActionLink("Members", "Members", "Admin")</li>
+                                        <li>
+                                            <a class="dropdown-toggle smooth-scroll" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;">Reports</a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("SpamReports", "Admin")'">Spam Reports</a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a class=" dropdown-toggle smooth-scroll" role="button" id="dropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;">Settings</a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink3">
+                                                @if (ViewBag.RoleID == "3")
+                                                {
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("ManageConfiguration", "Admin")'">Manage System Configuration</a>
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("ManageAdministrator", "Admin")'">Manage Administrator</a>}
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("ManageCategory", "Admin")'">Manage Category</a>
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("ManageType", "Admin")'">Manage Type</a>
+                                                <a class="dropdown-item" onclick="location.href='@Url.Action("ManageCountry", "Admin")'">Manage Countries</a>
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col-md-6  col-sm-6 col-xs-5 smooth-scroll flex-container">
+
+                                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:transparent;"><img src="@Url.Content(ViewBag.Profile)" alt="author" class="img-circle" style="height:40px;width:40px;margin-top:5px;"></a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("UserProfile_Admin", "Admin")'">Update Profile</a>
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("Changepassword", "Users")'">Change Password</a>
+                                                    <a class="dropdown-item a-logout" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }">LOGOUT</a>
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <input type="button" value="Logout" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }" />
+                                        </li>
+
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <input type="button" value="Login" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Login", "Users")'" />
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        @*Mobile Menu*@
+                        <div id="mobile-nav">
+                            <!--Mobile Menu Open Button -->
+                            <span id="mobile-nav-close-btn"> &times;</span>
+                            <div id="mobile-nav-content">
+                                <ul class="nav">
+
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <li>@Html.ActionLink("Dashboard", "Dashboard_admin", "Admin")</li>
+                                        <li>
+                                            <a>Notes</a>
+                                            <i class="fa fa-chevron-down toggle-arrow" data-toggle="collapse" data-target="#collapse-notes"></i>
+                                            <div class="collapse" id="collapse-notes">
+                                                <ul class="header-collapse">
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("NotesUnderReview", "Admin")'">Notes Under Review</a></li>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("PublishedNotes", "Admin")'">Published Notes</a></li>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("Admin_DownloadNotes", "Admin")'">Downloaded Notes</a>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("Admin_RejectedNotes", "Admin")'">Rejected Notes</a>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>@Html.ActionLink("Members", "Members", "Admin")</li>
+                                        <li>
+                                            <a>Reports</a>
+                                            <i class="fa fa-chevron-down toggle-arrow" data-toggle="collapse" data-target="#collapse-report"></i>
+                                            <div class="collapse" id="collapse-report">
+                                                <ul class="header-collapse">
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("SpamReports", "Admin")'">Spam Reports</a></li>
+
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a>Settings</a>
+                                            <i class="fa fa-chevron-down toggle-arrow" data-toggle="collapse" data-target="#collapse-settings"></i>
+                                            <div class="collapse" id="collapse-settings">
+                                                <ul class="header-collapse">
+                                                    @if (ViewBag.RoleID == "3")
+                                                    {
+
+                                                        <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("ManageConfiguration", "Admin")'">Manage System Configuration</a></li>
+                                                        <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("ManageAdministrator", "Admin")'">Manage Administrator</a></li>
+                                                    }
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("ManageCategory", "Admin")'">Manage Category</a></li>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("ManageType", "Admin")'">Manage Type</a></li>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("ManageCountry", "Admin")'">Manage Countries</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li id="header-profile">
+                                            <img src="@Url.Content(ViewBag.Profile)" class="img-circle" data-toggle="collapse" data-target="#collapse-profile" style="margin-left: 15px;height:50px;width:50px;margin-top:5px;">
+                                            <div class="collapse" id="collapse-profile">
+                                                <ul class="header-collapse">
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("UserProfile_Admin", "Admin")'">Update Profile</a></li>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item" onclick="location.href='@Url.Action("Changepassword", "Users")'">Change Password</a>
+                                                    <li style="margin-bottom: 2px;"><a class="dropdown-item a-logout" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }">LOGOUT</a>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        
+                                        <li>
+                                            <input type="button" value="Logout" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="if (confirm('Are you sure, you want to logout? ')) { location.href = '@Url.Action("Logout", "Users")' }" />
+                                        </li>
+
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <input type="button" value="Login" class="btn btn-primary btn-lg btn-block  text-center navbar-btn sticky-btn" onclick="location.href='@Url.Action("Login", "Users")'" />
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        @*Header Ends*@
+        @RenderBody()
+        @*footer*@
+        <footer class="b_footer">
+            <div class="container">
+                <div class="flex-container j-center footer-content col-md-12 col-sm-12 col-xs-12">
+                    <div class="footer-con">
+                        <p>
+                            Copyright &copy; TatvaSoft All rights reserved.
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <ul class="social-list">
+                            <li><a href="@ViewBag.Facebook" class="text-center"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="@ViewBag.Twitter" class="text-center"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="@ViewBag.LinkedIn" class="text-center"><i class="fa fa-linkedin"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </section>
+    @*JQuerry*@
+    <script src="~/Scripts/js/jquery.min.js"></script>
+    @*BootStrap JS*@
+    <script src="~/Scripts/js/bootstrap/bootstrap.min.js"></script>
+    @*Custom JS*@
+    <script src="~/Scripts/js/script.js"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+
+</html>

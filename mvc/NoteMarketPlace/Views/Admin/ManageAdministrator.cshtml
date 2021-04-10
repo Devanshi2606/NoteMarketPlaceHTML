@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "ManageAdministrator";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+
+<body>
+    <section id="manage-administrator">
+        @using (Html.BeginForm("ManageAdministrator", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <h2 class="heading">Manage Administrator</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-5 col-xs-12 add-btn ">
+                        <button type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center administrator-btn" onclick="location.href='@Url.Action("AddAdministrator", "Admin")'">
+                            Add Administrator
+                        </button>
+                    </div>
+                    <div class="col-md-6 col-sm-7 col-xs-12 search-content text-right">
+                        <div class="form-group ">
+                            <form>
+
+                                <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                    @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search"><i class="fa fa-search"></i>*@
+                                    @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>FIRST NAME</th>
+                                <th>LAST NAME</th>
+                                <th>EMAIL</th>
+                                <th>PHONE NO.</th>
+                                <th>DATE ADDED</th>
+                                <th>ACTIVE</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.userdetails != null)
+                            {
+                                foreach (var userdata in ViewBag.userdetails)
+                                {
+                            <tr>
+                                <td class="table-center">@(++ViewBag.count)</td>
+                                <td>@userdata.FirstName</td>
+                                <td>@userdata.LastName</td>
+                                <td>@userdata.EmailID</td>
+                                @foreach (var buyername in ViewBag.admindetails)
+                                {
+                                    if (buyername.UserID.ToString() == userdata.ID.ToString())
+                                    {
+                                        <td>@buyername.Phone_Number</td>
+                                    }
+                                }
+                                <td>
+                                <td>@userdata.JoiningDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+
+                                @switch ((bool)userdata.IsActive)
+                                {
+                                    case true:
+                                        <td class="table-center">Yes</td>
+                                        break;
+                                    case false:
+                                        <td class="table-center">No</td>
+                                        break;
+                                }
+                                <td>
+                                    <img src="~/Content/images/dashboard/edit.png" onclick="location.href='@Url.Action("AddAdministrator", "Admin",new { adminid=userdata.ID})'">
+                                    <img src="~/Content/images/dashboard/delete.png" onclick="if (confirm('Are you sure you want to make this administrator inactive?')) { location.href = '@Url.Action("DeleteAdministrator", "Admin",new { adminid=userdata.ID})' }">
+                                </td>
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        }
+    </section>
+    @section Scripts{
+        <!-- Paging -->
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+                    $("#tableData").pagify(10, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+                function showHideNav() {
+                   if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                   }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                 }
+            });
+        </script>
+    }
+</body>
+

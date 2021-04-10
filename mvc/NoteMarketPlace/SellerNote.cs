@@ -38,7 +38,7 @@ namespace NoteMarketPlace
         public bool IsPaid { get; set; }
         public Nullable<decimal> SellingPrice { get; set; }
         public string NotesPreview { get; set; }
-        public Nullable<System.DateTime> PublishedDate { get; set; }
+        public System.DateTime PublishedDate { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<int> ActionedBy { get; set; }
@@ -46,16 +46,18 @@ namespace NoteMarketPlace
         public Nullable<decimal> rating { get; set; }
         public string FileName { get; set; }
         public string FilePath { get; set; }
+        public bool IsActive { get; set; }
+        public decimal total_Earnings { get; set; }
     
         public virtual Country Country1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Download> Downloads { get; set; }
         public virtual NoteCategory NoteCategory { get; set; }
         public virtual NoteType NoteType1 { get; set; }
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SellerNotesReportedIssue> SellerNotesReportedIssues { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SellerNotesReview> SellerNotesReviews { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -91,6 +91,7 @@
                                     <div class="form-group drop-arrow">
                                         <select name="type" id="type" class="form-control" onchange="document.location.href = '/Users/SearchNotes?changeInRating=' + this.options[this.selectedIndex].value;" >
                                             <option value="" disabled selected hidden>Select rating</option>
+                                            <option value="5">5</option>
                                             <option value="4">4+</option>
                                             <option value="3">3+</option>
                                             <option value="2">2+</option>
@@ -261,7 +262,7 @@
                     else
                     {
                         <table width="100%" class="table-responsive">
-                            <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">@ViewBag.NorecordDetail</td></tr>
+                            <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
                         </table>
                     }
                 </div>

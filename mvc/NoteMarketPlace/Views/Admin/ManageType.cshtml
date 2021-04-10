@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "ManageType";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+
+
+<br />
+<br />
+<br />
+
+<body>
+    <section id="manage-type">
+        @using (Html.BeginForm("ManageType", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <h2 class="heading">Manage Type</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-5 col-xs-12 add-btn ">
+                        <button type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center administrator-btn" onclick="location.href='@Url.Action("AddType", "Admin")'">
+                            Add Type
+                        </button>
+                    </div>
+                    <div class="col-md-6 col-sm-7 col-xs-12 search-content text-right">
+                        <div class="form-group ">
+                            <form>
+                                <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                    @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search"><i class="fa fa-search"></i>*@
+                                    @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>TYPE</th>
+                                <th>DESCRIPTION</th>
+                                <th>DATE ADDED</th>
+                                <th>ADDED BY</th>
+                                <th>ACTIVE</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.typedetails != null)
+                            {
+                                foreach (var typedata in ViewBag.typedetails)
+                                {
+                                    <tr>
+                                        <td class="table-center">@(++ViewBag.count)</td>
+                                        <td>@typedata.TypeName</td>
+                                        <td>@typedata.Description</td>
+                                        <td>@typedata.CreatedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                        @*<td>@categorydata.CreatedDate.Day-@categorydata.CreatedDate.Month-@categorydata.CreatedDate.Year, </td>*@
+                                        <td>
+                                            @foreach (var buyername in ViewBag.admindetails)
+                                            {
+                                                if (buyername.ID.ToString() == typedata.CreatedBy.ToString())
+                                                {
+                                                    @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                                }
+                                            }
+                                        </td>
+
+                                        @switch ((bool)typedata.IsActive)
+                                        {
+                                            case true:
+                                                <td class="table-center">Yes</td>break;
+                                            case false:
+                                                <td class="table-center">No</td>break;
+                                        }
+                                        <td>
+                                            <img src="~/Content/images/dashboard/edit.png" onclick="location.href='@Url.Action("AddType", "Admin",new { typeid=typedata.TypeID})'">
+                                            <img src="~/Content/images/dashboard/delete.png" onclick="if (confirm('Are you sure you want to make this type inactive?')) { location.href = '@Url.Action("DeleteType", "Admin",new { typeid=typedata.TypeID})' }">
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        }
+    </section>
+    @section Scripts{
+        <!-- Paging -->
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+                    $("#tableData").pagify(10, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+                function showHideNav() {
+                   if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                   }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                 }
+            });
+        </script>
+    }
+</body>
+

@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "Download Notes";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+@model NoteMarketPlace.Models.Buyername
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="my_downloads">
+
+        @using (Html.BeginForm("Admin_DownloadNotes", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row whole-content" style="overflow-x: auto;">
+                    <div class="col-md-12 col-sm-12 col-xs-12 heading-download">
+                        <h2 class="heading">Download Notes</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-5 col-xs-12 admin-dashboard-month">
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            <p>Note</p>
+                            <div class="form-group drop-arrow">
+                                @Html.DropDownListFor(m => m.NoteTitle, ViewBag.NoteList as SelectList, "Select Note", new { @id = "type", @class = "form-control", onchange = "document.location.href = '/Admin/Admin_DownloadNotes?changeInTitle=' + this.options[this.selectedIndex].value;" })
+                                @*<select name="type" id="type" class="form-control">
+            <option value="" disabled selected hidden>Select note</option>
+            <option value="note1">Note 1</option>
+            <option value="note2">Note 2</option>
+            <option value="note3">Note 3</option>
+        </select>*@
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            <p>Seller</p>
+                            <div class="form-group drop-arrow">
+                                @Html.DropDownListFor(m => m.SellerName, ViewBag.SellerNameList as SelectList, "Select Seller", new { @id = "type", @class = "form-control", onchange = "document.location.href = '/Admin/Admin_DownloadNotes?changeInSellerName=' + this.options[this.selectedIndex].value;" })
+                                @*<select name="type" id="type" class="form-control">
+            <option value="" disabled selected hidden>Select seller</option>
+            <option value="khyati">Khyati</option>
+            <option value="rahul">Rahul</option>
+            <option value="suman">Suman</option>
+            <option value="raj">Raj</option>
+            <option value="niya">Niya</option>
+        </select>*@
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            <p>Buyer</p>
+                            <div class="form-group drop-arrow">
+                                @Html.DropDownListFor(m => m.BuyerName, ViewBag.BuyerNameList as SelectList, "Select Buyer", new { @id = "type", @class = "form-control", onchange = "document.location.href = '/Admin/Admin_DownloadNotes?changeInBuyerName=' + this.options[this.selectedIndex].value;" })
+                                @*<select name="type" id="type" class="form-control">
+            <option value="khyati" selected>Khyati</option>
+            <option value="rahul">Rahul</option>
+            <option value="suman">Suman</option>
+            <option value="raj">Raj</option>
+            <option value="niya">Niya</option>
+        </select>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-7 col-xs-12 search-content text-right" style="padding-right: 0px;">
+                        <div class="form-group ">
+                            <form>
+
+                                <div class="col-md-8 col-sm-8 col-xs-7 search">
+                                    @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search">*@
+                                    @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                    <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-5 text-right" style="padding-right: 0px;">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                        Search
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SR NO.</th>
+                                <th>NOTE TITLE</th>
+                                <th>CATEGORY</th>
+                                <th>BUYER</th>
+                                <th width="10px"></th>
+                                <th>SELLER</th>
+                                <th width="20px"></th>
+                                <th>SELL TYPE</th>
+                                <th>PRICE</th>
+                                <th class="table-center">DOWNLOADED<br>DATE/TIME</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.downloaddetails != null)
+                            {
+                                foreach (var downloaddata in ViewBag.downloaddetails)
+                                {                                    
+                            <tr>
+                                <td class="table-center">@(++ViewBag.count)</td>
+                                <td class="clr-change" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = downloaddata.NoteID })'">@downloaddata.NoteTitle</td>
+                                <td>
+                                    @foreach (var categoryname in ViewBag.categorydetails)
+                                    {
+                                        if (categoryname.Text == downloaddata.NoteCategory.ToString())
+                                        {
+                                            @categoryname.Value
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @foreach (var buyername in ViewBag.userdetails)
+                                    {
+                                        if (buyername.ID.ToString() == downloaddata.SellerId.ToString())
+                                        {
+                                            @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <i class="fa fa-fw fa-eye table-eye" style="color: #d1d1d1; margin-top: 10%; font-size: 1.4em;" onclick="location.href='@Url.Action("MemberDetails", "Admin", new { memberId = downloaddata.SellerId  })'"></i>
+
+                                </td>
+                                <td>
+                                    @foreach (var buyername in ViewBag.userdetails)
+                                    {
+                                        if (buyername.ID.ToString() == downloaddata.DownloaderId.ToString())
+                                        {
+                                            @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <i class="fa fa-fw fa-eye table-eye" style="color: #d1d1d1; margin-top: 10%; font-size: 1.4em;" onclick="location.href='@Url.Action("MemberDetails", "Admin", new { memberId = downloaddata.DownloaderId  })'"></i>
+
+                                </td>
+                                @if (downloaddata.PurchasedPrice == 0)
+                                {
+                                    <td>Free</td>
+                                }
+                                else
+                                {
+                                    <td>Paid</td>
+                                }
+
+                                <td>$@downloaddata.PurchasedPrice</td>
+                                <td>
+                                    @downloaddata.AttachmentDownloadDate.ToString(string.Format("dd-MMM-yyyy, hh:mm"))
+                                </td>
+                                <td>
+
+                                    <div class="table-icon dropdown">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <p style="color: #d1d1d1; font-size: 1.4em;">&vellip;</p>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = downloaddata.NoteID })'">Download Note</a>
+                                            <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = downloaddata.NoteID })'">View More Details</a>
+                                        </div>
+
+
+                                    </div>
+                                </td>
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- Review Pop Up -->
+                    <section id="review-pop-up">
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+
+                                    <div class="modal-body ">
+                                        <form method="post">
+                                            <button type="button" class="close pop-up-close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <div>
+                                                <h2 class="heading">Add Review</h2>
+                                            </div>
+                                            <div class="rate">
+                                                @*@Html.RadioButtonFor(m => m.rating, "5", new { @id = "star5" })*@
+                                                <input type="radio" id="star5" name="rate" value="5" />
+                                                <label for="star5" title="text">5 stars</label>
+                                                @*@Html.RadioButtonFor(m => m.rating, "4", new { @id = "star4" })*@
+                                                <input type="radio" id="star4" name="rate" value="4" />
+                                                <label for="star4" title="text">4 stars</label>
+                                                @*@Html.RadioButtonFor(m => m.rating, "3", new { @id = "star3" })*@
+                                                <input type="radio" id="star3" name="rate" value="3" />
+                                                <label for="star3" title="text">3 stars</label>
+                                                @*@Html.RadioButtonFor(m => m.rating, "2", new { @id = "star2" })*@
+                                                <input type="radio" id="star2" name="rate" value="2" />
+                                                <label for="star2" title="text">2 stars</label>
+                                                @*@Html.RadioButtonFor(m => m.rating, "1", new { @id = "star1" })*@
+                                                <input type="radio" id="star1" name="rate" value="1" />
+                                                <label for="star1" title="text">1 star</label>
+                                            </div>
+                                            <div class="">
+                                                <p>Comments</p>
+                                                <div class="form-group ">
+                                                    <textarea class="form-control" id="message" placeholder="Comments..." name="comment"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <input type="button" class="btn btn-primary btn-lg btn-block text-uppercase text-center" onclick="location.href='@Url.Action("Review", "Users")'" value="Submit" />
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    </div>
+            </div>
+        }
+
+    </section>
+
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(10, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+        </script>
+    }
+</body>
+

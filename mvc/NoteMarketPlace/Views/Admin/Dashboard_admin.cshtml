@@ -1,6 +1,221 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
 }
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="dashboard" class="admin-dashboard">
+        @using (Html.BeginForm("Dashboard_admin", "Admin", new { enctype = "multipart/form-data" }))
+        {
+            <div class="container">
+                <div class="row dashboard-heading">
+                    <div class="col-md-12">
+                        <div>
+                            <h2 class="heading">Dashboard</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row dashboard-item">
+                    <div class="col-md-12 col-sm-12 sol-xs-12 item-part2" style="padding-right: 0px; padding-left: 0px;">
+                        <div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 0px;">
+                            <!-- Item 01 -->
+                            <div class="stats-item text-center">
+                                <h2 class="heading">@ViewBag.InReviewNotes</h2>
+                                <p class="note-detail-info">Numbers of Notes in Review for Publish</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <!-- Item 02 -->
+                            <div class="stats-item text-center">
+                                <h2 class="heading">@ViewBag.LastDownloadednotes</h2>
+                                <p class="note-detail-info">Numbers of New Notes Downloaded (Last 7 days)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <!-- Item 03 -->
+                            <div class="stats-item text-center">
+                                <h2 class="heading">@ViewBag.LastUsers</h2>
+                                <p class="note-detail-info">Numbers of New Registrations (Last 7 days)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="flex-container j-space-btn dashboard-search">
+                        <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 0px;">
+                            <h3 class="heading">Published Notes</h3>
+                        </div>
+                        <div class="col-md-7 col-sm-12 col-xs-12" style="padding-right: 0px;">
+                            <div class="form-group ">
+                                <form>
+                                    <div class="col-md-6 col-sm-6 col-xs-4 search">
+                                        @*<input type="text" class="form-control search fa fa-search" id="search-field" placeholder="  Search">*@
+                                        @Html.TextBox("SearchText", "", new { @class = "form-control search fa fa-search", @id = "search-field", @placeholder = "Search", @name = "SearchText" })
+                                        <span class="text-danger"> @Html.ValidationMessage("SearchText")</span>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-4 text-right" style="padding-right: 0px;">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                            Search
+                                        </button>
+                                    </div>
+                                    @*<div class="col-md-6 col-sm-6 col-xs-4 search">
+                                        <input type="text" class="form-control search" id="search-field" placeholder="Search">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-4 text-right">
+                                        <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center search-btn">
+                                            Search
+                                        </button>
+                                    </div>*@
+                                    <div class="col-md-3 col-sm-3 col-xs-4 admin-dashboard-month" style="padding-right: 0px;">
+                                        <div class="form-group drop-arrow">
+                                            <select name="type" id="type" class="form-control" onchange="document.location.href = '/Admin/Dashboard_admin?changeInMonth=' + this.options[this.selectedIndex].value;">
+                                                <option value="" disabled selected hidden>Select month</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table id="tableData" class="table table-responsive">
+                        <thead>
+                            <tr class="text-uppercase">
+                                <th>Sr no.</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Attachment size</th>
+                                <th>Sell type</th>
+                                <th>Price</th>
+                                <th>Publisher</th>
+                                <th>Published Date</th>
+                                <th class="table-center">Number of<br>downloads</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="t1">
+                            @if (ViewBag.SellerNoteDetails != null)
+                            {
+                                foreach (var sellerdata in ViewBag.SellerNoteDetails)
+                                {
+                                    long length = new System.IO.FileInfo(Server.MapPath(sellerdata.FilePath)).Length;
+                                    long file_length = length / 1024;
+                                    ViewBag.downloadcount = 0;
+                                    <tr>
+                                        <td class="table-center">@(++ViewBag.count)</td>
+                                        <td class="clr-change" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = sellerdata.ID })'">@sellerdata.Title</td>
+                                        <td>
+                                            @foreach (var categoryname in ViewBag.categorydetails)
+                                            {
+                                                if (categoryname.Text == sellerdata.Category.ToString())
+                                                {
+                                                    @categoryname.Value
+                                                }
+                                            }
+                                        </td>
+                                        <td>@file_length KB</td>
+                                        @if (sellerdata.SellingPrice == 0)
+                                        {
+                                            <td>Free</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Paid</td>
+                                        }
 
-<h1>Dashboard_Admin</h1>
+                                        <td>$@sellerdata.SellingPrice</td>
+                                        <td>
+                                            @foreach (var buyername in ViewBag.userdetails)
+                                            {
+                                                if (buyername.ID.ToString() == sellerdata.SellerID.ToString())
+                                                {
+                                                    @(buyername.FirstName)<span>&nbsp;</span>@(buyername.LastName)
+                                                }
+                                            }
+                                        </td>
+                                        <td>@sellerdata.PublishedDate.ToString(string.Format("dd-MM-yyyy, hh:mm"))</td>
+                                        @foreach (var download in ViewBag.downloaddetails)
+                                        {
+                                            if (download.NoteID.ToString() == sellerdata.ID.ToString())
+                                            {
+                                                ++ViewBag.downloadcount;
+                                            }
+                                        }
+                                        <td class="table-center">@(ViewBag.downloadcount)</td>
+                                        <td>
+                                            <div class="table-icon dropdown">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <p style="color: #d1d1d1; font-size: 1.4em;">&vellip;</p>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("DownloadFile", "Users", new { noteid = sellerdata.ID })'">Download Notes</a>
+                                                    <a class="dropdown-item" onclick="location.href='@Url.Action("Admin_ViewNotes", "Admin", new { noteid = sellerdata.ID })'">View More Details</a>
+                                                   
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <table width="100%" class="table-responsive">
+                                    <tr><td style="border:1px solid #fff; text-align:center; font-size:25px;" class="norecorddetail">No Records Found</td></tr>
+                                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        </section>
+    @section Scripts{
+        <!-- Paging -->
+
+        <script type="text/javascript" src="~/Scripts/js/paging_navigation.js"></script>
+        <script type="text/javascript">
+            $("#tableData").pagify(5, "tbody tr");
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+        </script>
+    }
+</body>

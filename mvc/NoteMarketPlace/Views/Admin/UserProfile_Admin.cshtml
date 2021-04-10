@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/Admin_Header.cshtml";
+}
+@model NoteMarketPlace.Models.Admin_Profile
+<body>
+    <br />
+    <br />
+    <br />
+    <section id="admin-my-profile">
+        <!-- profile -->
+        @using (Html.BeginForm("UserProfile_Admin", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="basic-profile-details">
+                <form>
+                    <div class="container">
+                        <div class="row">
+                            <!-- Basic Details -->
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h1 class="heading">My Profile</h1>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>First Name*</p>
+                                    <div class="form-group ">
+                                        @Html.TextBoxFor(m => m.Firstname, "", new { @class = "form-control name f-name", @id = "f-name", @placeholder = "Enter your first name" })
+                                        <span class="text-danger"> @Html.ValidationMessage("Firstname")</span>
+                                        @*<input type="text" class="form-control name f-name" id="f-name" placeholder="Enter your first name">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Last Name*</p>
+                                    <div class="form-group ">
+                                        @Html.TextBoxFor(m => m.Lastname, "", new { @class = "form-control name l-name", @id = "l-name", @placeholder = "Enter your last name" })
+                                        <span class="text-danger"> @Html.ValidationMessage("Lastname")</span>
+                                        @*<input type="text" class="form-control name l-name" id="l-name" placeholder="Enter your last name">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Email*</p>
+                                    <div class="form-group ">
+                                        @*<input type="email" class="form-control email" id="email" placeholder="Enter your email address">*@
+                                        @Html.TextBoxFor(m => m.emailId, "", new { @class = "form-control email", @id = "email", @placeholder = "Enter your email address", @readonly = "readonly" })
+                                        <span class="text-danger"> @Html.ValidationMessage("emailId")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Secondary Email*</p>
+                                    <div class="form-group ">
+                                        @*<input type="email" class="form-control email" id="email" placeholder="Enter your email address">*@
+                                        @Html.TextBoxFor(m => m.Secondary_emailId, "", new { @class = "form-control email", @id = "email", @placeholder = "Enter your email address" })
+                                        <span class="text-danger"> @Html.ValidationMessage("Secondary_emailId")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Phone Number</p>
+                                    <div class="col-md-3 col-sm-4 col-xs-5 country-code form-group drop-arrow">
+                                        @*<select name="phone-no" id="phone-no" class="form-control">
+                                            <option value="india">+91</option>
+                                            <option value="usa">+1</option>
+                                        </select>*@
+                                        @Html.DropDownListFor(model => model.CountryCode, ViewBag.CountryList as SelectList, new { @id = "phone-no", @class = "form-control" })
+                                    </div>
+                                    <div class="col-md-9 col-sm-8 col-xs-7 phone-number form-group">
+                                        @Html.TextBoxFor(m => m.phoneNo, "", new { @class = "form-control name p-no", @id = "p-no", @placeholder = "Enter your phone number" })
+                                        <span class="text-danger"> @Html.ValidationMessage("phoneNo")</span>
+                                        @*<input type="text" class="form-control name p-no" id="p-no" placeholder="Enter your phone number">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 data">
+                                    <p>Profile Picture</p>
+                                    <div class="form-group flex-container">
+                                        <label for="profilePicture" id="upload-img" class="form-control form-control-upload  upload-img">
+                                        @Html.TextBoxFor(m => m.profilePictureGet, "", new { @class = "form-control name hidden" })
+                                        <input type="file" name="profilePicture" id="profilePicture" style="display:none; visibility:hidden;" onchange="getname(this.value,this.name);" value=@ViewBag.picname />
+                                        <p class="display-picture" style="margin-top:0%;"></p>
+                                        <figure class="upload-picture" style="margin-top:18%;">
+                                            <img src="~/Content/images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon" style="z-index:1;" />
+                                            <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                                        </figure>
+                                    </label>
+                                        @*<input type="text" class="form-control form-control-upload  upload-img" id="upload-img">
+                                        <span>
+                                            <figure>
+                                                <img src="../../images/User-Profile/upload.png" class="field-upload-icon" alt="upload icon">
+                                                <figcaption class="field-upload-icon-text">Upload a picture</figcaption>
+                                            </figure>
+                                        </span>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-7">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block text-uppercase text-center btn-submit">
+                                    Submit
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+    </section>
+    @section Scripts{
+        <script type="text/javascript">
+            $(function () {
+                showHideNav();
+                $(window).scroll(function () {
+                    //show hide nav on windows scroll
+                    showHideNav();
+                });
+                function showHideNav() {
+                    if ($(window).scrollTop() > -50) {
+                        //show white nav
+                        $("nav").addClass("white-nav-top");
+                        $("nav").css("box-shadow", "0 0 0 0 ");
+                        //show dark logo
+                        $(".sticky-logo img").attr("src", "../../Content/images/login/logo.png");
+                        //Show back-to-top Button
+                    }
+                    if ($(window).scrollTop() > 50) {
+                        $("nav").css("box-shadow", "0 8px 6px -9px #999 ");
+                    }
+                }
+            });
+        </script>
+        <script type="text/javascript">
+            $(window).on("load", function () {
+                if ($("#profilePicture").attr("value") != null) {
+                    $(".display-picture").html($("#profilePicture").attr("value"));
+                    $(".upload-picture").hide();
+                }
+            });
+        </script>
+        <script type="text/javascript">
+            function getname(file_name, class_name) {
+                file_name = file_name.replace(/^.*\\/, "");
+                if (class_name == "profilePicture") {
+                    $(".display-picture").html(file_name);
+                    $(".upload-picture").hide();
+                    //ViewBag.picture=file_name;
+                }
+            }
+        </script>
+
+    }
+</body>

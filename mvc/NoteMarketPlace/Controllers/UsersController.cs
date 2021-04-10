@@ -24,29 +24,44 @@ namespace NoteMarketPlace.Controllers
     public class UsersController : Controller
     {
         private Notes_MarketplaceEntities Db = new Notes_MarketplaceEntities();
-
         public ActionResult Header()
         {
             using (var db = new Notes_MarketplaceEntities())
             {
+                var systemDisplay_image = db.SystemConfigurations.Where(s => s.K_ey == "Display_image").Select(s => s.Value).FirstOrDefault();
+                var systemFacebook = db.SystemConfigurations.Where(s => s.K_ey == "Facebook").Select(s => s.Value).FirstOrDefault();
+                var systemTwitter = db.SystemConfigurations.Where(s => s.K_ey == "Twitter").Select(s => s.Value).FirstOrDefault();
+                var systemLinkedIn = db.SystemConfigurations.Where(s => s.K_ey == "LinkedIn").Select(s => s.Value).FirstOrDefault();
                 try
                 {
-                    var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
+                    var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name && x.IsActive==true);
                     var userdata = db.UserProfiles.FirstOrDefault(s => s.UserId == user.ID);
-
+                    TempData["Twitter"] = systemTwitter;
+                    TempData["LinkedIn"] = systemLinkedIn;
+                    TempData["Facebook"] = systemFacebook;
                     if (userdata != null)
                     {
-                        //ViewBag.userdetails = userdata.Profile_Picture;
-                        TempData["Userdetails"] = userdata.Profile_Picture;
+                        if (userdata.Profile_Picture != null)
+                        {
+                            //ViewBag.userdetails = userdata.Profile_Picture;u want to delete reported issue
+                            TempData["Userdetails"] = userdata.Profile_Picture;
+                        }
+                        else
+                        {
+                            TempData["Userdetails"] = systemDisplay_image;
+                        }
                     }
                     else
                     {
-                        TempData["Userdetails"] = "~/ UploadedFiles / defaultfile / user - 1.jpg";
+                        TempData["Userdetails"] = systemDisplay_image;
                     }
                 }
                 catch
                 {
-                    TempData["Userdetails"] = "";
+                    TempData["Twitter"] = systemTwitter;
+                    TempData["LinkedIn"] = systemLinkedIn;
+                    TempData["Facebook"] = systemFacebook;
+                    TempData["Userdetails"] = systemDisplay_image;
                 }
                 return View("~/Views/Shared/Header.cshtml");
             }
@@ -54,7 +69,7 @@ namespace NoteMarketPlace.Controllers
         }
 
         [HttpGet]
-        public ActionResult Signup(User user)
+        public ActionResult Signup()
         {
             return View();
         }
@@ -79,6 +94,7 @@ namespace NoteMarketPlace.Controllers
                             user.EmailID = signupobj.emailId;
                             user.Password = signupobj.password;
                             user.ActivationCode = Guid.NewGuid();
+                            user.JoiningDate=DateTime.Now;
                             user.RoleID = 1;
                             db.Users.Add(user);
                             db.SaveChanges();
@@ -143,6 +159,7 @@ namespace NoteMarketPlace.Controllers
                 if (IsVerify != null)
                 {
                     IsVerify.IsEmailVerified = true;
+                    IsVerify.IsActive = true;
                     db.SaveChanges();
                     ViewBag.Message = "Email Verification completed";
                     Status = true;
@@ -160,7 +177,13 @@ namespace NoteMarketPlace.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            return View();
+            Models.Login model = new Models.Login();
+            if(Request.Cookies["Login"]!=null)
+            {
+                model.emailId = Request.Cookies["Login"].Values["EmailID"];
+                model.password= Request.Cookies["Login"].Values["Password"];
+            }
+            return View(model);
         }
         [HttpPost]
         public ActionResult Login(Models.Login l)
@@ -169,24 +192,43 @@ namespace NoteMarketPlace.Controllers
             {
                 using (var db = new Notes_MarketplaceEntities())
                 {
-                    bool isValid = db.Users.Any(x => x.EmailID == l.emailId && x.Password == l.password && x.IsEmailVerified);
+                    User user = db.Users.Where(x => x.EmailID == l.emailId && x.Password == l.password && x.IsEmailVerified==true && x.IsActive==true).FirstOrDefault();
                     
-                    if (isValid)
+                    if (user!=null)
                     {
-                        User user = db.Users.FirstOrDefault(x => x.EmailID == l.emailId);
-                        FormsAuthentication.SetAuthCookie(l.emailId, false);
+                     
+                        FormsAuthentication.SetAuthCookie(l.emailId, l.RememberMe);
+                        Session["EmailID"] = user.EmailID;
+                        Session["Password"] = user.Password;
+                        if(l.RememberMe)
+                        {
+                            HttpCookie cookie = new HttpCookie("Login");
+                            cookie.Values.Add("EmailID", user.EmailID);
+                            cookie.Values.Add("Password", user.Password);
+                            cookie.Expires = DateTime.Now.AddDays(15);
+                            Response.Cookies.Add(cookie);
+                        }
                         if (user.RoleID == 1)
                         {
                             bool isRecordcreated = db.UserProfiles.Any(p => p.UserId == user.ID);
                             if (isRecordcreated)
                             {
-                                return RedirectToAction("Home");
+                                return RedirectToAction("Home","Users");
                             }
                             return RedirectToAction("Userprofile", "Users");
                         }
-                        else
+                        else if(user.RoleID==2)
                         {
-                            return RedirectToAction("Dashboard_admin", "Admin");
+                            bool isRecordcreated = db.Users_Admin.Any(p => p.UserID == user.ID);
+                            if (isRecordcreated)
+                            {
+                                return RedirectToAction("Dashboard_admin","Admin");
+                            }
+                            return RedirectToAction("UserProfile_Admin", "Admin");
+                        }
+                        else if(user.RoleID==3)
+                        {
+                            RedirectToAction("Dashboard_admin","Admin");
                         }
                     }
                     else
@@ -195,9 +237,9 @@ namespace NoteMarketPlace.Controllers
                     }
                 }
             }
-            return View();
+            return View(l);
         }
-        
+        [Authorize]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
@@ -212,17 +254,23 @@ namespace NoteMarketPlace.Controllers
             {
                 using (var db = new Notes_MarketplaceEntities())
                 {
-                    var getCountryList = db.Countries.ToList();
+                    var getCountryList = db.Countries.Where(x=>x.IsActive==true).ToList();
                     SelectList CountryList, CountryNameList;
                     User user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
+                    bool isusersigned = db.Users.Any(u => u.ID == user.ID);
+                    User_Profile up = new User_Profile();
+                    if (isusersigned)
+                    {
+                        up.Firstname = user.FirstName;
+                        up.Lastname = user.LastName;
+                        up.emailId = user.EmailID;
+                        up.DOB = DateTime.Now;
+                    }
                     bool isRecordcreated = db.UserProfiles.Any(p => p.UserId == user.ID);
                     if(isRecordcreated)
                     {
                         var userList = db.UserProfiles.FirstOrDefault(p => p.UserId == user.ID);
-                        User_Profile up = new User_Profile();
-                        up.Firstname = user.FirstName;
-                        up.Lastname = user.LastName;
-                        up.emailId = user.EmailID;
+                        
                         up.DOB = Convert.ToDateTime(userList.DOB);
                         up.phoneNo = userList.Phone_Number;
                         up.address1 = userList.Address_Line1;
@@ -232,12 +280,32 @@ namespace NoteMarketPlace.Controllers
                         up.University = userList.University;
                         up.College = userList.College;
                         up.zipCode = userList.Zip_Code;
-                        Country country = db.Countries.FirstOrDefault(c => c.CountryID == userList.Country);
-                        object counId = country.CountryID;
-                        CountryList = new SelectList(getCountryList, "CountryID", "CountryCode",counId);
-                        ViewBag.countrycode = CountryList;
-                        CountryNameList = new SelectList(getCountryList, "CountryID", "CountryName",counId);
-                        ViewBag.countryname = CountryNameList;
+                        Country countryname = db.Countries.FirstOrDefault(c => c.CountryID == userList.Country && c.IsActive==true);
+                        int coun_code = Convert.ToInt32(userList.Country_Code);
+                        Country countrycode = db.Countries.FirstOrDefault(c => c.CountryID == coun_code && c.IsActive==true);
+                        if(countryname!=null)
+                        {
+                            object counId = countryname.CountryID;
+                            CountryNameList = new SelectList(getCountryList, "CountryID", "CountryName", counId);
+                            ViewBag.countryname = CountryNameList;
+                        }
+                        else
+                        {
+                            CountryNameList = new SelectList(getCountryList, "CountryID", "CountryName");
+                            ViewBag.countryname = CountryNameList;
+                            ViewBag.countrydefValue = "Select Your Country";
+                        }
+                        if(countrycode!=null)
+                        {
+                            object counId = countrycode.CountryID;
+                            CountryList = new SelectList(getCountryList, "CountryID", "CountryCode", counId);
+                            ViewBag.countrycode = CountryList;
+                        }
+                        else
+                        {
+                            CountryList = new SelectList(getCountryList, "CountryID", "CountryCode");
+                            ViewBag.countrycode = CountryList;
+                        }
                         ViewBag.gender = userList.Gender;
                         up.profilePictureGet = userList.Profile_Picture;
                         string filename = Path.GetFileName(userList.Profile_Picture);
@@ -251,14 +319,15 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.countrydefValue= "Select Your Country";
                     ViewBag.gender = null;
                     ViewBag.picname = null;
-                    
+                    return View(up);
                 }
             }
             return View();
 
         }
+        [Authorize]
         [HttpPost]
-        public ActionResult Userprofile(User_Profile userProfilemodel)
+        public ActionResult Userprofile(User_Profile userProfilemodel, UserProfile userProfileDb)
         {
             if (ModelState.IsValid)
             {
@@ -268,22 +337,27 @@ namespace NoteMarketPlace.Controllers
                     int userTemp = 0;
                     
                     var user = db.Users.Where(x => x.EmailID == User.Identity.Name).FirstOrDefault();
-                    var userProfileDb = db.UserProfiles.Where(u => u.UserId == user.ID).FirstOrDefault();
+                    bool isRecordcreated = db.UserProfiles.Any(p => p.UserId == user.ID);
+
+                    
                     if(user!=null)
                     {
                         userTemp = 1;
                     }
-                    if(userProfileDb!=null)
+                    if(isRecordcreated)
                     {
+                        userProfileDb = db.UserProfiles.Where(u => u.UserId == user.ID).FirstOrDefault();
                         userProfileTemp = 1;
                     }
                     user.FirstName = userProfilemodel.Firstname;
                     user.LastName = userProfilemodel.Lastname;
-                    userProfileDb.UserId = user.ID;
                     userProfileDb.DOB = userProfilemodel.DOB;
                     userProfileDb.Gender = userProfilemodel.Gender;
                     userProfileDb.Country_Code = userProfilemodel.CountryCode;
+                    userProfileDb.UserId = user.ID;
                     userProfileDb.Phone_Number = userProfilemodel.phoneNo;
+                    userProfileDb.IsActive = true;
+                    userProfileDb.ModifiedDate = DateTime.Now;
                     var path = Server.MapPath("~\\UploadedFiles\\") + user.ID;
                     if (!(Directory.Exists(path)))
                     {
@@ -319,7 +393,7 @@ namespace NoteMarketPlace.Controllers
                     }
                     else
                     {
-                        userProfileDb.Profile_Picture = "~\\UploadedFiles\\defaultfile\\user-1.jpg";
+                        userProfileDb.Profile_Picture = null;
                     }
 
                     userProfileDb.Address_Line1 = userProfilemodel.address1;
@@ -332,7 +406,7 @@ namespace NoteMarketPlace.Controllers
                     userProfileDb.College = userProfilemodel.College;
                     userProfileDb.Total_expenses = 0;
                     userProfileDb.Total_earnings = 0;
-                    userProfileDb.CreatedDate = DateTime.Now;
+                    
 
                     if (userTemp == 1)
                     {
@@ -340,6 +414,7 @@ namespace NoteMarketPlace.Controllers
                     }
                     else
                     {
+                        
                         db.Users.Add(user);
                     }
                     if (userProfileTemp==1)
@@ -348,6 +423,7 @@ namespace NoteMarketPlace.Controllers
                     }
                     else
                     {
+                        userProfileDb.CreatedDate = DateTime.Now;
                         db.UserProfiles.Add(userProfileDb);
                     }
                     
@@ -428,8 +504,7 @@ namespace NoteMarketPlace.Controllers
         [HttpGet]
         public ActionResult SearchNotes(Searchnotes searchnotes,string changeInTitle,int? changeInType,int?changeINCategory,string changeInUniversity,string changeInCourse,int? changeInCountry,int? changeInRating)
         {
-            Header();
-
+                Header();
             if (ModelState.IsValid)
             {
                 using (var db = new Notes_MarketplaceEntities())
@@ -441,20 +516,21 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.star = 0;
                     ViewBag.month = null;
                     ViewBag.day = null;
-                    var bookdata = db.SellerNotes.Where(s => s.Status == "approved").ToList();
-                    var inappropriate_message = db.SellerNotesReportedIssues.ToList();
+                    var bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.IsActive == true).ToList();
+                    ViewBag.bookdetails = null;
+                    var inappropriate_message = db.SellerNotesReportedIssues.Where(r=>r.IsActive == true).ToList();
                     SelectList ReportedList = new SelectList(inappropriate_message, "ID", "NoteID");
                     ViewBag.inappropriateMsg = ReportedList;
-                    var note_review = db.SellerNotesReviews.ToList();
+                    var note_review = db.SellerNotesReviews.Where(r=>r.IsActive == true).ToList();
                     SelectList ReviewList = new SelectList(note_review, "Ratings", "NoteID");
                     ViewBag.reviewMsg = ReviewList;
-                    var getCountryList = db.Countries.ToList();
+                    var getCountryList = db.Countries.Where(x => x.IsActive == true).ToList();
                     SelectList CountryList = new SelectList(getCountryList, "CountryID", "CountryName");
                     ViewBag.countryname = CountryList;
-                    var getCategoryList = db.NoteCategories.ToList();
+                    var getCategoryList = db.NoteCategories.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList = new SelectList(getCategoryList, "CategoryID", "CategoryName");
                     ViewBag.categoryname = CategoryList;
-                    var getTypeList = db.NoteTypes.ToList();
+                    var getTypeList = db.NoteTypes.Where(x => x.IsActive == true).ToList();
                     SelectList TypeList = new SelectList(getTypeList, "TypeID", "TypeName");
                     ViewBag.typename = TypeList;
                     var getUniversityList = db.SellerNotes.GroupBy(s => s.UniversityName).Select(s => s.FirstOrDefault()).ToList();
@@ -466,88 +542,66 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.coursename = CourseList;
                     if (changeInTitle != null)
                     {
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Title == changeInTitle).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Title == changeInTitle && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
-                    if (changeInType!=null)
+                    else if (changeInType!=null)
                     {
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.NoteType==changeInType).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.NoteType==changeInType && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
                     else if (changeINCategory != null)
                     {
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Category == changeINCategory).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Category == changeINCategory && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
                     else if (changeInUniversity != null)
                     {
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.UniversityName == changeInUniversity).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.UniversityName == changeInUniversity && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
-                        }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
                         }
                     }
                     else if (changeInCourse != null)
                     {
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Course == changeInCourse).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Course == changeInCourse && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
                     else if (changeInCountry != null)
                     {
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Country == changeInCountry).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.Country == changeInCountry && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
                     else if (changeInRating != null)
                     {
-                        var r = db.SellerNotes.Where(s => s.Status == "approved" ).Select(s=>s.rating).ToList();
-                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.rating >=changeInRating).ToList();
+                        //var r = db.SellerNotes.Where(s => s.Status == "approved" && s.IsActive == true).Select(s=>s.rating).ToList();
+                        bookdata = db.SellerNotes.Where(s => s.Status == "approved" && s.rating >=changeInRating && s.IsActive == true).ToList();
                         if (bookdata.Count != 0)
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
                     else
                     {
@@ -555,10 +609,7 @@ namespace NoteMarketPlace.Controllers
                         {
                             ViewBag.bookdetails = bookdata;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
+                        
                     }
                     
 
@@ -570,7 +621,7 @@ namespace NoteMarketPlace.Controllers
 
         
         [Authorize]
-        public ActionResult SellyourNotes(string progressText,string publishedText)
+        public ActionResult SellyourNotes(string progressText,string publishedText,int? page)
         {
             Header();
             if (ModelState.IsValid)
@@ -581,21 +632,21 @@ namespace NoteMarketPlace.Controllers
                     //ViewBag.day = null;
                     //ViewBag.count = 0;
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    var progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && (x.Status == "draft" || x.Status == "inReview" || x.Status == "submitted")).ToList();
-                    var publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved").ToList();
+                    var progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && (x.Status == "draft" || x.Status == "inReview" || x.Status == "submitted")).OrderBy(x=>x.ModifiedDate).ToList().ToPagedList(page??1,3);
+                    var publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.IsActive == true).OrderBy(x => x.PublishedDate).ToList();
                     ViewBag.progressdetails = null;
                     ViewBag.publisheddetails = null;
-                    var SoldNotes = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true).ToList();
+                    var SoldNotes = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true).ToList();
                     ViewBag.Soldnotes = SoldNotes.Count;
-                    var earning = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true).Sum(x => x.PurchasedPrice);
+                    var earning = db.UserProfiles.Where(x=>x.UserId==user.ID).Select(x=>x.Total_earnings).FirstOrDefault();
                     ViewBag.Earning = earning;
-                    var downloadNotes = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsPaid == true).ToList();
+                    var downloadNotes = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true).ToList();
                     ViewBag.downloadNotes = downloadNotes.Count;
                     var rejectedNotes = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected").ToList();
                     ViewBag.rejectedNotes = rejectedNotes.Count;
-                    var buyerNotes = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false).ToList();
+                    var buyerNotes = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false && x.IsActive == false).ToList();
                     ViewBag.buyerNotes = buyerNotes.Count;
-                    var categorydata = db.NoteCategories.ToList();
+                    var categorydata = db.NoteCategories.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList = new SelectList(categorydata, "CategoryName", "CategoryID");
                     ViewBag.categorydetails = CategoryList;
                     if (!String.IsNullOrEmpty(progressText))
@@ -611,46 +662,31 @@ namespace NoteMarketPlace.Controllers
                             bool isStatus = StatusType.Contains(progressText);
                             if (isTitle)
                             {
-                                progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && (x.Status == "draft" || x.Status == "inReview" || x.Status == "submitted") && x.Title == progressText).ToList();
+                                progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && (x.Status == "draft" || x.Status == "inReview" || x.Status == "submitted") && x.Title == progressText ).OrderBy(x => x.ModifiedDate).ToList().ToPagedList(page ?? 1, 3);
                                 if (progressList.Count != 0)
                                 {
                                     ViewBag.progressdetails = progressList;
-                                }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
                                 }
                             }
-                            else if (isCat)
+                             if (isCat)
                             {
-                                var cid = db.NoteCategories.Where(x => x.CategoryName == progressText).Select(x => x.CategoryID).FirstOrDefault();
-                                progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && (x.Status == "draft" || x.Status == "inReview" || x.Status == "submitted") && x.Category == cid).ToList();
+                                var cid = db.NoteCategories.Where(x => x.CategoryName == progressText && x.IsActive==true).Select(x => x.CategoryID).FirstOrDefault();
+                                progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && (x.Status == "draft" || x.Status == "inReview" || x.Status == "submitted") && x.Category == cid).OrderBy(x => x.ModifiedDate).ToList().ToPagedList(page ?? 1, 3);
                                 if (progressList.Count != 0)
                                 {
                                     ViewBag.progressdetails = progressList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                                
                             }
-                            else if (isStatus)
+                             if (isStatus)
                             {
-                                progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == progressText).ToList();
+                                progressList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == progressText).OrderBy(x => x.ModifiedDate).ToList().ToPagedList(page ?? 1, 3);
                                 if (progressList.Count != 0)
                                 {
                                     ViewBag.progressdetails = progressList;
-                                }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
                                 }
                             }
                             
-                            else
-                            {
-                                ViewBag.NorecordDetail = "No Records Found";
-                            }
                         }
                     }
                     else
@@ -658,10 +694,6 @@ namespace NoteMarketPlace.Controllers
                         if (progressList.Count != 0)
                         {
                             ViewBag.progressdetails = progressList;
-                        }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
                         }
                     }
 
@@ -678,69 +710,52 @@ namespace NoteMarketPlace.Controllers
                             bool isSellType = sellMode.Contains(publishedText);
                             if (isTitle)
                             {
-                                publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.Title == publishedText).ToList();
+                                publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.Title == publishedText && x.IsActive == true).OrderBy(x => x.PublishedDate).ToList();
                                 if (publishedList.Count != 0)
                                 {
                                     ViewBag.publisheddetails = publishedList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else if (isCat)
+                            if (isCat)
                             {
-                                var cid = db.NoteCategories.Where(x => x.CategoryName == publishedText).Select(x => x.CategoryID).FirstOrDefault();
-                                publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.Category == cid).ToList();
+                                var cid = db.NoteCategories.Where(x => x.CategoryName == publishedText && x.IsActive==true).Select(x => x.CategoryID).FirstOrDefault();
+                                publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.Category == cid && x.IsActive == true).OrderBy(x => x.PublishedDate).ToList();
                                 if (publishedList.Count != 0)
                                 {
                                     ViewBag.publisheddetails = publishedList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                                
                             }
-                            else if (isPrice)
+                            if (isPrice)
                             {
 
                                 bool Price = db.SellerNotes.Any(d => d.SellingPrice == price);
                                 if (Price)
                                 {
-                                    publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.SellingPrice == price).ToList();
+                                    publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.SellingPrice == price && x.IsActive == true).OrderBy(x => x.PublishedDate).ToList();
                                     if (publishedList.Count != 0)
                                     {
                                         ViewBag.publisheddetails = publishedList;
                                     }
-                                    else
-                                    {
-                                        ViewBag.NorecordDetail = "No Records Found";
-                                    }
                                 }
                             }
-                            else if (isSellType)
+                            if (isSellType)
                             {
                                 if (publishedText == "free")
                                 {
-                                    publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.IsPaid == false).ToList();
+                                    publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.IsPaid == false && x.IsActive == true).OrderBy(x => x.PublishedDate).ToList();
                                 }
                                  if (publishedText == "paid")
                                 {
-                                    publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.IsPaid == true).ToList();
+                                    publishedList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "approved" && x.IsPaid == true && x.IsActive == true).OrderBy(x => x.PublishedDate).ToList();
                                 }
                                 if (publishedList.Count != 0)
                                 {
                                     ViewBag.publisheddetails = publishedList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                                
                             }
-                            else
-                            {
-                                ViewBag.NorecordDetail = "No Records Found";
-                            }
+                            
                         }
                     }
                     else
@@ -749,13 +764,10 @@ namespace NoteMarketPlace.Controllers
                         {
                             ViewBag.publisheddetails = publishedList;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
                     }
-                    
+                    return View(publishedList.ToPagedList(page??1,3));
                 }
+                
             }
             return View();
         }
@@ -775,18 +787,35 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.star = 0;
                     ViewBag.month = null;
                     ViewBag.day = null;
-
-                    var bookdata = db.SellerNotes.Where(x => x.ID == noteid).ToList();
+                    var systemPhoneno = db.SystemConfigurations.Where(s => s.K_ey == "pno").Select(s=>s.Value).FirstOrDefault();
+                    ViewBag.systemPhoneNo = systemPhoneno;
+                    var bookdata = db.SellerNotes.Where(x => x.ID == noteid ).ToList();
                     ViewBag.bookdetails = bookdata;
-                    var countrydata = db.Countries.ToList();
+                    var countrydata = db.Countries.Where(x => x.IsActive == true).ToList();
                     SelectList CountryList = new SelectList(countrydata, "CountryName", "CountryID");
                     ViewBag.countrydetails = CountryList;
-                    var note_review = db.SellerNotesReviews.ToList();
+                    var notesReview = db.SellerNotesReviews.Where(n => n.NoteID == noteid && n.IsActive==true).OrderBy(n=>Guid.NewGuid()).Take(3).ToList();
+                    ViewBag.NoteReview = notesReview;
+                    var reviewerList = db.Users.ToList();
+                    ViewBag.reviewerList = reviewerList;
+                    var reviewerProfileList = db.UserProfiles.ToList();
+                    ViewBag.reviewrProfileList = reviewerProfileList;
+                    var note_review = db.SellerNotesReviews.Where(x=>x.IsActive == true && x.NoteID==noteid).ToList();
                     SelectList ReviewList = new SelectList(note_review, "Ratings", "NoteID");
                     ViewBag.reviewMsg = ReviewList;
-                    var inappropriate_message = db.SellerNotesReportedIssues.ToList();
+                    var inappropriate_message = db.SellerNotesReportedIssues.Where(x=>x.IsActive == true && x.NoteID==noteid).ToList();
                     SelectList ReportedList = new SelectList(inappropriate_message, "ID", "NoteID");
                     ViewBag.inappropriateMsg = ReportedList;
+                    var sellerdata = db.SellerNotes.Where(x => x.ID == noteid && x.IsActive == true).Select(x=>x.SellerID).ToList();
+                    var userdata = db.Users.Where(u=> sellerdata.Contains(u.ID) || u.EmailID == User.Identity.Name).ToList();
+                    var userProfiledata = db.UserProfiles.Where(u=> sellerdata.Contains(u.UserId) ).ToList();
+                    ViewBag.UserProfileDetails = userProfiledata;
+                    var Downloderdata = db.Users.Where(u => u.EmailID == User.Identity.Name).Select(u=>u.ID).FirstOrDefault();
+                    bool isRecordCreated = db.Downloads.Any(d => d.NoteID == noteid && d.DownloaderId == Downloderdata && d.IsSellerHasAllowedDownload==true);
+                    if (!isRecordCreated)
+                    { ViewBag.RecordCreated = "no"; }
+                    else { ViewBag.RecordCreated = "yes"; }
+                    ViewBag.UserDetails = userdata;
                 }
             }
             return View();
@@ -799,25 +828,65 @@ namespace NoteMarketPlace.Controllers
             {
                 using (var db = new Notes_MarketplaceEntities())
                 {
-                    var bookdata = db.SellerNotes.Where(x => x.ID == noteid).ToList();
-                    var sellernote = db.SellerNotes.FirstOrDefault(s => s.ID == noteid);
+                    //var bookdata = db.SellerNotes.Where(x => x.ID == noteid).ToList();
+                    var sellernote = db.SellerNotes.FirstOrDefault(s => s.ID == noteid && s.IsActive == true);
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    if (ModelState.IsValid)
+                    var sellerid = db.Users.FirstOrDefault(x => x.ID == sellernote.SellerID);
+                    var buyerDetail = db.UserProfiles.Where(b => b.UserId == user.ID).Select(b => b.Gender).FirstOrDefault();
+                    bool isUserPaid = db.Downloads.Any(d => d.NoteID == noteid && d.DownloaderId == user.ID && d.IsSellerHasAllowedDownload == true);
+                    bool isRecordCreated = db.Downloads.Any(d=>d.NoteID==noteid && d.DownloaderId==user.ID);
+                    if (!isRecordCreated)
                     {
-                        download.NoteID = noteid;
-                        download.SellerId = sellernote.SellerID;
-                        download.DownloaderId = user.ID;
-                        download.IsSellerHasAllowedDownload = false;
-                        download.AttachmentName = sellernote.FileName;
-                        download.AttachmentPath = sellernote.FilePath;
-                        download.IsAttachmentDownloaded = false;
-                        download.AttachmentDownloadDate = DateTime.Now;
-                        download.IsPaid = false;
-                        download.PurchasedPrice = sellernote.SellingPrice;
-                        download.NoteTitle = sellernote.Title;
-                        download.NoteCategory = Convert.ToInt32(sellernote.Category);
-                        db.Downloads.Add(download);
-                        db.SaveChanges();
+                        if (ModelState.IsValid)
+                        {
+                            download.NoteID = noteid;
+                            download.SellerId = sellernote.SellerID;
+                            download.DownloaderId = user.ID;
+                            download.IsSellerHasAllowedDownload = false;
+                            download.IsActive = false;
+                            download.AttachmentName = sellernote.FileName;
+                            download.AttachmentPath = sellernote.FilePath;
+                            download.IsAttachmentDownloaded = false;
+                            download.AttachmentDownloadDate = DateTime.Now;
+                            download.IsPaid = sellernote.IsPaid;
+                            download.PurchasedPrice = sellernote.SellingPrice;
+                            download.NoteTitle = sellernote.Title;
+                            download.NoteCategory = Convert.ToInt32(sellernote.Category);
+                            db.Downloads.Add(download);
+                            string gender = "";
+                            switch (buyerDetail)
+                            {
+                                case "Male": gender = "him"; break;
+                                case "Female": gender = "her"; break;
+                            }
+                            db.SaveChanges();
+                            if (sellernote.SellingPrice == 0)
+                            {
+                                return RedirectToAction("DownloadFile", "Users", new { noteid = noteid });
+                            }
+                            else
+                            {
+                                MailMessage mail = new MailMessage();
+                                mail.To.Add(sellerid.EmailID);
+                                mail.From = new MailAddress("parejiyadevanshi@gmail.com", "Devanshi Parejiya");
+                                mail.Subject = user.FirstName + " " + user.LastName + " wants to purchase your notes";
+                                string Body = "<p><p style=" + "margin-bottom:0px;" + ">Hello," + sellerid.FirstName + " " + sellerid.LastName + "<br>We would like to inform you that, " + user.FirstName + " " + user.LastName + " wants to purchase your notes,Please see Buyer Requests tab and allow download access to Buyer if you have received the payment from " + gender + ".<br><p><b>Regards,<br>NotesMarketplace</b></p></p>";
+                                mail.Body = Body;
+                                mail.IsBodyHtml = true;
+                                mail.BodyEncoding = UTF8Encoding.UTF8;
+                                SmtpClient smtp = new SmtpClient();
+                                smtp.Host = "smtp.gmail.com";
+                                smtp.Port = 587;
+                                smtp.UseDefaultCredentials = false;
+                                smtp.Credentials = new System.Net.NetworkCredential("parejiyadevanshi@gmail.com", "jhmswewvcofgnyfr"); // Enter seders User name and password  
+                                smtp.EnableSsl = true;
+                                smtp.Send(mail);
+                            }
+                        }
+                    }
+                    if(isUserPaid)
+                    {
+                        return  RedirectToAction("DownloadFile", "Users",new { noteid=noteid});
                     }
 
                 }
@@ -836,15 +905,15 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.day = null;
                     ViewBag.count = 0;
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    var downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false).ToList();
+                    var downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false).OrderBy(x => x.AttachmentDownloadDate).ToList();
                     ViewBag.downloaddetails = null;
-                    var categorydata = db.NoteCategories.ToList();
+                    var categorydata = db.NoteCategories.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList = new SelectList(categorydata, "CategoryName", "CategoryID");
                     ViewBag.categorydetails = CategoryList;
                     var buyerdata = db.Users.ToList();
                     SelectList BuyerList = new SelectList(buyerdata, "EmailID", "ID");
                     ViewBag.buyerdetails = BuyerList;
-                    var countrydata = db.Countries.ToList();
+                    var countrydata = db.Countries.Where(x => x.IsActive == true).ToList();
                     SelectList CountryList = new SelectList(countrydata, "CountryCode", "CountryID");
                     ViewBag.countrydetails = CountryList;
                     var userdata = db.UserProfiles.ToList();
@@ -861,76 +930,55 @@ namespace NoteMarketPlace.Controllers
 
                             if (isTitle)
                             {
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false && x.NoteTitle == SearchText).ToList();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false && x.NoteTitle == SearchText && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                              
                             }
-                            else if (isCat)
+                            if (isCat)
                             {
-                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText).Select(x => x.CategoryID).FirstOrDefault();
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false && x.NoteCategory == cid).ToList();
+                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText && x.IsActive==true).Select(x => x.CategoryID).FirstOrDefault();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false && x.NoteCategory == cid && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                                
                             }
-                            else if (isBuyer)
+                            if (isBuyer)
                             {
                                 var bname = db.Users.Where(b => b.FirstName == SearchText).Select(b => b.ID).ToList();
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false && bname.Contains(x.DownloaderId)).ToList();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false && bname.Contains(x.DownloaderId) && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else if (isphoneno)
+                            if (isphoneno)
                             {
                                 var pno = db.UserProfiles.Where(b => b.Phone_Number == SearchText).Select(b => b.UserId).FirstOrDefault();
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false && x.DownloaderId == pno).ToList();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false && x.DownloaderId == pno && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else if (isPrice)
+                            if (isPrice)
                             {
 
                                 bool Price = db.Downloads.Any(d => d.PurchasedPrice == price);
                                 if (Price)
                                 {
-                                    downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == false && x.PurchasedPrice == price).ToList();
+                                    downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == false && x.PurchasedPrice == price && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                     if (downloadList.Count != 0)
                                     {
                                         ViewBag.downloaddetails = downloadList;
                                     }
-                                    else
-                                    {
-                                        ViewBag.NorecordDetail = "No Records Found";
-                                    }
                                 }
                             }
-                            else
-                            {
-                                ViewBag.NorecordDetail = "No Records Found";
-                            }
+                            
                         }
                     }
                     else
@@ -938,10 +986,6 @@ namespace NoteMarketPlace.Controllers
                         if (downloadList.Count != 0)
                         {
                             ViewBag.downloaddetails = downloadList;
-                        }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
                         }
                     }
                     
@@ -962,15 +1006,15 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.day = null;
                     ViewBag.count = 0;
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    var downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsPaid == true).ToList();
+                    var downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                     ViewBag.downloaddetails = null;
-                    var categorydata = db.NoteCategories.ToList();
+                    var categorydata = db.NoteCategories.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList = new SelectList(categorydata, "CategoryName", "CategoryID");
                     ViewBag.categorydetails = CategoryList;
                     var buyerdata = db.Users.ToList();
                     SelectList BuyerList = new SelectList(buyerdata, "EmailID", "ID");
                     ViewBag.buyerdetails = BuyerList;
-                    var countrydata = db.Countries.ToList();
+                    var countrydata = db.Countries.Where(x => x.IsActive == true).ToList();
                     SelectList CountryList = new SelectList(countrydata, "CountryCode", "CountryID");
                     ViewBag.countrydetails = CountryList;
                     var userdata = db.UserProfiles.ToList();
@@ -986,64 +1030,44 @@ namespace NoteMarketPlace.Controllers
 
                             if (isTitle)
                             {
-                                downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsPaid == true && x.NoteTitle == SearchText).ToList();
+                                downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsSellerHasAllowedDownload == true && x.NoteTitle == SearchText && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else if (isCat)
+                            if (isCat)
                             {
-                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText).Select(x => x.CategoryID).FirstOrDefault();
-                                downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsPaid == true && x.NoteCategory == cid).ToList();
+                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText && x.IsActive==true).Select(x => x.CategoryID).FirstOrDefault();
+                                downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsSellerHasAllowedDownload == true && x.NoteCategory == cid && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
-
                             }
-                            else if (isBuyer)
+                            if (isBuyer)
                             {
                                 var bname = db.Users.Where(b => b.FirstName == SearchText).Select(b => b.ID).ToList();
-                                downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsPaid == true && bname.Contains(x.DownloaderId)).ToList();
+                                downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsSellerHasAllowedDownload == true && bname.Contains(x.DownloaderId) && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else if (isPrice)
+                            if (isPrice)
                             {
 
                                 bool Price = db.Downloads.Any(d => d.PurchasedPrice == price);
                                 if (Price)
                                 {
-                                    downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsPaid == true && x.PurchasedPrice == price).ToList();
+                                    downloadList = db.Downloads.Where(x => x.DownloaderId == user.ID && x.IsSellerHasAllowedDownload == true && x.PurchasedPrice == price && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                     if (downloadList.Count != 0)
                                     {
                                         ViewBag.downloaddetails = downloadList;
                                     }
-                                    else
-                                    {
-                                        ViewBag.NorecordDetail = "No Records Found";
-                                    }
                                 }
                             }
-                            else
-                            {
-                                ViewBag.NorecordDetail = "No Records Found";
-                            }
+                            
                         }
                     }
                     else
@@ -1051,10 +1075,6 @@ namespace NoteMarketPlace.Controllers
                         if (downloadList.Count != 0)
                         {
                             ViewBag.downloaddetails = downloadList;
-                        }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
                         }
                     }
                     
@@ -1075,15 +1095,15 @@ namespace NoteMarketPlace.Controllers
                     ViewBag.day = null;
                     ViewBag.count = 0;
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    var downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true).ToList();
+                    var downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                     ViewBag.downloaddetails = null;
-                    var categorydata = db.NoteCategories.ToList();
+                    var categorydata = db.NoteCategories.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList = new SelectList(categorydata, "CategoryName", "CategoryID");
                     ViewBag.categorydetails = CategoryList;
                     var buyerdata = db.Users.ToList();
                     SelectList BuyerList = new SelectList(buyerdata, "EmailID", "ID");
                     ViewBag.buyerdetails = BuyerList;
-                    var countrydata = db.Countries.ToList();
+                    var countrydata = db.Countries.Where(x => x.IsActive == true).ToList();
                     SelectList CountryList = new SelectList(countrydata, "CountryCode", "CountryID");
                     ViewBag.countrydetails = CountryList;
                     var userdata = db.UserProfiles.ToList();
@@ -1099,64 +1119,45 @@ namespace NoteMarketPlace.Controllers
 
                             if (isTitle)
                             {
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true && x.NoteTitle == SearchText).ToList();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == true && x.NoteTitle == SearchText && x.IsActive == true).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                                
                             }
-                            else if (isCat)
+                             if (isCat)
                             {
-                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText).Select(x => x.CategoryID).FirstOrDefault();
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true && x.NoteCategory == cid).ToList();
+                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText && x.IsActive==true).Select(x => x.CategoryID).FirstOrDefault();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true && x.NoteCategory == cid).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
-
                             }
-                            else if (isBuyer)
+                            if (isBuyer)
                             {
                                 var bname = db.Users.Where(b => b.FirstName == SearchText).Select(b => b.ID).ToList();
-                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true && bname.Contains(x.DownloaderId)).ToList();
+                                downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true && bname.Contains(x.DownloaderId)).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else if (isPrice)
+                            if (isPrice)
                             {
 
                                 bool Price = db.Downloads.Any(d => d.PurchasedPrice == price);
                                 if (Price)
                                 {
-                                    downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsPaid == true && x.PurchasedPrice == price).ToList();
+                                    downloadList = db.Downloads.Where(x => x.SellerId == user.ID && x.IsSellerHasAllowedDownload == true && x.IsActive == true && x.PurchasedPrice == price).OrderBy(x => x.AttachmentDownloadDate).ToList();
                                     if (downloadList.Count != 0)
                                     {
                                         ViewBag.downloaddetails = downloadList;
                                     }
-                                    else
-                                    {
-                                        ViewBag.NorecordDetail = "No Records Found";
-                                    }
                                 }
                             }
-                            else
-                            {
-                                ViewBag.NorecordDetail = "No Records Found";
-                            }
+                            
                         }
                     }
                     else
@@ -1164,10 +1165,6 @@ namespace NoteMarketPlace.Controllers
                         if (downloadList.Count != 0)
                         {
                             ViewBag.downloaddetails = downloadList;
-                        }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
                         }
                     }
                 }
@@ -1185,9 +1182,9 @@ namespace NoteMarketPlace.Controllers
                 {
                     ViewBag.count = 0;
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    var downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected").ToList();
+                    var downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected").OrderBy(x => x.PublishedDate).ToList();
                     ViewBag.downloaddetails = null;
-                    var categorydata = db.NoteCategories.ToList();
+                    var categorydata = db.NoteCategories.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList = new SelectList(categorydata, "CategoryName", "CategoryID");
                     ViewBag.categorydetails = CategoryList;
                     var userdata = db.UserProfiles.ToList();
@@ -1202,45 +1199,32 @@ namespace NoteMarketPlace.Controllers
 
                             if (isTitle)
                             {
-                                downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected" && x.Title == SearchText).ToList();
+                                downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected" && x.Title == SearchText).OrderBy(x => x.PublishedDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+
                             }
-                            else if (isCat)
+                            if (isCat)
                             {
-                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText).Select(x => x.CategoryID).FirstOrDefault();
-                                downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected" && x.Category == cid).ToList();
+                                var cid = db.NoteCategories.Where(x => x.CategoryName == SearchText && x.IsActive==true).Select(x => x.CategoryID).FirstOrDefault();
+                                downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected" && x.Category == cid).OrderBy(x => x.PublishedDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
+                             
                             }
-                            else if (isRemark)
+                            if (isRemark)
                             {
-                                downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected" && x.AdminRemarks == SearchText).ToList();
+                                downloadList = db.SellerNotes.Where(x => x.SellerID == user.ID && x.Status == "rejected" && x.AdminRemarks == SearchText).OrderBy(x => x.PublishedDate).ToList();
                                 if (downloadList.Count != 0)
                                 {
                                     ViewBag.downloaddetails = downloadList;
                                 }
-                                else
-                                {
-                                    ViewBag.NorecordDetail = "No Records Found";
-                                }
                             }
-                            else
-                            {
-                                ViewBag.NorecordDetail = "No Records Found";
-                            }
+                            
                         }
                     }
                     else
@@ -1249,22 +1233,19 @@ namespace NoteMarketPlace.Controllers
                         {
                             ViewBag.downloaddetails = downloadList;
                         }
-                        else
-                        {
-                            ViewBag.NorecordDetail = "No Records Found";
-                        }
                     }
                 }
             }
             return View();
         }
-        
+        [Authorize]
         public ActionResult Clone(int noteid)
         {
             using (var db = new Notes_MarketplaceEntities())
             {
-                var cloningdata = db.SellerNotes.Where(x => x.ID == noteid).FirstOrDefault();
+                SellerNote cloningdata = db.SellerNotes.Where(x => x.ID == noteid).FirstOrDefault();
                 cloningdata.Status = "draft";
+                db.Entry(cloningdata).State = EntityState.Modified;
                 db.SaveChanges();
             }
             return RedirectToAction("RejectedNotes");
@@ -1275,6 +1256,7 @@ namespace NoteMarketPlace.Controllers
         {
             return View();
         }
+        [Authorize]
         [HttpPost]
         public ActionResult Changepassword(Changepassword changepassword)
         {
@@ -1305,19 +1287,47 @@ namespace NoteMarketPlace.Controllers
                     }
                 }
             }
-            return View();
+            return RedirectToAction("Login","Users");
         }
+        [Authorize]
         public ActionResult AllowDownload(int buyerID,int _id)
         {
             using (var db = new Notes_MarketplaceEntities())
             {
-                var downloadingdata = db.Downloads.Where(x => x.DownloaderId == buyerID && x.ID==_id).FirstOrDefault();
-                downloadingdata.IsPaid = true;
+                Download downloadingdata = db.Downloads.Where(x => x.DownloaderId == buyerID && x.ID==_id).FirstOrDefault();
+                downloadingdata.IsActive = true;
                 downloadingdata.IsSellerHasAllowedDownload = true;
+                downloadingdata.ModifiedBy = downloadingdata.SellerId;
+                downloadingdata.ModifiedDate = DateTime.Now;
+                SellerNote seller = db.SellerNotes.Where(x => x.ID == downloadingdata.NoteID).FirstOrDefault();
+                seller.total_Earnings = (decimal)(seller.total_Earnings + downloadingdata.PurchasedPrice);
+                UserProfile userprofile = db.UserProfiles.Where(x => x.UserId == downloadingdata.SellerId).FirstOrDefault();
+                userprofile.Total_earnings = (decimal)(userprofile.Total_earnings + downloadingdata.PurchasedPrice);
+                db.Entry(downloadingdata).State = EntityState.Modified;
+                db.Entry(userprofile).State = EntityState.Modified;
                 db.SaveChanges();
+                var sellerEmail = db.Users.FirstOrDefault(u => u.EmailID == User.Identity.Name);
+                var buyerEmail = db.Users.FirstOrDefault(u => u.ID == buyerID);
+                MailMessage mail = new MailMessage();
+                mail.To.Add(buyerEmail.EmailID);
+                mail.From = new MailAddress("parejiyadevanshi@gmail.com", "Devanshi Parejiya");
+                mail.Subject = sellerEmail.FirstName + " " + sellerEmail.LastName + " Allows you to download a note";
+                string Body = "<p><p style=" + "margin-bottom:0px;" + ">Hello," + buyerEmail.FirstName + " " + buyerEmail.LastName + "<br>We would like to inform you that, " + sellerEmail.FirstName + " " + sellerEmail.LastName + " Allows you to download a note,Please login and see My Download tabs to download particular note.<br><p><b>Regards,<br>NotesMarketplace</b></p></p>";
+                mail.Body = Body;
+                mail.IsBodyHtml = true;
+                mail.BodyEncoding = UTF8Encoding.UTF8;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential("parejiyadevanshi@gmail.com", "jhmswewvcofgnyfr"); // Enter seders User name and password  
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+
             }
             return RedirectToAction("BuyerRequest");
         }
+        [Authorize]
         public ActionResult DeleteNotes(int?noteid)
         {
             using (var db = new Notes_MarketplaceEntities())
@@ -1325,27 +1335,83 @@ namespace NoteMarketPlace.Controllers
                 if (noteid!=null)
                 {
                     SellerNote notes = db.SellerNotes.Where(n=>n.ID==noteid).FirstOrDefault();
-                    db.SellerNotes.Remove(notes);
+                    notes.IsActive = false;
+                    db.Entry(notes).State = EntityState.Modified;
                     db.SaveChanges();
                 }
             }
             return RedirectToAction("SellyourNotes","Users");
         }
-        public ActionResult Review(SellerNotesReview seller,string rate,string comment,Review r)
+        [Authorize]
+        public ActionResult Review(int? noteid, string Message, string rating,SellerNotesReview seller)
         {
-            
-            using (var db=new Notes_MarketplaceEntities())
+            using (var db = new Notes_MarketplaceEntities())
             {
                 var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                
+
                 seller.ReviewedByID = user.ID;
-                seller.Comments = comment;
-                seller.Ratings = decimal.Parse(rate);
+                seller.Comments = Message;
+                seller.NoteID = (int)noteid;
+                seller.Ratings = decimal.Parse(rating);
                 seller.CreatedDate = DateTime.Now;
+                seller.IsActive = true;
                 db.SellerNotesReviews.Add(seller);
                 db.SaveChanges();
+                var review = db.SellerNotesReviews.Where(r => r.NoteID == noteid && r.IsActive==true).ToList();
+                var count = 0;
+                decimal star = 0;
+                foreach(var r in review)
+                {
+                    star += r.Ratings;
+                    count += 1;
+                }
+                decimal note_star = star / count;
+                SellerNote sellerNote = db.SellerNotes.FirstOrDefault(n => n.ID == noteid);
+                sellerNote.rating = note_star;
+                db.Entry(sellerNote).State = EntityState.Modified;
+                db.SaveChanges();
             }
-            return RedirectToAction("DownloadNotes");
+
+            return RedirectToAction("DownloadNotes", "Users");
+        }
+        [Authorize]
+        public ActionResult ReportIssue(int? noteid, string Issue, SellerNotesReportedIssue notesReportedIssue)
+        {
+            using (var db = new Notes_MarketplaceEntities())
+            {
+                var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
+                var notedetail = db.SellerNotes.FirstOrDefault(s=>s.ID==noteid);
+                notesReportedIssue.NoteID = (int)noteid;
+                notesReportedIssue.ReportedBYID = user.ID;
+                notesReportedIssue.Remarks = Issue;
+                notesReportedIssue.CreatedDate = DateTime.Now;
+                notesReportedIssue.IsActive = true;
+                db.SellerNotesReportedIssues.Add(notesReportedIssue);
+                db.SaveChanges();
+                var sellerEmail = db.Users.FirstOrDefault(s => s.ID == notedetail.SellerID);
+                var systemAdmin_Email = db.SystemConfigurations.Where(s => s.K_ey == "admin_Email").Select(s=>s.Value).FirstOrDefault();
+                string[] sender_email = systemAdmin_Email.Split(',');
+                foreach(var sender in sender_email)
+                {
+                    MailMessage mail = new MailMessage();
+                    mail.To.Add(sender);
+                    mail.From = new MailAddress("parejiyadevanshi@gmail.com", "Devanshi Parejiya");
+                    mail.Subject = user.FirstName + " " + user.LastName + " Reported an issue for " + notedetail.Title;
+                    string Body = "<p><p style=" + "margin-bottom:0px;" + ">Hello Admins, <br>We want to inform you that, " + user.FirstName + " " + user.LastName + " Reported an issue for " + sellerEmail.FirstName + " " + sellerEmail.LastName + "'s Note with title " + notedetail.Title + ". Please look and take required actions.<br><p><b>Regards,<br>NotesMarketplace</b></p></p>";
+                    mail.Body = Body;
+                    mail.IsBodyHtml = true;
+                    mail.BodyEncoding = UTF8Encoding.UTF8;
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new System.Net.NetworkCredential("parejiyadevanshi@gmail.com", "jhmswewvcofgnyfr"); // Enter seders User name and password  
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+                
+            }
+            return RedirectToAction("DownloadNotes", "Users");
         }
         [HttpGet]
         public ActionResult Faq()
@@ -1363,30 +1429,37 @@ namespace NoteMarketPlace.Controllers
         [HttpPost]
         public ActionResult ContactUs(ContactUs contactUs)
         {
+            Header();
             if (ModelState.IsValid)
             {
-                
-                    MailMessage mail = new MailMessage();
-                    mail.To.Add("parejiyadevanshi@gmail.com");
-                    mail.From = new MailAddress("parejiyadevanshi@gmail.com","Devanshi Parejiya");
-                    mail.Subject = contactUs.firstName+" -Query";
-                    string Body = "<p><p>Hello,</p>"+contactUs.comment+"<p><b>Regards,<br>"+contactUs.firstName+"</b></p></p>";
-                    mail.Body = Body;
-                    mail.IsBodyHtml = true;
-                    mail.BodyEncoding = UTF8Encoding.UTF8;
-                    SmtpClient smtp = new SmtpClient();
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.Port = 587;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new System.Net.NetworkCredential("parejiyadevanshi@gmail.com", "jhmswewvcofgnyfr"); // Enter seders User name and password  
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-
+                using (var db = new Notes_MarketplaceEntities())
+                {
+                    var system_Admin_Email = db.SystemConfigurations.Where(x => x.K_ey == "admin_Email").Select(x => x.Value).FirstOrDefault();
+                    string[] sender_email = system_Admin_Email.Split(',');
+                    foreach (var sender in sender_email)
+                    {
+                        MailMessage mail = new MailMessage();
+                        mail.To.Add(sender);
+                        mail.From = new MailAddress("parejiyadevanshi@gmail.com", "Devanshi Parejiya");
+                        mail.Subject = contactUs.firstName + " -Query";
+                        string Body = "<p><p>Hello,</p>" + contactUs.comment + "<p><b>Regards,<br>" + contactUs.firstName + "</b></p></p>";
+                        mail.Body = Body;
+                        mail.IsBodyHtml = true;
+                        mail.BodyEncoding = UTF8Encoding.UTF8;
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.Host = "smtp.gmail.com";
+                        smtp.Port = 587;
+                        smtp.UseDefaultCredentials = false;
+                        smtp.Credentials = new System.Net.NetworkCredential("parejiyadevanshi@gmail.com", "jhmswewvcofgnyfr"); // Enter senders User name and password  
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
                 
             }
             return View();
         }
-
+        [Authorize]
         [HttpGet]
         public ActionResult AddNotes(int ?noteid)
         {
@@ -1396,9 +1469,9 @@ namespace NoteMarketPlace.Controllers
                 using (var db = new Notes_MarketplaceEntities())
                 {
 
-                    var getCategoryList = db.NoteCategories.ToList();
-                    var getTypeList = db.NoteTypes.ToList();
-                    var getCountryList = db.Countries.ToList();
+                    var getCategoryList = db.NoteCategories.Where(x=>x.IsActive==true).ToList();
+                    var getTypeList = db.NoteTypes.Where(x => x.IsActive == true).ToList();
+                    var getCountryList = db.Countries.Where(x => x.IsActive == true).ToList();
                     SelectList CategoryList, TypeList, CountryList;
                     if(noteid !=null)
                     {
@@ -1425,15 +1498,15 @@ namespace NoteMarketPlace.Controllers
                             {
                                 addnotes.SellMode = "paid";
                             }
-                            NoteCategory category = db.NoteCategories.FirstOrDefault(c => c.CategoryID == notedetail.Category);
+                            NoteCategory category = db.NoteCategories.FirstOrDefault(c => c.CategoryID == notedetail.Category && c.IsActive==true);
                             object catid = category.CategoryID;
                             CategoryList = new SelectList(getCategoryList, "CategoryID", "CategoryName",catid);
                             ViewBag.categoryname = CategoryList;
-                            NoteType noteType = db.NoteTypes.FirstOrDefault(t => t.TypeID == notedetail.NoteType);
+                            NoteType noteType = db.NoteTypes.FirstOrDefault(t => t.TypeID == notedetail.NoteType && t.IsActive==true);
                             object tid = noteType.TypeID;
                             TypeList = new SelectList(getTypeList, "TypeID", "TypeName",tid);
                             ViewBag.typename = TypeList;
-                            Country country = db.Countries.FirstOrDefault(co => co.CountryID == notedetail.Country);
+                            Country country = db.Countries.FirstOrDefault(co => co.CountryID == notedetail.Country && co.IsActive==true);
                             object counId = country.CountryID;
                             CountryList = new SelectList(getCountryList, "CountryID", "CountryName",counId);
                             ViewBag.countryname = CountryList;
@@ -1465,18 +1538,17 @@ namespace NoteMarketPlace.Controllers
             }
             return View();
         }
-
+        [Authorize]
         [HttpPost]
         public ActionResult AddNotes(Addnotes addnotes,SellerNote sellerNote,string submit)
         {
-            if (ModelState.IsValid)
-            {
                 using (var db = new Notes_MarketplaceEntities())
                 {
                     int sellernoteTemp = 0;
 
                     var user = db.Users.FirstOrDefault(x => x.EmailID == User.Identity.Name);
-                    if (addnotes.noteid != null)
+                    var systemUpload_image = db.SystemConfigurations.Where(s => s.K_ey == "Note_image").Select(s => s.Value).FirstOrDefault();
+                if (addnotes.noteid != null)
                     {
                         sellerNote = db.SellerNotes.Where(u => u.SellerID == user.ID && u.ID == addnotes.noteid).FirstOrDefault();
                         if (sellerNote != null)
@@ -1496,6 +1568,9 @@ namespace NoteMarketPlace.Controllers
                     sellerNote.CourseCode = addnotes.CourseCode;
                     sellerNote.Professor = addnotes.ProfessorName;
                     sellerNote.ModifiedDate = DateTime.Now;
+                    sellerNote.PublishedDate = DateTime.Now;
+                    sellerNote.IsActive = false;
+                    sellerNote.total_Earnings = 0;
                     if (addnotes.SellMode == "Free")
                     {
                         sellerNote.IsPaid = false;
@@ -1540,7 +1615,11 @@ namespace NoteMarketPlace.Controllers
                     {
                         sellerNote.DisplayPicture = addnotes.uploadPictureGet;
                     }
-                    if (addnotes.uploadNotes != null && addnotes.uploadNotes.ContentLength > 0)
+                else
+                {
+                    sellerNote.DisplayPicture = systemUpload_image;
+                }
+                if (addnotes.uploadNotes != null && addnotes.uploadNotes.ContentLength > 0)
                     {
                         string _FileName = Path.GetFileName(addnotes.uploadNotes.FileName);
                         string _path = Path.Combine(Server.MapPath(temp_path), _FileName);
@@ -1574,8 +1653,28 @@ namespace NoteMarketPlace.Controllers
                             break;
                         case "publish":
                             sellerNote.Status = "submitted";
-                            sellerNote.PublishedDate = DateTime.Now;
-                            break;
+                        var sellerEmail = db.Users.FirstOrDefault(u => u.EmailID == User.Identity.Name);
+                        var systemAdmin_Email = db.SystemConfigurations.Where(s => s.K_ey == "admin_Email").Select(s => s.Value).FirstOrDefault();
+                        string[] sender_email = systemAdmin_Email.Split(',');
+                        foreach (var sender in sender_email)
+                        {
+                            MailMessage mail = new MailMessage();
+                            mail.To.Add(sender);
+                            mail.From = new MailAddress("parejiyadevanshi@gmail.com", "Devanshi Parejiya");
+                            mail.Subject = sellerEmail.FirstName + " " + sellerEmail.LastName + " Sent his note for review";
+                            string Body = "<p><p style=" + "margin-bottom:0px;" + ">Hello Admins,<br>We want to inform you that, " + sellerEmail.FirstName + " " + sellerEmail.LastName + " sent his note " + addnotes.Title + " for review. Please look at the notes and take required actions.<br><p><b>Regards,<br>NotesMarketplace</b></p></p>";
+                            mail.Body = Body;
+                            mail.IsBodyHtml = true;
+                            mail.BodyEncoding = UTF8Encoding.UTF8;
+                            SmtpClient smtp = new SmtpClient();
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.Port = 587;
+                            smtp.UseDefaultCredentials = false;
+                            smtp.Credentials = new System.Net.NetworkCredential("parejiyadevanshi@gmail.com", "jhmswewvcofgnyfr"); // Enter seders User name and password  
+                            smtp.EnableSsl = true;
+                            smtp.Send(mail);
+                        }
+                        break;
                     }
 
                     if (sellernoteTemp == 1)
@@ -1589,11 +1688,10 @@ namespace NoteMarketPlace.Controllers
                     db.SaveChanges();
                     return RedirectToAction("SellyourNotes", "Users");
                 }
-            }
 
             return View();
         }
-        
+        [Authorize]
         public FileResult DownloadFile(int noteid)
         {
             using (var db = new Notes_MarketplaceEntities())
@@ -1605,120 +1703,6 @@ namespace NoteMarketPlace.Controllers
                 return File(fullpath, "application/pdf", notedetail.FileName);
             }
         }
-        // GET: Users
-        /*
-        public ActionResult Index()
-        {
-            var users = db.Users.Include(u => u.UserRole);
-            return View(users.ToList());
-        }
-
-        // GET: Users/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-            return View(user);
-        }
-
-        // GET: Users/Create
-        public ActionResult Create()
-        {
-            ViewBag.RoleID = new SelectList(db.UserRoles, "ID", "Name");
-            return View();
-        }
-
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,RoleID,FirstName,LastName,EmailID,Password,IsEmailVerified,CreatedDate,CreatedBy,ModifiedDate,ModifiedBy,IsActive")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.RoleID = new SelectList(db.UserRoles, "ID", "Name", user.RoleID);
-            return View(user);
-        }
-
-        // GET: Users/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.RoleID = new SelectList(db.UserRoles, "ID", "Name", user.RoleID);
-            return View(user);
-        }
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,RoleID,FirstName,LastName,EmailID,Password,IsEmailVerified,CreatedDate,CreatedBy,ModifiedDate,ModifiedBy,IsActive")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.RoleID = new SelectList(db.UserRoles, "ID", "Name", user.RoleID);
-            return View(user);
-        }
-
-        // GET: Users/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            User user = db.Users.Find(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            User user = db.Users.Find(id
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }*/
+        
     }
 }
